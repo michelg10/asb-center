@@ -22,5 +22,7 @@
         </block>
       </view>
     </view>
+
+    <canvas class="qr-image" canvas-id="canvas"></canvas> 
   </view>
 </view>

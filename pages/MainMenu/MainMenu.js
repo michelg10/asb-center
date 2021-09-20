@@ -25,6 +25,20 @@ Component({
    * Component methods
    */
   methods: {
+    createQRCode: function(data) { // data is the string value of the qr code
+      let QRCode = require('../../utils/weapp-qrcode')
+      let qrcode = new QRCode('canvas', {
+        usingIn: "",
+        text: "",
+        width: 300,
+        height: 300,
+        colorDark: "#000000", // you can change color here
+        colorLight: "white",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+      qrcode.makeCode(data) 
+    },
+
     fetchServerData: async function() {
       // simulate retrieving from a server
       this.setData({
@@ -52,6 +66,8 @@ Component({
          }, 1000
         );
       });
+
+      this.createQRCode("https://www.bing.com") // this is the content of the qr code
     },
     recomputeData: function(incremental) {
       console.log("Tick");

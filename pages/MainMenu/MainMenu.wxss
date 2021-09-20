@@ -55,3 +55,8 @@
   width: 15px;
   margin-left: 10px;
 }
+
+.qr-image {
+  height: 500rpx;
+  width: 500rpx;
+}
