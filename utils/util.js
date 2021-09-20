@@ -1,19 +1,25 @@
-const formatTime = date => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
-
-  return `${[year, month, day].map(formatNumber).join('/')} ${[hour, minute, second].map(formatNumber).join(':')}`
+const getUnixTime = () => {
+  return Math.floor(Date.now() / 1000);
 }
-
-const formatNumber = n => {
-  n = n.toString()
-  return n[1] ? n : `0${n}`
+const getTimeDifference = (from, to) => {
+  return `${from-to} utt`;
+}
+const withinRange = (number, rangeL, rangeR) => {
+  let inRange=true;
+  if (rangeL !== -1) {
+    if (number < rangeL) {
+      inRange=false;
+    }
+  } else if (rangeR !== -1) {
+    if (number > rangeR) {
+      inRange=false;
+    }
+  }
+  return inRange;
 }
 
 module.exports = {
-  formatTime
+  getUnixTime,
+  getTimeDifference,
+  withinRange
 }

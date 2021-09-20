@@ -1,0 +1,57 @@
+/* pages/MainMenu/MainMenu.wxss */
+@import "../../global-colors.wxss";
+#main-menu-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+}
+#main-menu-top-container {
+  padding: 0 14px;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 18px;
+}
+#main-menu-top-scan-button-container {
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--button-background-color);
+  border-radius: 50%;
+}
+#main-menu-top-scan-button-image {
+  width: 100%;
+  height: 100%;
+}
+#main-menu-info-container {
+  padding: 0 14px;
+}
+.event-row {
+  height: 45px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 13px;
+}
+.main-menu-sub-container {
+  background-color: var(--subcontainer-background);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.event-title-text {
+  font-size: 20px;
+}
+.event-till-time-text {
+  color: var(--secondary);
+  font-size: 17px;
+}
+.event-row-right {
+  display: flex;
+  align-items: center;
+}
+.event-row-chevron-image {
+  height: 45px;
+  width: 15px;
+  margin-left: 10px;
+}

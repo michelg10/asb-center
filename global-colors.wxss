@@ -1,0 +1,6 @@
+view {
+  --button-background-color: #E9E9E9;
+  --subcontainer-background: #ECECEC;
+  --link: #366AEF;
+  --secondary: #6C6C6C;
+}
