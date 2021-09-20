@@ -1,4 +1,21 @@
 <!--pages/MainMenu/MainMenu.wxml-->
+<template name="eventsList">
+  <view class="main-menu-big-section" wx:if="{{listData.length>0}}">
+    <text class="heading-text">{{listTitle}}</text>
+  <view class="main-menu-sub-container" id="my-events-container">
+    <block wx:for="{{listData}}" wx:key="id">
+      <view wx:if="{{index!==0}}" class="events-separator"></view>
+      <view class="event-row">
+        <text class="event-title-text"> {{item.title}} </text>
+        <view class="event-row-right">
+          <text class="event-till-time-text"> {{"now"}} </text>
+          <image wx:if="{{item.canJump}}" src="../../icons/chevron-right.svg" class="event-row-chevron-image"></image>
+        </view>
+      </view>
+    </block>
+  </view>
+  </view>
+</template>
 <view id="main-menu-container">
   <view id="main-menu-top-container">
     <text class="big-title-text">ASB Center</text>
@@ -7,22 +24,8 @@
     </view>
   </view>
   <view id="main-menu-info-container">
-    <view class="main-menu-big-section">
-      <text class="heading-text">My Events</text>
-      <view class="main-menu-sub-container" id="my-events-container">
-        <block wx:for="{{myEventsData}}" wx:key="id">
-          <view wx:if="{{index==0}}" class="events-separator"></view>
-          <view class="event-row">
-            <text class="event-title-text"> {{item.title}} </text>
-            <view class="event-row-right">
-              <text class="event-till-time-text"> {{"now"}} </text>
-              <image wx:if="{{item.canJump}}" src="../../icons/chevron-right.svg" class="event-row-chevron-image"></image>
-            </view>
-          </view>
-        </block>
-      </view>
-    </view>
-
-    <canvas class="qr-image" canvas-id="canvas"></canvas> 
+    <template is="eventsList" data="{{ ...{listData: myEventsData, listTitle: 'My Events'} }}"></template>
+    <template is="eventsList" data="{{ ...{listData: currentEventsData, listTitle: 'Current Events'} }}"></template>
+    <template is="eventsList" data="{{ ...{listData: pastEventsData, listTitle: 'Past Events'} }}"></template>
   </view>
 </view>

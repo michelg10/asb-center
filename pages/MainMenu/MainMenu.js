@@ -66,8 +66,8 @@ Component({
          }, 1000
         );
       });
-
-      this.createQRCode("https://www.bing.com") // this is the content of the qr code
+      
+      this.test=0;
     },
     recomputeData: function(incremental) {
       console.log("Tick");
@@ -77,41 +77,41 @@ Component({
       // recompute the display data for events
       for (let i=0;i<this.data.eventsData.length;i++) {
         const consideredEvent = this.data.eventsData[i];
+        let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(),consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventBegin), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd));
         if (getUnixTime()<=consideredEvent.displayEventEnd) {
           let userInfo=this.data.userData.info[`${consideredEvent.id}Data`];
           if (userInfo !== undefined && userInfo.joined===true) {
-            newMyEventsData.push(new DisplayRow(consideredEvent.name, withinRange(getUnixTime(),consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventBegin), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd)));
+            newMyEventsData.push(displayRow);
           } else {
-            newCurrentEventsData.push(new DisplayRow(consideredEvent.name, withinRange(getUnixTime(),consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventBegin), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd)));
+            newCurrentEventsData.push(displayRow);
           }
         } else {
-          newPastEventsData.push(new DisplayRow(consideredEvent.name, withinRange(getUnixTime(),consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventBegin), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd)));
+          newPastEventsData.push(displayRow);
         }
-        if (incremental) {
-          if (this.displayRowDiff(this.data.myEventsData, newMyEventsData)) {
-            this.setData({
-              myEventsData: newMyEventsData,
-            });
-          }
-          if (this.displayRowDiff(this.data.currentEventsData, newCurrentEventsData)) {
-            this.setData({
-              currentEventsData: newCurrentEventsData,
-            });
-          }
-          if (this.displayRowDiff(this.data.pastEventsData, newPastEventsData)) {
-            this.setData({
-              pastEventsData: newPastEventsData,
-            });
-          }
-        } else {
+      }
+      if (incremental) {
+        if (this.displayRowDiff(this.data.myEventsData, newMyEventsData)) {
           this.setData({
             myEventsData: newMyEventsData,
+          });
+        }
+        if (this.displayRowDiff(this.data.currentEventsData, newCurrentEventsData)) {
+          this.setData({
             currentEventsData: newCurrentEventsData,
+          });
+        }
+        if (this.displayRowDiff(this.data.pastEventsData, newPastEventsData)) {
+          this.setData({
             pastEventsData: newPastEventsData,
           });
         }
+      } else {
+        this.setData({
+          myEventsData: newMyEventsData,
+          currentEventsData: newCurrentEventsData,
+          pastEventsData: newPastEventsData,
+        });
       }
-      
       // recompute preview data
     },
     displayRowDiff: function(a, b) {
@@ -122,9 +122,6 @@ Component({
         }
       }
       return false;
-    },
-    refreshPreviews: function() {
-
     }
   },
 })

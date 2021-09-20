@@ -3,4 +3,5 @@ view {
   --subcontainer-background: #ECECEC;
   --link: #366AEF;
   --secondary: #6C6C6C;
+  --list-separator: #B9B9B9;
 }
