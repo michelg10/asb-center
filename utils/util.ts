@@ -1,7 +1,7 @@
-const getUnixTime = () => {
+export function getUnixTime() {
   return Math.floor(Date.now() / 1000);
 }
-const getTimeDifference = (fromTs, toTs) => {
+export function getTimeDifference(fromTs: number, toTs: number) {
   let diff=fromTs-toTs;
   let rturn="";
   let diffPositive = (diff>0);
@@ -33,7 +33,7 @@ const getTimeDifference = (fromTs, toTs) => {
   }
   return rturn;
 }
-const withinRange = (number, rangeL, rangeR) => {
+export function withinRange(number: number, rangeL: number, rangeR: number) {
   let inRange=true;
   if (rangeL !== -1) {
     if (number < rangeL) {
@@ -48,7 +48,7 @@ const withinRange = (number, rangeL, rangeR) => {
   return inRange;
 }
 
-const extendNumberToLengthString = (number, length) => {
+export function extendNumberToLengthString(number: number, length: number) {
   let numberString = number.toString();
   if (numberString.length<length) {
     let result="";
@@ -60,11 +60,4 @@ const extendNumberToLengthString = (number, length) => {
   } else {
     return numberString;
   }
-}
-
-module.exports = {
-  getUnixTime,
-  getTimeDifference,
-  withinRange,
-  extendNumberToLengthString
 }

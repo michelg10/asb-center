@@ -1,0 +1,25 @@
+{
+  "name": "asb-center",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "./node_modules/typescript/bin/tsc",
+    "tsc": "node ./node_modules/typescript/lib/tsc.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LegitMichel777/asb-center.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LegitMichel777/asb-center/issues"
+  },
+  "homepage": "https://github.com/LegitMichel777/asb-center#readme",
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "typescript": "^3.9.10"
+  }
+}

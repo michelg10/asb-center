@@ -44,7 +44,9 @@
     "disableUseStrict": false,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": [
+      "typescript"
+    ]
   },
   "compileType": "miniprogram",
   "libVersion": "2.19.4",
@@ -53,7 +55,6 @@
   "debugOptions": {
     "hidedInDevtools": []
   },
-  "scripts": {},
   "staticServerOptions": {
     "baseURL": "",
     "servePath": ""
