@@ -43,5 +43,35 @@
   flex-direction: column;
 }
 #sports-meet-leaderboard-heading {
-  margin-top: 7px;
+  margin-bottom: 10px;
+}
+.sports-meet-leaderboard-block {
+  height: 98px;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 8px;
+}
+.sports-meet-leaderboard-block-image {
+  width: 100%;
+  height: auto;
+}
+.sports-meet-leaderboard-block-heading {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  font-weight: 700;
+  color: white;
+  font-size: 17px;
+}
+.sports-meet-leaderboard-block-text {
+  position: absolute;
+  bottom: 9px;
+  left: 9px;
+  font-weight: 500;
+  color: white;
+  font-size: 17px;
 }

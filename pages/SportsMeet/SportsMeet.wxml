@@ -1,4 +1,12 @@
 <!--pages/SportsMeet.wxml-->
+<template name="leaderboard-block">
+  <view class="sports-meet-leaderboard-block">
+      <image src="{{imageSrc}}" class="sports-meet-leaderboard-block-image"></image>
+      <text class="sports-meet-leaderboard-block-heading">{{blockTitle}}</text>
+      <text class="sports-meet-leaderboard-block-text">{{blockText}}</text>
+  </view>
+</template>
+
 <view id="sports-meet-container">
   <text class="big-title-text">Sports Meet</text>
   <view id="sports-meet-stamp-container">
@@ -16,8 +24,6 @@
   </view>
   <view id="sports-meet-leaderboard-container">
     <text class="heading-text" id="sports-meet-leaderboard-heading">Leaderboards</text>
-    <view class="sports-meet-leaderboard-block">
-      
-    </view>
+    <template is="leaderboard-block" data="{{ ...{imageSrc: '../../images/SportsMeet/homeroom.jpg', blockTitle: 'Homeroom', blockText: 'Ranked 3rd'} }}"></template>
   </view>
 </view>
