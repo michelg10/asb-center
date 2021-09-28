@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   padding-top: 10px;
+  margin-bottom: 40px;
 }
 #main-menu-top-container {
   padding: 0 14px;

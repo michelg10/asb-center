@@ -1,1 +1,47 @@
 /* pages/SportsMeet.wxss */
+@import "../../global-colors.wxss";
+@import "../MainMenu/MainMenu.wxss";
+#sports-meet-container {
+  margin: 0 14px;
+}
+#sports-meet-stamp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 23px;
+  margin-bottom: 25px;
+}
+#sports-meet-stamp-inner-container {
+  margin-top: 12px;
+  height: 97px;
+  background-color: var(--subcontainer-background);
+  width: 100%;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sports-meet-stamp-image {
+  height: 62px;
+  width: 62px;
+}
+#sports-meet-stamp-inner {
+  padding: 0 26px;
+}
+#sports-meet-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+}
+#sports-meet-code-heading {
+  margin-bottom: 10px;
+}
+#sports-meet-leaderboard-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+#sports-meet-leaderboard-heading {
+  margin-top: 7px;
+}

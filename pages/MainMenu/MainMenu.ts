@@ -1,20 +1,22 @@
 // pages/MainMenu/MainMenu.js
-import { Event, SecureCodePreview } from '../../classes/event'
+import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
 import {DisplayRow} from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
 import { sha256 } from '../../utils/sha256';
-import { previewEnum } from '../../utils/common';
+import { createQRCode, previewEnum, userDataType } from '../../utils/common';
+import allCollectionsData from '../../utils/allCollectionsData';
 interface SecureCodePreviewData {
   userCode: String;
 }
-interface PreviewGenerator {
+export interface PreviewGenerator {
+  eventId: string;
   previewMode: previewEnum;
   previewPort: string;
   previewData: SecureCodePreviewData;
 }
 interface componentDataInterface {
   masterEventsData: Array<Event>;
-  userData: {id: string, student: {id: string, name: string, grade: number, class: number}, info: any};
+  userData: userDataType;
   myEventsData: Array<DisplayRow>;
   currentEventsData: Array<DisplayRow>;
   pastEventsData: Array<DisplayRow>;
@@ -43,35 +45,25 @@ Component({
    * Component methods
    */
   methods: {
-    createQRCode: function(canvasId: string, data: string) { // data is the string value of the qr code
-      let QRCode = require('../../utils/weapp-qrcode')
-      let qrcode = new QRCode(canvasId, {
-        usingIn: "",
-        text: "",
-        width: 184,
-        height: 184,
-        colorDark: "#000000",
-        colorLight: "#ECECEC", // sync this with the interface color
-        correctLevel: QRCode.CorrectLevel.H,
-      });
-      qrcode.makeCode(data) 
-    },
-
     fetchServerData: async function() {
+      let serverEventData = await allCollectionsData(this.data.db, "event");
+
+      let newEventsDb = [];
+      for (let i=0;i<serverEventData.data.length;i++) {
+        let currentDataEntry = serverEventData.data[i];
+        let currentDataEntryPreview: AnyPreviewType = null;
+        if (currentDataEntry.preview.type=="secureCodePreview") {
+          currentDataEntryPreview=new SecureCodePreview(currentDataEntry.preview.title, currentDataEntry.preview.caption.replace(/\\n/gi, '\n'));
+        }
+        newEventsDb.push(new Event(currentDataEntry.id, currentDataEntry.name, currentDataEntryPreview, currentDataEntry.eventVisibleDate, currentDataEntry.displayEventBegin, currentDataEntry.displayEventEnd, currentDataEntry.accessibleEventBegin, currentDataEntry.accessibleEventEnd, currentDataEntry.menuEventBegin, currentDataEntry.menuEventEnd));
+      }
+
+      console.log(newEventsDb);
+      
       // simulate retrieving from a server
       this.setData({
-        masterEventsData: 
-        [
-          new Event("SportsMeet2021", "Sports Meet", new SecureCodePreview("Show ID Code to log points", "Your ID Code is unique and updates with time.\nDo not share your ID Code."), -1, 0, 1800000000, 0, 1800000000, 0, 1800000000), 
-          new Event("Blackout2021", "Blackout", new SecureCodePreview("Show Access Code on entry & exit", "Your Access Code is unique and updates with time.\nDo not share your Access Code."), -1, 0, 1632157490, 0, 1632157490, 0, 1632157490)
-      ]
-      });
-      
-      // let events = await this.data.db.collection('event').get();
-      // console.log(events.data);
-
-      this.setData({
-        userData: {id: "ID given by wechat", student: {id: "student id", name: "Michel", grade: 11, class: 3}, info: {SportsMeet2021Data: {joined: true, secureCodeString: "secretRandomString"}}}
+        userData: {id: "ID given by wechat", student: {id: "student id", name: "Michel", grade: 11, class: 3}, info: {SportsMeet2021Data: {joined: true, secureCodeString: "secretRandomString"}}},
+        masterEventsData: newEventsDb,
       });
     },
     scanButtonClick: function() {
@@ -82,7 +74,17 @@ Component({
       let eventClickedId=x.currentTarget.dataset.id;
       if (eventClickedId==="SportsMeet2021") {
         wx.navigateTo({
-          url: '../SportsMeet/SportsMeet',
+          url: '/pages/SportsMeet/SportsMeet',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('eventId', 'SportsMeet2021');
+            res.eventChannel.emit('eventInfo', this.data.masterEventsData.find((val) => {
+              return val.id === eventClickedId;
+            }));
+            res.eventChannel.emit('previewInfo', this.data.previewGenerator.find((val) => {
+              return val.eventId === eventClickedId;
+            }));
+          }
         });
       }
     },
@@ -121,7 +123,7 @@ Component({
             if (this.data.masterEventsData[i].preview instanceof SecureCodePreview) {
               if (userInfo.secureCodeString !== undefined) {
                 let currentPreviewPort = `previewPort${i}`;
-                newPreviewGenerator.push({previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: {userCode: userInfo.secureCodeString}});
+                newPreviewGenerator.push({eventId: consideredEvent.id,previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: {userCode: userInfo.secureCodeString}});
 
                 displayRow.previewData={previewMode: "secureCodePreview", title: this.data.masterEventsData[i].preview!.title, subtitle: this.data.masterEventsData[i].preview!.caption, previewPort: currentPreviewPort };
               }
@@ -165,7 +167,8 @@ Component({
           let accessCodeContents=newPreviewGenerator[i].previewData.userCode+previewTimePeriod.toString();
           accessCodeContents=sha256(accessCodeContents)!;
           if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
-            this.createQRCode(newPreviewGenerator[i].previewPort, accessCodeContents);
+            let myCreateQRCode = createQRCode.bind(this);
+            myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');
             this.data.previewLastGen.set(newPreviewGenerator[i].previewPort, accessCodeContents);
           }
         }
