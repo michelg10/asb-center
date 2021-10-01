@@ -19,7 +19,9 @@ export class Event {
   accessibleEventEnd: number;
   menuEventBegin: number;
   menuEventEnd: number;
-  constructor(id: string, name: string, preview: AnyPreviewType, eventVisibleDate: number, displayEventBegin: number, displayEventEnd: number, accessibleEventBegin: number, accessibleEventEnd: number, menuEventBegin: number, menuEventEnd: number) {
+  grades: null|[number];
+  restrictAccess: boolean;
+  constructor(id: string, name: string, preview: AnyPreviewType, eventVisibleDate: number, displayEventBegin: number, displayEventEnd: number, accessibleEventBegin: number, accessibleEventEnd: number, menuEventBegin: number, menuEventEnd: number, grades: [number], restrictAccess: boolean) {
     this.id=id;
     this.name=name;
     this.eventVisibleDate=eventVisibleDate
@@ -30,6 +32,8 @@ export class Event {
     this.accessibleEventEnd=accessibleEventEnd;
     this.menuEventBegin=menuEventBegin;
     this.menuEventEnd=menuEventEnd;
+    this.grades=grades;
+    this.restrictAccess=restrictAccess;
   }
   
   eventAccessible() {

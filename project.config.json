@@ -8,6 +8,7 @@
       }
     ]
   },
+  "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
     "urlCheck": true,
     "es6": true,

@@ -14,6 +14,7 @@ interface componentDataInterface {
   codeLastGen: string;
   previewPort: string;
   lastUpdateTime: string;
+  recomputeCaller: any;
 }
 
 Component({
@@ -63,7 +64,7 @@ Component({
       this.data.codeLastGen = "";
       setTimeout(
         () => {
-          setInterval(() => {this.recomputeCode()}, 500);
+          this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
         }, 500
       );
     },
@@ -81,6 +82,9 @@ Component({
       this.setData({
         lastUpdateTime: newUpdateString,
       });
+    },
+    onUnload: function() {
+      clearInterval(this.data.recomputeCaller);
     }
   }
 })

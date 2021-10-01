@@ -5,7 +5,7 @@
   <view class="main-menu-sub-container" id="my-events-container">
     <block wx:for="{{listData}}" wx:key="id">
       <view wx:if="{{index!==0}}" class="events-separator"></view>
-      <view class="event-row" bindtap="handleEventRowClick" data-id="{{item.jumpTo}}">
+      <view class="event-row" bindtap="handleEventRowClick" data-id="{{item.jumpTo}}" data-shouldJump="{{item.canJump}}">
         <text class="event-title-text"> {{item.title}} </text>
         <view class="event-row-right">
           <text class="event-till-time-text"> {{item.timeLeft}} </text>

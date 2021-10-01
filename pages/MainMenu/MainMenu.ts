@@ -3,7 +3,7 @@ import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
 import {DisplayRow} from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
 import { sha256 } from '../../utils/sha256';
-import { createQRCode, previewEnum, userDataType } from '../../utils/common';
+import { createQRCode, previewEnum, studentDataType, userDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 interface SecureCodePreviewData {
   userCode: String;
@@ -46,23 +46,42 @@ Component({
    */
   methods: {
     fetchServerData: async function() {
-      let serverEventData = await allCollectionsData(this.data.db, "event");
+      const tasks = [];
+      tasks.push(allCollectionsData(this.data.db, "event"));
+      tasks.push(this.data.db.collection("userData").where({
+        userId: '{openid}'
+      }).get());
+      let results=await Promise.all(tasks);
+      let serverEventData: any[]=results[0].data;
+      let userData = results[1].data;
+      if (userData.length === 0) {
+        // ask the server 
+      } else {
+        let studentData = await this.data.db.collection("studentData").where({
+          _id: userData[0].studentId, 
+        }).get();
+        let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info};
+        if (studentData.data.length !== 0) {
+          let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
+          userObject.student = studentDataObject;
+        }
+        this.setData({
+          userData: userObject,
+        });
+      }
 
       let newEventsDb = [];
-      for (let i=0;i<serverEventData.data.length;i++) {
-        let currentDataEntry = serverEventData.data[i];
+      for (let i=0;i<serverEventData.length;i++) {
+        let currentDataEntry = serverEventData[i];
         let currentDataEntryPreview: AnyPreviewType = null;
         if (currentDataEntry.preview.type=="secureCodePreview") {
           currentDataEntryPreview=new SecureCodePreview(currentDataEntry.preview.title, currentDataEntry.preview.caption.replace(/\\n/gi, '\n'));
         }
-        newEventsDb.push(new Event(currentDataEntry.id, currentDataEntry.name, currentDataEntryPreview, currentDataEntry.eventVisibleDate, currentDataEntry.displayEventBegin, currentDataEntry.displayEventEnd, currentDataEntry.accessibleEventBegin, currentDataEntry.accessibleEventEnd, currentDataEntry.menuEventBegin, currentDataEntry.menuEventEnd));
+        newEventsDb.push(new Event(currentDataEntry.id, currentDataEntry.name, currentDataEntryPreview, currentDataEntry.eventVisibleDate, currentDataEntry.displayEventBegin, currentDataEntry.displayEventEnd, currentDataEntry.accessibleEventBegin, currentDataEntry.accessibleEventEnd, currentDataEntry.menuEventBegin, currentDataEntry.menuEventEnd, currentDataEntry.grades, currentDataEntry.restrictAccess));
       }
 
-      console.log(newEventsDb);
-      
       // simulate retrieving from a server
       this.setData({
-        userData: {id: "ID given by wechat", student: {id: "student id", name: "Michel", grade: 11, class: 3}, info: {SportsMeet2021Data: {joined: true, secureCodeString: "secretRandomString"}}},
         masterEventsData: newEventsDb,
       });
     },
@@ -72,6 +91,10 @@ Component({
     },
     handleEventRowClick: function(x: any) {
       let eventClickedId=x.currentTarget.dataset.id;
+      let shouldJump = x.currentTarget.dataset.shouldJump;
+      if (!shouldJump) {
+        return;
+      }
       if (eventClickedId==="SportsMeet2021") {
         wx.navigateTo({
           url: '/pages/SportsMeet/SportsMeet',
@@ -116,6 +139,11 @@ Component({
       // recompute the display data for events
       for (let i=0;i<this.data.masterEventsData.length;i++) {
         const consideredEvent = this.data.masterEventsData[i];
+        if (consideredEvent.grades !== null && this.data.userData.student !== null) {
+          if (!consideredEvent.grades.includes(this.data.userData.student.grade)) {
+            continue;
+          }
+        }
         let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventEnd), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd), consideredEvent.id, null);
         if (getUnixTime()<=consideredEvent.displayEventEnd) {
           let userInfo=this.data.userData.info[`${consideredEvent.id}Data`];
@@ -130,6 +158,9 @@ Component({
             }
             newMyEventsData.push(displayRow);
           } else {
+            if (consideredEvent.restrictAccess) {
+              displayRow.canJump=false;
+            }
             newCurrentEventsData.push(displayRow);
           }
         } else {
