@@ -50,7 +50,6 @@ exports.main = async (event, context) => {
       });
     }
   }
-  
   // now run mandatory join on the user
   let unresolvedInfo = await db.collection("userData").where({
     userId: wxContext.OPENID,

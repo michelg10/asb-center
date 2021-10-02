@@ -41,7 +41,7 @@ exports.main = async (event, context) => {
       for (let i=0;i<userDataInformation.length;i++) {
         let studentJoin = false;
         if (eventCollectionInformation[i].grades !== undefined) {
-          if (userDataInformation[i].student.grade !== undefined) {
+          if (userDataInformation[i].student!==undefined&&userDataInformation[i].student.grade !== undefined) {
             if (eventCollectionInformation[i].grades.includes(userDataInformation[i].student.grade)) {
               studentJoin = true;
             }

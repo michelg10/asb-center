@@ -7,6 +7,7 @@ interface componentDataInterface {
   studentData: Student[];
   db: DB.Database;
   matchingIndexes: number[];
+  skipBeenTapped: boolean;
 };
 Component({
   /**
@@ -36,6 +37,7 @@ Component({
       });
     },
     onLoad: function() {
+      this.data.skipBeenTapped=false;
       this.data.db = wx.cloud.database();
       this.setData({
         scrollViewHeight: wx.getSystemInfoSync().windowHeight-340-122,
@@ -76,6 +78,19 @@ Component({
         rturn.push(tmp);
       }
       return rturn;
+    },
+    skipRegistration: async function() {
+      if (this.data.skipBeenTapped) {
+        return;
+      }
+      this.data.skipBeenTapped=true;
+      await wx.cloud.callFunction({
+        name: "registerUser",
+        data: {}
+      })
+      wx.reLaunch({
+        url: "/pages/MainMenu/MainMenu"
+      });
     },
     handleSearchBoxChange: function(e: any) {
       if (this.data.studentData === undefined) {

@@ -30,13 +30,12 @@ Component({
         return;
       }
       this.data.yesBeenTapped=true;
-      const res = await wx.cloud.callFunction({
+      await wx.cloud.callFunction({
         name: "registerUser",
         data: {
           studentId: this.data.studentData.id,
         }
       })
-      console.log(res);
       wx.reLaunch({
         url: "/pages/MainMenu/MainMenu",
       });
