@@ -4,4 +4,6 @@ view {
   --link: #366AEF;
   --secondary: #6C6C6C;
   --list-separator: #B9B9B9;
+  --list-search-box: #D9D9D9;
+  --warn: #D81717;
 }

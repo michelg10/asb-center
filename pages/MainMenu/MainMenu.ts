@@ -56,6 +56,15 @@ Component({
       let userData = results[1].data;
       if (userData.length === 0) {
         // ask the server 
+        let shouldRegister=wx.cloud.callFunction({
+          name: "checkNeedNewUser",
+        });
+        if (shouldRegister) {
+          wx.redirectTo({
+            url: '/pages/Registration/Registration'
+          })
+          return;
+        }
       } else {
         let studentData = await this.data.db.collection("studentData").where({
           _id: userData[0].studentId, 
@@ -91,7 +100,7 @@ Component({
     },
     handleEventRowClick: function(x: any) {
       let eventClickedId=x.currentTarget.dataset.id;
-      let shouldJump = x.currentTarget.dataset.shouldJump;
+      let shouldJump = x.currentTarget.dataset.shouldjump;
       if (!shouldJump) {
         return;
       }
@@ -132,6 +141,9 @@ Component({
     },
     recomputeData: function(incremental: boolean) {
       console.log("Tick");
+      if (this.data.userData===undefined) {
+        return;
+      }
       let newMyEventsData:Array<DisplayRow>=[];
       let newCurrentEventsData:Array<DisplayRow>=[];
       let newPastEventsData:Array<DisplayRow>=[];

@@ -1,0 +1,86 @@
+/* pages/Registration/Registration.wxss */
+@import "../../global-colors.wxss";
+#registration-container {
+  padding: 0 16px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+#registration-big-title {
+  padding-bottom: 5px;
+}
+#registration-big-title-sub {
+  padding-bottom: 27px;
+}
+#registration-list-container {
+  margin-bottom: 15px;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+#registration-list-search-container {
+  height: 44px;
+  background-color: var(--list-search-box);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+#registration-list-main-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+#registration-skip-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#registration-skip-text {
+  color: var(--warn);
+  font-size: 17px;
+  padding-bottom: 6px;
+}
+#registration-skip-subtext {
+  padding: 0 29px;
+}
+#registration-search-image {
+  width: 24px;
+  height: 24px;
+  padding-right: 7px;
+}
+#registration-search-textfield {
+  font-size: 17px;
+  width: 100%;
+}
+.registration-search-textfield-placeholder {
+  color: var(--secondary);
+}
+.registration-enter-image {
+  height: 26px;
+  width: 26px;
+}
+.registration-select-container-block {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 16px;
+  align-items: center;
+}
+.registration-select-class {
+  font-size: 17px;
+  margin-right: 11px;
+}
+.registration-select-right-block {
+  display: flex;
+  align-items: center;
+}
+.registration-select-left-block {
+  display: flex;
+  flex-direction: column;
+}
+.registration-select-nickname {
+  font-size: 17px;
+}
+.registration-select-name {
+  font-size: 13px;
+  color: var(--secondary);
+}

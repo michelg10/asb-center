@@ -50,13 +50,11 @@ Component({
         });
       })
       eventChannel.on('eventInfo', (data: Event) => {
-        console.log(data);
         this.setData({
           eventInfo: data,
         });
       })
       eventChannel.on('previewInfo', (data: PreviewGenerator) => {
-        console.log(data);
         this.setData({
           previewInfo: data,
         });

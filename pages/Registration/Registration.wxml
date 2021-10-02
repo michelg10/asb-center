@@ -1,0 +1,29 @@
+<!--pages/Registration/Registration.wxml-->
+<view id="registration-container">
+  <text class="big-title-text" id="registration-big-title">Registration</text>
+  <text class="big-title-sub-text" id="registration-big-title-sub">Search and select who you are. This cannot be easily changed.</text>
+  <view id="registration-list-container">
+    <view id="registration-list-search-container">
+      <image src="../../icons/search.svg" id="registration-search-image"></image>  
+      <input type="text" id="registration-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="registration-search-textfield-placeholder"/>
+    </view>
+    <view id="registration-list-main-container" style="height: {{scrollViewHeight}}px">
+      <block wx:for="{{matchingIndexes}}" wx:key="*this">
+        <view class="registration-select-container-block">
+          <view class="registration-select-left-block">
+            <text class="registration-select-nickname">{{studentData[item].nickname}}</text>
+            <text class="registration-select-name">{{ studentData[item].chineseName+" ("+studentData[item].englishName+")" }}</text>
+          </view>
+          <view class="registration-select-right-block">
+            <text class="registration-select-class">{{ studentData[item].studentGrade+"-"+studentData[item].studentClass }}</text>
+            <image src="/icons/enter.svg" class="registration-enter-image"></image>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view id="registration-skip-container">
+    <text id="registration-skip-text">Skip registration</text>
+    <text class="subtext" id="registration-skip-subtext">Registration is required to participate in most events, such as Sports Meet and Blackout.</text>
+  </view>
+</view>
