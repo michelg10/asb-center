@@ -41,7 +41,7 @@ exports.main = async (event, context) => {
     }
     if (!userHasStudentId && studentIdValid) {
       // update the user ID
-      db.collection("userData").where({
+      await db.collection("userData").where({
         userId: wxContext.OPENID,
       }).update({
         data: {

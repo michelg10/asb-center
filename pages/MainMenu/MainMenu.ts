@@ -46,40 +46,48 @@ Component({
    */
   methods: {
     fetchServerData: async function() {
-      const tasks = [];
-      tasks.push(allCollectionsData(this.data.db, "event"));
-      tasks.push(this.data.db.collection("userData").where({
+      this.data.db.collection("userData").where({
         userId: '{openid}'
-      }).get());
-      let results=await Promise.all(tasks);
-      let serverEventData: any[]=results[0].data;
-      let userData = results[1].data;
-      if (userData.length === 0) {
-        // ask the server 
-        let shouldRegister=wx.cloud.callFunction({
-          name: "checkNeedNewUser",
-        });
-        if (shouldRegister) {
-          wx.redirectTo({
-            url: '/pages/Registration/Registration'
-          })
-          return;
-        }
-      } else {
-        let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info};
-        if (userData[0].studentId !== undefined) {
-          let studentData = await this.data.db.collection("studentData").where({
-            _id: userData[0].studentId, 
-          }).get();
-          if (studentData.data.length !== 0) {
-            let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
-            userObject.student = studentDataObject;
+      }).watch({
+        onChange: async (snapshot) => {
+          let userData = snapshot.docs;
+          console.log(userData);
+          if (snapshot.type==="init") {
+            if (userData.length === 0) {
+              // ask the server 
+              let shouldRegister=wx.cloud.callFunction({
+                name: "checkNeedNewUser",
+              });
+              if (shouldRegister) {
+                wx.redirectTo({
+                  url: '/pages/Registration/Registration'
+                })
+                return;
+              }
+            }
           }
+          if (userData.length>0) {
+            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info};
+            if (userData[0].studentId !== undefined) {
+              let studentData = await this.data.db.collection("studentData").where({
+                _id: userData[0].studentId, 
+              }).get();
+              if (studentData.data.length !== 0) {
+                let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
+                userObject.student = studentDataObject;
+              }
+            }
+            console.log(userObject);
+            this.setData({
+              userData: userObject,
+            });
+          }
+        }, onError: function(err) {
+          console.error("user data watch closed due to", err);
         }
-        this.setData({
-          userData: userObject,
-        });
-      }
+      });
+      let serverEventData: any[]=(await allCollectionsData(this.data.db, "event")).data;
+      console.log(serverEventData);
 
       let newEventsDb = [];
       for (let i=0;i<serverEventData.length;i++) {
@@ -90,8 +98,6 @@ Component({
         }
         newEventsDb.push(new Event(currentDataEntry.id, currentDataEntry.name, currentDataEntryPreview, currentDataEntry.eventVisibleDate, currentDataEntry.displayEventBegin, currentDataEntry.displayEventEnd, currentDataEntry.accessibleEventBegin, currentDataEntry.accessibleEventEnd, currentDataEntry.menuEventBegin, currentDataEntry.menuEventEnd, currentDataEntry.grades, currentDataEntry.restrictAccess));
       }
-
-      // simulate retrieving from a server
       this.setData({
         masterEventsData: newEventsDb,
       });
@@ -230,6 +236,12 @@ Component({
       });
     },
     displayRowDiff: function(a: Array<DisplayRow>, b: Array<DisplayRow>) {
+      if (a===undefined && b===undefined) {
+        return false;
+      }
+      if (a===undefined || b===undefined) {
+        return true;
+      }
       if (a.length !== b.length) return true;
       for (let i=0;i<a.length;i++) {
         if (a[i].canJump !== b[i].canJump || a[i].jumpTo !== b[i].jumpTo || a[i].timeLeft !== b[i].timeLeft || a[i].title !== b[i].title) {

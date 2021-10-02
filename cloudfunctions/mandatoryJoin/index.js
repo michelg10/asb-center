@@ -21,6 +21,8 @@ exports.main = async (event, context) => {
       name: "resolveUserInfo",
       data: { }
     }));
+  } else {
+    console.log("Running with supplied information ", suppliedUserDataInformation);
   }
   let results = await Promise.all(tasks);
   let eventCollectionInformation = results[0].result.data;
