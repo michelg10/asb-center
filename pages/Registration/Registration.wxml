@@ -1,7 +1,7 @@
 <!--pages/Registration/Registration.wxml-->
 <view id="registration-container">
   <text class="big-title-text" id="registration-big-title">Registration</text>
-  <text class="big-title-sub-text" id="registration-big-title-sub">Search and select who you are. This cannot be easily changed.</text>
+  <text class="big-title-sub-text" id="registration-big-title-sub">Search and select who you are. This cannot be changed.</text>
   <view id="registration-list-container">
     <view id="registration-list-search-container">
       <image src="../../icons/search.svg" id="registration-search-image"></image>  
@@ -16,7 +16,7 @@
           </view>
           <view class="registration-select-right-block">
             <text class="registration-select-class">{{ studentData[item].studentGrade+"-"+studentData[item].studentClass }}</text>
-            <image src="/icons/enter.svg" class="registration-enter-image"></image>
+            <image src="/icons/enter.svg" class="registration-enter-image" bindtap="handlePersonChoose" data-chosenid="{{item}}"></image>
           </view>
         </view>
       </block>

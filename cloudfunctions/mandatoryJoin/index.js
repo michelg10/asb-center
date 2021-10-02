@@ -7,6 +7,7 @@ db=cloud.database();
 exports.main = async (event, context) => {
   console.log("Running mandatory join routine");
   const wxContext = cloud.getWXContext()
+  let suppliedUserDataInformation=event.suppliedUserDataInformation;
 
   let tasks=[];
   tasks.push(cloud.callFunction({
@@ -15,13 +16,21 @@ exports.main = async (event, context) => {
       collectionName: "event",
     }
   }));
-  tasks.push(cloud.callFunction({
-    name: "resolveUserInfo",
-    data: { }
-  }));
+  if (suppliedUserDataInformation === undefined) {
+    tasks.push(cloud.callFunction({
+      name: "resolveUserInfo",
+      data: { }
+    }));
+  }
   let results = await Promise.all(tasks);
   let eventCollectionInformation = results[0].result.data;
-  let userDataInformation = results[1].result.data;
+  let userDataInformation;
+  if (suppliedUserDataInformation === undefined) {
+    userDataInformation = results[1].result.data;
+    console.log(userDataInformation);
+  } else {
+    userDataInformation = suppliedUserDataInformation;
+  }
   // resolve student data information into user data information
   let updatedStudentsMap=new Map();
   for (let i=0;i<eventCollectionInformation.length;i++) {

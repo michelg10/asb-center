@@ -1,0 +1,70 @@
+/* pages/RegistrationConfirmation.wxss */
+@import "../../global-colors.wxss";
+.registrationconfirm-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  align-items: center;
+}
+#registrationconfirm-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top:0;
+  bottom:0;
+}
+#registrationconfirm-top-container {
+  padding: 0 37px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: center;
+}
+#registrationconfirm-big-title {
+  text-align: center;
+  margin-bottom: 41px;
+}
+#registrationconfirm-subtext {
+  margin: 0 45px;
+  padding-bottom:83px;
+  text-align: center;
+}
+#registrationconfirm-action-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+}
+.registrationconfirm-action-button {
+  margin: 0 16px;
+  box-sizing: border-box;
+  background-color: var(--subcontainer-background);
+  border-radius: 9px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#registrationconfirm-action-button-yes {
+  margin-bottom: 8px;
+}
+#registrationconfirm-action-button-no {
+  margin-bottom: 20px;
+}
+.registrationconfirm-info-row-label {
+  font-size: 17px;
+  font-weight: 500;
+}
+.registrationconfirm-info-row-data {
+  font-size: 17px;
+  font-weight: 400;
+}
+#registrationconfirm-action-yes {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--link);
+}
+#registrationconfirm-action-no {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--warn);
+}

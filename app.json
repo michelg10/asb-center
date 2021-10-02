@@ -2,7 +2,8 @@
   "pages": [
     "pages/MainMenu/MainMenu",
     "pages/SportsMeet/SportsMeet",
-    "pages/Registration/Registration"
+    "pages/Registration/Registration",
+    "pages/RegistrationConfirmation/RegistrationConfirmation"
   ],
   "window": {
     "backgroundTextStyle": "light",

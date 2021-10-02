@@ -44,6 +44,15 @@ Component({
       this.loadData();
 
     },
+    handlePersonChoose: function(e: any) {
+      let chosenId=e.currentTarget.dataset.chosenid;
+      wx.navigateTo({
+        url: '/pages/RegistrationConfirmation/RegistrationConfirmation',
+        success: (res) => {
+          res.eventChannel.emit('registrationConfirmationStudent', this.data.studentData[chosenId]);
+        }
+      });
+    },
     cutStringToSearchTokens: function(s: string) {
       if (s.length===0) {
         return [];

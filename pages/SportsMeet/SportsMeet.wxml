@@ -8,7 +8,7 @@
 </template>
 
 <view id="sports-meet-container">
-  <text class="big-title-text">Sports Meet</text>
+  <text class="big-title-text">Sports Carnival</text>
   <view id="sports-meet-stamp-container">
     <text class="heading-text">Stamps</text>
     <view id="sports-meet-stamp-inner-container">
