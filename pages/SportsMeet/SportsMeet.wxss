@@ -2,7 +2,7 @@
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
 #sports-meet-container {
-  margin: 0 14px;
+  margin: 0 16px;
 }
 #sports-meet-stamp-container {
   display: flex;
