@@ -66,13 +66,15 @@ Component({
           return;
         }
       } else {
-        let studentData = await this.data.db.collection("studentData").where({
-          _id: userData[0].studentId, 
-        }).get();
         let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info};
-        if (studentData.data.length !== 0) {
-          let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
-          userObject.student = studentDataObject;
+        if (userData[0].studentId !== undefined) {
+          let studentData = await this.data.db.collection("studentData").where({
+            _id: userData[0].studentId, 
+          }).get();
+          if (studentData.data.length !== 0) {
+            let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
+            userObject.student = studentDataObject;
+          }
         }
         this.setData({
           userData: userObject,
@@ -97,6 +99,11 @@ Component({
     scanButtonClick: function() {
       console.log("Scan QR Code")
       // implement this
+    },
+    handleRegister: function() {
+      wx.redirectTo({
+        url: '/pages/Registration/Registration'
+      });
     },
     handleEventRowClick: function(x: any) {
       let eventClickedId=x.currentTarget.dataset.id;

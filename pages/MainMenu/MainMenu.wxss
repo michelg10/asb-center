@@ -27,6 +27,7 @@
 }
 #main-menu-info-container {
   padding: 0 16px;
+  margin-bottom: 6px;
 }
 .event-row {
   height: 44px;
@@ -88,4 +89,27 @@
   margin: 0 30px;
   padding-bottom: 10px;
   margin-top: 13px;
+}
+#main-menu-footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  align-items: center;
+}
+.main-menu-registration-information {
+  font-size: 17px;
+  color: var(--secondary);
+  margin: 0 31px;
+}
+#main-menu-registration-button {
+  margin-top: 11px;
+  color: var(--link);
+  font-size: 17px;
+}
+#main-menu-registration-ask {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
