@@ -3,7 +3,8 @@
     "pages/MainMenu/MainMenu",
     "pages/SportsMeet/SportsMeet",
     "pages/Registration/Registration",
-    "pages/RegistrationConfirmation/RegistrationConfirmation"
+    "pages/RegistrationConfirmation/RegistrationConfirmation",
+    "pages/ScanFailure/ScanFailure"
   ],
   "window": {
     "backgroundTextStyle": "light",

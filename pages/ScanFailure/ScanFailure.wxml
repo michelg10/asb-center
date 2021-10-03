@@ -1,0 +1,11 @@
+<view id="scanfailure-container">
+  <view id="scanfailure-top-container">
+    <text id="scanfailure-title" class="big-title-text">Code Scan Failure</text>
+    <text id="scanfailure-caption">{{caption}}</text>
+  </view>
+  <view id="scanfailure-bottom-container">
+    <view id="scanfailure-back-button" bindtap="onOkClick">
+      <text id="scanfailure-back-button-text">OK</text>
+    </view>
+  </view>
+</view>

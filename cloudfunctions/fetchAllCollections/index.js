@@ -8,12 +8,22 @@ let db = cloud.database();
 exports.main = async (event, context) => {
   const MAX_LIMIT = 100.0;
   let collectionName = event.collectionName;
-  const countResult = await db.collection(collectionName).count();
+  let collection = db.collection(collectionName);
+  if (event.whereClause !== undefined) {
+    collection=collection.where(event.whereClause);
+  }
+  const countResult = await collection.count();
   const total = countResult.total;
   const batchTimes = Math.ceil(total/MAX_LIMIT);
   const tasks = [];
+  if (batchTimes===0) {
+    return {
+      data: [],
+      errMsg: "nothing",
+    }
+  }
   for (let i=0;i<batchTimes;i++) {
-    const promise = db.collection(collectionName).skip(i*MAX_LIMIT).limit(MAX_LIMIT).get();
+    const promise = collection.skip(i*MAX_LIMIT).limit(MAX_LIMIT).get();
     tasks.push(promise);
   }
   return (await Promise.all(tasks)).reduce((acc, cur) => {

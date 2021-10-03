@@ -1,5 +1,6 @@
 import { Event } from "../../classes/event";
 import { createQRCode, userDataType } from "../../utils/common";
+import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { sha256 } from "../../utils/sha256";
 import { extendNumberToLengthString, getUnixTime } from "../../utils/util";
 import { PreviewGenerator } from "../MainMenu/MainMenu";
@@ -48,7 +49,7 @@ Component({
         this.setData({
           eventId: data,
         });
-      })
+      });
       eventChannel.on('eventInfo', (data: Event) => {
         this.setData({
           eventInfo: data,
@@ -67,9 +68,7 @@ Component({
       );
     },
     recomputeCode: function() {
-      let previewTimePeriod=Math.floor(getUnixTime()/3);
-      let accessCodeContents=this.data.previewInfo.previewData.userCode+previewTimePeriod.toString();
-      accessCodeContents=sha256(accessCodeContents)!;
+      let accessCodeContents=generatePreviewCode(this.data.previewInfo.previewData.userCode);
       if (accessCodeContents !== this.data.codeLastGen) {
         let myCreateQRCode = createQRCode.bind(this);
         myCreateQRCode(this.data.previewPort, accessCodeContents, 'FFFFFF');

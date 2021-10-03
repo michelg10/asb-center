@@ -5,8 +5,12 @@ import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString
 import { sha256 } from '../../utils/sha256';
 import { createQRCode, previewEnum, studentDataType, userDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
+import { generateQrCode } from '../../utils/generateQrCode';
+import { generatePreviewCode } from '../../utils/generatePreviewCode';
+import { handleCode } from '../../utils/handleCode';
+import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
 interface SecureCodePreviewData {
-  userCode: String;
+  userCode: string;
 }
 export interface PreviewGenerator {
   eventId: string;
@@ -51,7 +55,6 @@ Component({
       }).watch({
         onChange: async (snapshot) => {
           let userData = snapshot.docs;
-          console.log(userData);
           if (snapshot.type==="init") {
             if (userData.length === 0) {
               // ask the server 
@@ -77,7 +80,6 @@ Component({
                 userObject.student = studentDataObject;
               }
             }
-            console.log(userObject);
             this.setData({
               userData: userObject,
             });
@@ -87,7 +89,6 @@ Component({
         }
       });
       let serverEventData: any[]=(await allCollectionsData(this.data.db, "event")).data;
-      console.log(serverEventData);
 
       let newEventsDb = [];
       for (let i=0;i<serverEventData.length;i++) {
@@ -103,8 +104,18 @@ Component({
       });
     },
     scanButtonClick: function() {
-      console.log("Scan QR Code")
-      // implement this
+      wx.scanCode({
+        onlyFromCamera: true,
+        success: (res) => {
+          console.log(res);
+          handleCode(this, res.result);
+        }, fail(res) {
+          console.error(res);
+        }
+      });
+    },
+    sportsMeet2021FetchSecureCodes: async function() {
+      return await sportsMeet2021GetSecureCodes(this);
     },
     handleRegister: function() {
       wx.redirectTo({
@@ -219,9 +230,7 @@ Component({
       // recompute preview data
       for (let i=0;i<newPreviewGenerator.length;i++) {
         if (newPreviewGenerator[i].previewMode==="secureCodePreview") {
-          let previewTimePeriod=Math.floor(getUnixTime()/3);
-          let accessCodeContents=newPreviewGenerator[i].previewData.userCode+previewTimePeriod.toString();
-          accessCodeContents=sha256(accessCodeContents)!;
+          let accessCodeContents=generatePreviewCode(newPreviewGenerator[i].previewData.userCode);
           if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
             let myCreateQRCode = createQRCode.bind(this);
             myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');

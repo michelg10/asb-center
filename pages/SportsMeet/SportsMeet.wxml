@@ -10,7 +10,7 @@
 <view id="sports-meet-container">
   <text class="big-title-text">Sports Carnival</text>
   <view id="sports-meet-stamp-container">
-    <text class="heading-text">Stamps</text>
+    <text class="heading-text">Stickers</text>
     <view id="sports-meet-stamp-inner-container">
       <image src="../../icons/SportsMeet/stamp.png" class="sports-meet-stamp-image"></image>
       <image src="../../icons/SportsMeet/stamp.png" class="sports-meet-stamp-image" id="sports-meet-stamp-inner"></image>
