@@ -1,1 +1,116 @@
 /* pages/PersonaDetail/PersonaDetail.wxss */
+#persona-detail-id-text {
+  color: var(--secondary);
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#persona-detail-container {
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  padding-top: 10px;
+}
+#persona-detail-gradeclass-text {
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+.select-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+  position: relative;
+  margin-top: 18px;
+  margin-bottom: 23px;
+}
+.main-select-container {
+  height: 37px;
+  border-radius: 9px;
+  background-color: var(--subcontainer-background);
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  width: 203px;
+  justify-content: space-around;
+}
+.main-select-container-open {
+  box-shadow: 0 0 3px 0 rgba(0,0,0,0.53);
+}
+.main-select-text {
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 500;
+}
+.select-chevron-down-image {
+  height: 16px;
+  width: 16px;
+  margin-right: 11px;
+}
+.select-options-container {
+  width: 203px;
+  background-color: #DFDFDF;
+  position: absolute;
+  top: 0;
+  border-radius: 9px;
+  padding-top: 37px;
+  padding-bottom: 9px;
+}
+.select-option-scoll-container {
+  max-height: 193px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.select-option-row {
+  margin: 0 16px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+.select-option-separator {
+  width: 100%;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+.activity-log-row {
+  height: 37px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.activity-log-row-input {
+  width: 110px;
+  padding: 0 9px;
+  box-sizing: border-box;
+  height: 100%;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+#add-activity-log-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+.button {
+  border-radius: 9px;
+  width: 121px;
+  height: 38px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+}
+#add-activity-log-button text {
+  color: #3180E9;
+}
+.button-text {
+  font-size: 17px;
+  font-weight: 500;
+}
+.activity-log-row-title {
+  font-weight: 500;
+}
+#log-activity-container {
+  margin-bottom: 39px;
+}

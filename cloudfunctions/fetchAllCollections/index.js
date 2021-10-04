@@ -6,6 +6,7 @@ let db = cloud.database();
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  // important: this should only be allowed to be called from the cloud
   const MAX_LIMIT = 100.0;
   let collectionName = event.collectionName;
   let collection = db.collection(collectionName);

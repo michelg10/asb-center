@@ -8,6 +8,12 @@ export default async function allCollectionsData(db: DB.Database, collectionName
     const promise = db.collection(collectionName).skip(i*MAX_LIMIT).limit(MAX_LIMIT).get();
     tasks.push(promise);
   }
+  if (batchTimes===0) {
+    return {
+      data: [],
+      errMsg: "empty",
+    }
+  }
   return (await Promise.all(tasks)).reduce((acc, cur) => {
     return {
       data: acc.data.concat(cur.data),
