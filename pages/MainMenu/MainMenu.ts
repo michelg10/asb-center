@@ -104,15 +104,21 @@ Component({
       });
     },
     scanButtonClick: function() {
-      wx.scanCode({
-        onlyFromCamera: true,
+      wx.navigateTo({
+        url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          console.log(res);
-          handleCode(this, res.result);
-        }, fail(res) {
-          console.error(res);
+          res.eventChannel.emit('userId', "14139e1261586d5110c7a8810faa7da7");
         }
       });
+      // wx.scanCode({
+      //   onlyFromCamera: true,
+      //   success: (res) => {
+      //     console.log(res);
+      //     handleCode(this, res.result);
+      //   }, fail(res) {
+      //     console.error(res);
+      //   }
+      // });
     },
     sportsMeet2021FetchSecureCodes: async function() {
       return await sportsMeet2021GetSecureCodes(this);

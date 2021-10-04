@@ -90,7 +90,6 @@ export async function handleCode(obj: any, x: string) {
   // handle the code
   if (keyToValueMap.get("event")==="SportsMeet2021") {
     if (keyToValueMap.get("type")==="secureCode") {
-      // admin status?
       let currentTime = getUnixTime();
       let secureCodesList:getSecureCodesReturnType = (await obj.sportsMeet2021FetchSecureCodes());
       if (secureCodesList.status === "forbidden") {
@@ -102,6 +101,14 @@ export async function handleCode(obj: any, x: string) {
         reportCodeScanError(`This Sports Carnival ID Code is invalid.`);
         return;
       }
+      // navigate to the persona detail page
+      wx.navigateTo({
+        url: '/pages/PersonaDetail/PersonaDetail',
+        success: (res) => {
+          res.eventChannel.emit('userId', secureCodeVerification);
+        }
+      });
+      return;
     }
   }
 }

@@ -4,7 +4,8 @@
     "pages/SportsMeet/SportsMeet",
     "pages/Registration/Registration",
     "pages/RegistrationConfirmation/RegistrationConfirmation",
-    "pages/ScanFailure/ScanFailure"
+    "pages/ScanFailure/ScanFailure",
+    "pages/PersonaDetail/PersonaDetail"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -29,22 +29,22 @@ exports.main = async (event, context) => {
   let userDataInformation;
   if (suppliedUserDataInformation === undefined) {
     userDataInformation = results[1].result.data;
-    console.log(userDataInformation);
   } else {
     userDataInformation = suppliedUserDataInformation;
   }
   // resolve student data information into user data information
   let updatedStudentsMap=new Map();
+  let cacheObj = {};
   for (let i=0;i<eventCollectionInformation.length;i++) {
     if (!eventCollectionInformation[i].mandatory) {
       continue;
     }
     if (Math.floor(Date.now() / 1000)<=eventCollectionInformation[i].menuEventEnd) {
-      for (let i=0;i<userDataInformation.length;i++) {
+      for (let j=0;j<userDataInformation.length;j++) {
         let studentJoin = false;
         if (eventCollectionInformation[i].grades !== undefined) {
-          if (userDataInformation[i].student!==undefined&&userDataInformation[i].student.grade !== undefined) {
-            if (eventCollectionInformation[i].grades.includes(userDataInformation[i].student.grade)) {
+          if (userDataInformation[j].student!==undefined&&userDataInformation[j].student.grade !== undefined) {
+            if (eventCollectionInformation[i].grades.includes(userDataInformation[j].student.grade)) {
               studentJoin = true;
             }
           }
@@ -52,18 +52,55 @@ exports.main = async (event, context) => {
           studentJoin=true;
         }
         if (studentJoin) {
-          if (userDataInformation[i].info[`${eventCollectionInformation[i].id}Data`] === undefined) {
+          if (userDataInformation[j].info[`${eventCollectionInformation[i].id}Data`] === undefined) {
             // tailor this code to every event
-            console.log(`Mandatory join ${userDataInformation[i].student.nickname} (${userDataInformation[i]._id}) to ${eventCollectionInformation[i].id}`);
+            console.log(`Mandatory join ${userDataInformation[j].student.nickname} (${userDataInformation[j]._id}) to ${eventCollectionInformation[i].id}`);
             if (eventCollectionInformation[i].id === "SportsMeet2021") {
               let secureCodeString = await cloud.callFunction({
                 name: "generateRandomId",
               });
-              userDataInformation[i].info[`${eventCollectionInformation[i].id}Data`] = {
+              userDataInformation[j].info[`${eventCollectionInformation[i].id}Data`] = {
                 joined: true,
                 secureCodeString: secureCodeString.result.data,
               };
-              updatedStudentsMap.set(userDataInformation[i]._id, i);
+              // add the new user into the computed stamp
+              await db.collection(`SportsMeet2021StampProcessed${userDataInformation[j].student.grade}`).add({
+                data: {
+                  studentId: userDataInformation[j]._id,
+                  stampNumber: 0,
+                  transacted: 0,
+                }
+              });
+
+              // add the new user into the computed leaderboard
+              let leaderboardObj = {
+                studentId: userDataInformation[j]._id,
+                studentNickname: userDataInformation[j].student.nickname,
+              };
+              if (cacheObj.SportsMeet2021Events===undefined) {
+                let result = await cloud.callFunction({
+                  name: "fetchAllCollections",
+                  data: {
+                    collectionName: "SportsMeet2021Events",
+                  },
+                });
+                result = result.result.data;
+                cacheObj.SportsMeet2021Events=result;
+              }
+              let result = cacheObj.SportsMeet2021Events;
+              for (let k=0;k<result.length;k++) {
+                if (result[k].rankLeaderboard) {
+                  leaderboardObj[`studentPointScore${result[k].id}`]=0;
+                  leaderboardObj[`studentLastRank${result[k].id}`]=-1;
+                  leaderboardObj[`studentSoonLastRank${result[k].id}`]=-1;
+                }
+              }
+              await db.collection(`SportsMeet2021LeaderboardProcessed${userDataInformation[i].student.grade}`).add({
+                data: {
+                  ...leaderboardObj,
+                }
+              });
+              updatedStudentsMap.set(userDataInformation[j]._id, i);
             }
           }
         }

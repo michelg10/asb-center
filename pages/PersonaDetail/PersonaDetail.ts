@@ -1,4 +1,8 @@
 // pages/PersonaDetail/PersonaDetail.ts
+interface componentDataInterface {
+  userId: string,
+}
+
 Component({
   /**
    * Component properties
@@ -10,14 +14,19 @@ Component({
   /**
    * Component initial data
    */
-  data: {
-
-  },
+  data: {} as componentDataInterface,
 
   /**
    * Component methods
    */
   methods: {
-
+    onLoad: function() {
+      const eventChannel = this.getOpenerEventChannel();
+      eventChannel.on('userId', (data: string) => {
+        this.setData({
+          userId: data,
+        });
+      });
+    }
   }
 })
