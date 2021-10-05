@@ -44,7 +44,6 @@ interface componentDataInterface {
   canDoPurchase: boolean,
   canDeleteAll: boolean,
   logWatcher: DB.RealtimeListener,
-  computedWatcher: DB.RealtimeListener,
   purchaseWatcher: DB.RealtimeListener,
   computedLog: ComputedLogType,
   stampValue: number,
@@ -105,7 +104,15 @@ Component({
       });
     },
     addActivityLog: function() {
-
+      wx.cloud.callFunction({
+        name: "SportsMeet2021AddActivityLog",
+        data: {
+          userId: this.data.userId,
+          eventId: this.data.events[this.data.selectedEventIndex].id,
+          stampValue: this.data.stampValue,
+          pointValue: this.data.pointValue,
+        }
+      });
     },
     mainSelectorClicked: function() {
       if (this.data.eventSelectorOpen) {
@@ -173,18 +180,6 @@ Component({
               console.error('the purchase log watch closed because of error', err);
             }
           })
-          this.data.computedWatcher = this.data.db.collection(`SportsMeet2021StampProcessed${studentResult.student.grade}`).where({
-            userId: data,
-          }).watch({
-            onChange: (snapshot) => {
-              this.setData({
-                computedLog: snapshot.docs[0],
-              })
-            },
-            onError: function(err) {
-              console.error('the computed log watch closed because of error', err);
-            }
-          });
         })
       });
       // fetch event, item database
@@ -244,7 +239,6 @@ Component({
     },
     onUnload: function() {
       this.data.logWatcher.close();
-      this.data.computedWatcher.close();
     }
   }
 })

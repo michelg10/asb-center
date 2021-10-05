@@ -63,14 +63,6 @@ exports.main = async (event, context) => {
                 joined: true,
                 secureCodeString: secureCodeString.result.data,
               };
-              // add the new user into the computed stamp
-              await db.collection(`SportsMeet2021StampProcessed${userDataInformation[j].student.grade}`).add({
-                data: {
-                  studentId: userDataInformation[j]._id,
-                  stampNumber: 0,
-                  transacted: 0,
-                }
-              });
 
               // add the new user into the computed leaderboard
               let leaderboardObj = {

@@ -38,6 +38,6 @@
     </view>
   </view>
   <view id="exchange-container" wx:if="{{canDoPurchase}}">
-    hello world!
+    
   </view>
 </view>
