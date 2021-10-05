@@ -21,6 +21,8 @@
   justify-content: center;
   z-index: 5;
   position: relative;
+}
+#activity-select-container {
   margin-top: 18px;
   margin-bottom: 23px;
 }
@@ -112,5 +114,46 @@
   font-weight: 500;
 }
 #log-activity-container {
+  margin-bottom: 39px;
+}
+.button-feedback {
+  padding-top: 10px;
+  margin: 0 39px;
+  display: flex;
+  justify-content: center;
+}
+.button-feedback-success-text {
+  font-size: 17px;
+  color: #36B909;
+  text-align: center;
+  width: 100%;
+}
+#exchange-container-subheading-text {
+  font-size: 17px;
+  color: var(--secondary);
+}
+#exchange-select-container {
+  margin-top: 25px;
+  margin-bottom: 17px;
+}
+#purchase-button-can-buy {
+  background-color: #D1F8D9;
+}
+#purchase-button-can-buy text {
+  color: #09A00E;
+}
+#purchase-button-cannot-buy {
+  background-color: #E2E8E3;
+}
+#purchase-button-cannot-buy text {
+  color: #9CAD9C;
+}
+.button-feedback-warn-text {
+  font-size: 17px;
+  color: var(--warn);
+  text-align: center;
+  width: 100%;
+}
+#exchange-container {
   margin-bottom: 39px;
 }

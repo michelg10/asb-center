@@ -5,8 +5,8 @@
   <text id="persona-detail-gradeclass-text">Class {{userData.student.grade}}-{{userData.student.class}}</text>
   <view id="log-activity-container" wx:if="{{selectedEventIndex !== undefined}}">
     <text class="heading-text" id="persona-detail-activity-log-text">Log Activity</text>
-    <view class="select-container">
-      <view class="{{mainSelectContainerClass}}" bindtap="mainSelectorClicked">
+    <view class="select-container" id="activity-select-container">
+      <view class="{{eventSelectorOpen ? 'main-select-container main-select-container-open' : 'main-select-container'}}" bindtap="mainSelectorClicked">
         <text class="main-select-text">{{events[selectedEventIndex].name}}</text>
         <image src="/icons/chevron-down.svg" class="select-chevron-down-image"></image>
       </view>
@@ -21,23 +21,50 @@
         </view>
       </view>
     </view>
-    <view class="activity-log-row" wx:if="{{events[selectedEventIndex].rankLeaderboard}}">
-      <text class="activity-log-row-title">
-        Points
-      </text>
-      <input class="activity-log-row-input" type="number" value="{{pointValue}}" bindinput="pointValueBind"/>
-    </view>
     <view class="activity-log-row" wx:if="{{events[selectedEventIndex].allowStamps}}">
       <text class="activity-log-row-title">
         Stamps
       </text>
       <input class="activity-log-row-input" type="number" value="{{stampValue}}" bindinput="stampValueBind"/>
     </view>
+    <view class="activity-log-row" wx:if="{{events[selectedEventIndex].rankLeaderboard}}">
+      <text class="activity-log-row-title">
+        Points
+      </text>
+      <input class="activity-log-row-input" type="number" value="{{pointValue}}" bindinput="pointValueBind"/>
+    </view>
     <view class="button" bindtap="addActivityLog" id="add-activity-log-button">
       <text class="button-text">Add Log</text>
     </view>
+    <view wx:if="{{logAddFeedback!==undefined}}" class="button-feedback">
+      <text class="{{logAddFeedbackClass}}">{{logAddFeedback}}</text>
+    </view>
   </view>
   <view id="exchange-container" wx:if="{{canDoPurchase}}">
-    
+    <view><text class="heading-text" id="persona-detail-activity-log-text">Exchange</text></view>
+    <view><text id="exchange-container-subheading-text" wx:if="{{totalStamps !== undefined && usedStamps !== undefined}}">User balance: {{totalStamps-usedStamps}} stamps (total {{totalStamps}}, spent {{usedStamps}})</text></view>
+
+    <view class="select-container" id="exchange-select-container">
+      <view class="{{purchaseSelectorOpen ? 'main-select-container main-select-container-open' : 'main-select-container'}}" bindtap="purchaseSelectorClicked">
+        <text class="main-select-text">{{items[selectedPurchaseItemIndex].name}} ({{items[selectedPurchaseItemIndex].cost}})</text>
+        <image src="/icons/chevron-down.svg" class="select-chevron-down-image"></image>
+      </view>
+      <view class="select-options-container" wx:if="{{purchaseSelectorOpen}}">
+        <view class="select-option-scoll-container">
+          <block wx:for="{{items}}" wx:key="id">
+            <view wx:if="{{index!==0}}" class="select-option-separator"></view>
+            <view class="select-option-row" bindtap="handlePurchaseOptionClick" data-itemindex="{{index}}">
+              <text>{{item.name}} ({{item.cost}})</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="button" bindtap="purchaseButtonTapped" id="{{purchaseButtonClass}}">
+      <text class="button-text">Purchase</text>
+    </view>
+    <view wx:if="{{purchaseHintText!==undefined && purchaseHintText!==''}}" class="button-feedback">
+      <text class="{{purchaseHintClass}}">{{purchaseHintText}}</text>
+    </view>
   </view>
 </view>

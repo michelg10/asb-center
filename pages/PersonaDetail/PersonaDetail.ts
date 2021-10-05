@@ -1,4 +1,5 @@
 import allCollectionsData from "../../utils/allCollectionsData";
+import { getUnixTime } from "../../utils/util";
 
 type SMEventType = {
   wxId: string,
@@ -27,12 +28,24 @@ type UserDataType = {
     class: number,
   }
 }
-type ComputedLogType = {
-  stampNumber: number,
-  transacted: number,
+// pages/PersonaDetail/PersonaDetail.ts
+type LogType = {
+  _id: string,
+  eventId: string,
+  issuerId: string,
+  issuerName: string,
+  pointNumber: null|number,
+  stampNumber: null|number,
   userId: string,
 };
-// pages/PersonaDetail/PersonaDetail.ts
+type PurchaseLogType = {
+  userId: string,
+  issuerId: string,
+  issuerName: string,
+  itemId: string,
+  itemName: string,
+  itemCost: number,
+};
 interface componentDataInterface {
   userId: string,
   db: DB.Database,
@@ -45,9 +58,20 @@ interface componentDataInterface {
   canDeleteAll: boolean,
   logWatcher: DB.RealtimeListener,
   purchaseWatcher: DB.RealtimeListener,
-  computedLog: ComputedLogType,
+  logs: LogType[],
+  purchaseLogs: PurchaseLogType[],
   stampValue: number,
   pointValue: number,
+  isWaiting: boolean,
+  logAddFeedback: string,
+  logAddFeedbackClass: string,
+  totalStamps: number,
+  usedStamps: number,
+  selectedPurchaseItemIndex: number,
+  purchaseSelectorOpen: boolean,
+  purchaseButtonClass: string,
+  purchaseHintText: string,
+  purchaseHintClass: string,
 }
 
 Component({
@@ -93,17 +117,47 @@ Component({
         pointValue: value,
       })
     },
+    updateCanAfford: function() {
+      if (this.data.selectedPurchaseItemIndex === undefined || this.data.selectedPurchaseItemIndex === -1) {
+        return;
+      }
+      if (this.data.totalStamps === undefined || this.data.usedStamps === undefined) {
+        return;
+      }
+      if (this.data.items[this.data.selectedPurchaseItemIndex].cost<=this.data.totalStamps-this.data.usedStamps) {
+        this.setData({
+          purchaseButtonClass: "purchase-button-can-buy",
+          purchaseHintClass: "",
+          purchaseHintText: "",
+        });
+      } else {
+        this.setData({
+          purchaseButtonClass: "purchase-button-cannot-buy",
+          purchaseHintClass: "button-feedback-warn-text",
+          purchaseHintText: "User balance insufficient",
+        })
+      }
+    },
     handleActivityOptionClick: function(x:any) {
       let optionClickedIndex=x.currentTarget.dataset.itemindex;
       this.setData({
         selectedEventIndex: optionClickedIndex,
         eventSelectorOpen: false,
-        mainSelectContainerClass: "main-select-container",
         stampValue: 0,
         pointValue: 0,
       });
     },
+    handlePurchaseOptionClick: function(x: any) {
+      let optionClickedIndex=x.currentTarget.dataset.itemindex;
+      this.setData({
+        selectedPurchaseItemIndex: optionClickedIndex,
+        purchaseSelectorOpen: false,
+      });
+      this.updateCanAfford();
+    },
     addActivityLog: function() {
+      if (this.data.isWaiting) return;
+      this.data.isWaiting = true;
       wx.cloud.callFunction({
         name: "SportsMeet2021AddActivityLog",
         data: {
@@ -112,18 +166,70 @@ Component({
           stampValue: this.data.stampValue,
           pointValue: this.data.pointValue,
         }
+      }).then((res) => {
+        console.log(res);
+        this.data.isWaiting=false;
+        let logAddFeedback = "";
+        let result: any = res.result;
+        let logAddClass = "";
+        if (result.status === "success") {
+          logAddFeedback = `Added log (${Math.floor(Math.random()*100000)})`;
+          logAddClass = "button-feedback-success-text";
+        } else {
+          logAddFeedback = result.reason;
+          logAddClass = "button-feedback-warn-text";
+        }
+        this.setData({
+          stampValue: 0,
+          pointValue: 0,
+          logAddFeedback: logAddFeedback,
+          logAddFeedbackClass: logAddClass,
+        });
       });
+    },
+    purchaseButtonTapped: function() {
+      wx.cloud.callFunction({
+        name: "SportsMeet2021DoPurchase",
+        data: {
+          userId: this.data.userId,
+          itemId: this.data.items[this.data.selectedPurchaseItemIndex].id,
+        }
+      }).then((res) => {
+        let result: any = res.result;
+        if (result.status === "success") {
+          this.setData({
+            purchaseHintText: `Exchange successful (${Math.floor(Math.random()*100000)})`,
+            purchaseHintClass: "button-feedback-success-text",
+          });
+        } else {
+          this.setData({
+            purchaseHintText: result.reason,
+            purchaseHintClass: "button-feedback-warn-text",
+          });
+        }
+      })
     },
     mainSelectorClicked: function() {
       if (this.data.eventSelectorOpen) {
         this.setData({
-          mainSelectContainerClass: "main-select-container",
           eventSelectorOpen: false,
         });
       } else {
         this.setData({
-          mainSelectContainerClass: "main-select-container main-select-container-open",
           eventSelectorOpen: true,
+        });
+      }
+    },
+    purchaseSelectorClicked: function() {
+      if (this.data.purchaseSelectorOpen) {
+        this.setData({
+          purchaseSelectContainerClass: "main-select-container",
+          purchaseSelectorOpen: false,
+        });
+      } else {
+        this.setData({
+          purchaseSelectContainerClass: "main-select-container main-select-container-open",
+          purchaseSelectorOpen: true,
         });
       }
     },
@@ -134,6 +240,8 @@ Component({
         eventSelectorOpen: false,
         stampValue: 0,
         pointValue: 0,
+        purchaseSelectContainerClass: "main-select-container",
+        purchaseSelectorOpen: false,
       });
       eventChannel.on('userId', (data: string) => {
         this.setData({
@@ -155,14 +263,37 @@ Component({
           this.setData({
             userData: studentResult,
           });
-          // monitor log & computed stamp / sticker / transaction
+          // monitor log (main, transaction)
           this.data.logWatcher = this.data.db.collection(`SportsMeet2021StampLog${studentResult.student.grade}`).where({
             userId: data,
           }).watch({
             onChange: (snapshot) => {
-              console.log('docs\'s changed events', snapshot.docChanges)
-              console.log('query result snapshot after the event', snapshot.docs)
-              console.log('is init data', snapshot.type === 'init')
+              let newLogs: LogType[]=[];
+              for (let i=0;i<snapshot.docs.length;i++) {
+                newLogs.push({
+                  _id: snapshot.docs[i]._id as string,
+                  issuerId: snapshot.docs[i].issuerId,
+                  issuerName: snapshot.docs[i].issuerName,
+                  userId: snapshot.docs[i].userId,
+                  eventId: snapshot.docs[i].eventId,
+                  pointNumber: snapshot.docs[i].pointNumber === undefined ? null : snapshot.docs[i].pointNumber,
+                  stampNumber: snapshot.docs[i].stampNumber === undefined ? null : snapshot.docs[i].stampNumber,
+                });
+              }
+              let newTotalStamps = 0;
+              let hasAStickerMap = new Map();
+              for (let i=0;i<newLogs.length;i++) {
+                if (!hasAStickerMap.has(newLogs[i].eventId)) {
+                  newTotalStamps+=5; // new sticker!
+                  hasAStickerMap.set(newLogs[i].eventId, true);
+                }
+                newTotalStamps+=(newLogs[i].stampNumber === null ? 0 : newLogs[i].stampNumber as number);
+              }
+              this.setData({
+                totalStamps: newTotalStamps,
+                logs: newLogs,
+              });
+              this.updateCanAfford();
             },
             onError: function(err) {
               console.error('the stamp log watch closed because of error', err);
@@ -172,9 +303,19 @@ Component({
             userId: data,
           }).watch({
             onChange: (snapshot) => {
-              console.log('docs\'s changed events', snapshot.docChanges)
-              console.log('query result snapshot after the event', snapshot.docs)
-              console.log('is init data', snapshot.type === 'init')
+              let newPurchaseLog: PurchaseLogType[] = [];
+              for (let i=0;i<snapshot.docs.length;i++) {
+                newPurchaseLog.push(snapshot.docs[i]);
+              }
+              let newUsedStamps = 0;
+              for (let i=0;i<newPurchaseLog.length;i++) {
+                newUsedStamps+=newPurchaseLog[i].itemCost;
+              }
+              this.setData({
+                usedStamps: newUsedStamps,
+                purchaseLogs: newPurchaseLog,
+              });
+              this.updateCanAfford();
             },
             onError: function(err) {
               console.error('the purchase log watch closed because of error', err);
@@ -214,7 +355,9 @@ Component({
         }
         this.setData({
           items: items,
+          selectedPurchaseItemIndex: 0,
         });
+        this.updateCanAfford();
       });
       this.data.db.collection("userData").where({
         userId: '{openid}',
@@ -239,6 +382,7 @@ Component({
     },
     onUnload: function() {
       this.data.logWatcher.close();
+      this.data.purchaseWatcher.close();
     }
   }
 })

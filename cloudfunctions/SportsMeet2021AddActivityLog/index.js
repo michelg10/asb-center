@@ -24,15 +24,19 @@ exports.main = async (event, context) => {
   let result = await Promise.all(tasks);
   let grabCallerId = result[0];
   if (grabCallerId.data.length === 0) {
-    console.log("Add Activity Log called by unknown user!");
-    return;
+    return {
+      status: "failure",
+      reason: "Add Activity Log called by unknown user!"
+    };
   }
   callerId = grabCallerId.data[0]._id;
 
   let grabUserStudentId = result[1];
   if (grabUserStudentId.data.length === 0) {
-    console.log("User does not exist!");
-    return;
+    return {
+      status: "failure",
+      reason: "User does not exist!"
+    };
   }
 
   studentId = grabUserStudentId.data[0].studentId;
@@ -63,8 +67,10 @@ exports.main = async (event, context) => {
   let studentGrade=0;
   let adminName="";
   if (result[0].data.length === 0) {
-    console.log("No admin privileges!");
-    return;
+    return {
+      status: "failure",
+      reason: "No admin privileges!"
+    };
   }
   adminName=result[0].data[0].name;
   eventData=result[1].result.data;
@@ -75,12 +81,16 @@ exports.main = async (event, context) => {
     }
   }
   if (rankLeaderboard === undefined) {
-    console.log("Event does not exist in event database!");
-    return;
+    return {
+      status: "failure",
+      reason: "Event does not exist in event database!"
+    };
   }
   if (result[2].data.length === 0) {
-    console.log("Student does not exist in student database!");
-    return;
+    return {
+      status: "failure",
+      reason: "Student does not exist in student database!"
+    };
   }
   studentNickname = result[2].data[0].nickname;
   studentGrade = result[2].data[0].grade;
@@ -109,8 +119,10 @@ exports.main = async (event, context) => {
   result = await Promise.all(tasks);
   if (rankLeaderboard) {
     if (result[1].data.length === 0) {
-      console.log("User has missing computed database entry!");
-      return;
+      return {
+        status: "failure",
+        reason: "User has missing computed database entry!"
+      };
     }
     currentComputedLeaderboardEntry=result[1].data[0];
   }
@@ -129,5 +141,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  return {};
+  return {
+    status: "success",
+  };
 }
