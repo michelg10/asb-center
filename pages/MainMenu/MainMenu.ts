@@ -2,12 +2,9 @@
 import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
 import {DisplayRow} from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
-import { sha256 } from '../../utils/sha256';
 import { createQRCode, previewEnum, studentDataType, userDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
-import { generateQrCode } from '../../utils/generateQrCode';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
-import { handleCode } from '../../utils/handleCode';
 import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
 interface SecureCodePreviewData {
   userCode: string;
@@ -168,6 +165,9 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5*1000*60);
+      wx.navigateTo({
+        url: '/pages/SportsMeetAdminPanel/SportsMeetAdminPanel'
+      })
     },
     recomputeData: function(incremental: boolean) {
       console.log("Tick");

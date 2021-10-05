@@ -1,16 +1,25 @@
-/* pages/Registration/Registration.wxss */
-@import "../../global-colors.wxss";
-#registration-container {
-  padding: 0 16px;
+/* pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxss */
+#sports-meet-admin-panel-container {
+  margin: 0 16px;
   padding-top: 10px;
+  margin-bottom: 80px;
+}
+#admin-panel-homeroom-points-container {
+  margin-top: 12px;
+  width: 100%;
+  background-color: var(--subcontainer-background);
+  height: 44px;
+  border-radius: 9px;
+  padding: 0 16px;
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
 }
-#registration-big-title {
-  padding-bottom: 5px;
-}
-#registration-big-title-sub {
-  padding-bottom: 27px;
+#admin-panel-homeroom-points-container text {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--link);
 }
 #registration-list-container {
   margin-bottom: 15px;
@@ -29,19 +38,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-}
-#registration-skip-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-#registration-skip-text {
-  color: var(--warn);
-  font-size: 17px;
-  padding-bottom: 6px;
-}
-#registration-skip-subtext {
-  padding: 0 29px;
+  height: 298px;
 }
 #registration-search-image {
   width: 24px;
@@ -56,9 +53,9 @@
 .registration-search-textfield-placeholder {
   color: var(--secondary);
 }
-.registration-enter-image {
-  height: 26px;
-  width: 26px;
+.admin-add-image {
+  height: 16px;
+  width: 16px;
 }
 .registration-select-container-block {
   display: flex;
@@ -70,9 +67,14 @@
   font-size: 17px;
   margin-right: 11px;
 }
-.registration-select-right-block {
+.admin-select-right-block {
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  border-radius: 13px;
+  background-color: #D6EEC7;
 }
 .registration-select-left-block {
   display: flex;
@@ -84,4 +86,10 @@
 .registration-select-name {
   font-size: 13px;
   color: var(--secondary);
+}
+#search-pseudo-accounts-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
 }

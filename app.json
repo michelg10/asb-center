@@ -5,7 +5,8 @@
     "pages/Registration/Registration",
     "pages/RegistrationConfirmation/RegistrationConfirmation",
     "pages/ScanFailure/ScanFailure",
-    "pages/PersonaDetail/PersonaDetail"
+    "pages/PersonaDetail/PersonaDetail",
+    "pages/SportsMeetAdminPanel/SportsMeetAdminPanel"
   ],
   "window": {
     "backgroundTextStyle": "light",

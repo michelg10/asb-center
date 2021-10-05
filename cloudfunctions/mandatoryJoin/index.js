@@ -24,6 +24,7 @@ exports.main = async (event, context) => {
   } else {
     console.log("Running with supplied information ", suppliedUserDataInformation);
   }
+  let randomCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
   let results = await Promise.all(tasks);
   let eventCollectionInformation = results[0].result.data;
   let userDataInformation;
@@ -35,6 +36,8 @@ exports.main = async (event, context) => {
   // resolve student data information into user data information
   let updatedStudentsMap=new Map();
   let cacheObj = {};
+  tasks=[];
+  let batchPushMap = new Map();
   for (let i=0;i<eventCollectionInformation.length;i++) {
     if (!eventCollectionInformation[i].mandatory) {
       continue;
@@ -56,12 +59,13 @@ exports.main = async (event, context) => {
             // tailor this code to every event
             console.log(`Mandatory join ${userDataInformation[j].student.nickname} (${userDataInformation[j]._id}) to ${eventCollectionInformation[i].id}`);
             if (eventCollectionInformation[i].id === "SportsMeet2021") {
-              let secureCodeString = await cloud.callFunction({
-                name: "generateRandomId",
-              });
+              let secureCodeString="";
+              for (let i=0;i<10;i++) {
+                secureCodeString += randomCharacters.charAt(Math.floor(Math.random() * randomCharacters.length));
+              }
               userDataInformation[j].info[`${eventCollectionInformation[i].id}Data`] = {
                 joined: true,
-                secureCodeString: secureCodeString.result.data,
+                secureCodeString: secureCodeString,
               };
 
               // add the new user into the computed leaderboard
@@ -87,11 +91,11 @@ exports.main = async (event, context) => {
                   leaderboardObj[`studentSoonLastRank${result[k].id}`]=-1;
                 }
               }
-              await db.collection(`SportsMeet2021LeaderboardProcessed${userDataInformation[i].student.grade}`).add({
-                data: {
-                  ...leaderboardObj,
-                }
-              });
+              if (!batchPushMap.has(`SportsMeet2021LeaderboardProcessed${userDataInformation[j].student.grade}`)) {
+                batchPushMap.set(`SportsMeet2021LeaderboardProcessed${userDataInformation[j].student.grade}`, [leaderboardObj]);
+              } else {
+                batchPushMap.get(`SportsMeet2021LeaderboardProcessed${userDataInformation[j].student.grade}`).push(leaderboardObj);
+              }
               updatedStudentsMap.set(userDataInformation[j]._id, i);
             }
           }
@@ -99,7 +103,6 @@ exports.main = async (event, context) => {
       }
     }
   }
-  tasks=[];
   for (const [key, value] of updatedStudentsMap.entries()) {
     tasks.push(db.collection('userData').doc(key).update({
       data: {
@@ -107,7 +110,10 @@ exports.main = async (event, context) => {
       }
     }));
   }
-  return {
-
-  };
+  for (const [key, value] of batchPushMap.entries()) {
+    tasks.push(db.collection(key).add({
+      data: value
+    }));
+  }
+  // await Promise.all(tasks);
 }

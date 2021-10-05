@@ -2,14 +2,12 @@ import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
 
-// pages/Registration/Registration.ts
-interface componentDataInterface {
-  scrollViewHeight: number;
-  studentData: Student[];
-  db: DB.Database;
-  matchingIndexes: number[];
-  skipBeenTapped: boolean;
-};
+// pages/SportsMeetAdminPanel/SportsMeetAdminPanel.ts
+type componentDataInterface = {
+  db: DB.Database,
+  studentData: Student[],
+  matchingIndexes: number[],
+}
 Component({
   /**
    * Component properties
@@ -27,7 +25,8 @@ Component({
    * Component methods
    */
   methods: {
-    loadData: async function() {
+    onLoad: async function() {
+      this.data.db = wx.cloud.database();
       let studentData = await allCollectionsData(this.data.db, "studentData");
       let tmpStudentData=[];
       for (let i=0;i<studentData.data.length;i++) {
@@ -37,37 +36,9 @@ Component({
         studentData: tmpStudentData,
       });
     },
-    onLoad: function() {
-      this.data.skipBeenTapped=false;
-      this.data.db = wx.cloud.database();
-      this.setData({
-        scrollViewHeight: wx.getSystemInfoSync().windowHeight-340-122,
-        matchingIndexes: [],
-      }); // 340px from the bottom, 122px from the top
-      this.loadData();
-
-    },
     handlePersonChoose: function(e: any) {
       let chosenId=e.currentTarget.dataset.chosenid;
-      wx.navigateTo({
-        url: '/pages/RegistrationConfirmation/RegistrationConfirmation',
-        success: (res) => {
-          res.eventChannel.emit('registrationConfirmationStudent', this.data.studentData[chosenId]);
-        }
-      });
-    },
-    skipRegistration: async function() {
-      if (this.data.skipBeenTapped) {
-        return;
-      }
-      this.data.skipBeenTapped=true;
-      await wx.cloud.callFunction({
-        name: "registerUser",
-        data: {}
-      })
-      wx.reLaunch({
-        url: "/pages/MainMenu/MainMenu"
-      });
+      console.log(this.data.studentData[chosenId]);
     },
     handleSearchBoxChange: function(e: any) {
       if (this.data.studentData === undefined) {

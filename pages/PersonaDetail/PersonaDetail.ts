@@ -1,5 +1,4 @@
 import allCollectionsData from "../../utils/allCollectionsData";
-import { getUnixTime } from "../../utils/util";
 
 type SMEventType = {
   wxId: string,
