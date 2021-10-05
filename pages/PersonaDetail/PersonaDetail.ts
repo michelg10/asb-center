@@ -46,6 +46,7 @@ type PurchaseLogType = {
   itemId: string,
   itemName: string,
   itemCost: number,
+  _id: string,
 };
 type AdminStatusType = {
   wxId: string,
@@ -83,6 +84,7 @@ interface componentDataInterface {
   purchaseHintText: string,
   purchaseHintClass: string,
   pastLogDeletionError: string,
+  exchangeLogDeletionError: string,
 }
 
 Component({
@@ -148,6 +150,32 @@ Component({
         } else {
           this.setData({
             pastLogDeletionError: "",
+          });
+        }
+        this.data.isWaiting = false;
+      })
+    },
+    deleteExchangeLog: function(x: any) {
+      console.log("hi");
+      if (this.data.isWaiting) {
+        return;
+      }
+      this.data.isWaiting = true;
+      wx.cloud.callFunction({
+        name: "SportsMeet2021DeleteExchangeLog",
+        data: {
+          deleteLogId: this.data.purchaseLogs[x.currentTarget.dataset.itemindex]._id,
+          logGrade: this.data.userData.student.grade,
+        }
+      }).then((res) => {
+        let result: any = res.result;
+        if (result.status !== "success") {
+          this.setData({
+            exchangeLogDeletionError: result.reason,
+          });
+        } else {
+          this.setData({
+            exchangeLogDeletionError: "",
           });
         }
         this.data.isWaiting = false;
@@ -223,6 +251,10 @@ Component({
       });
     },
     purchaseButtonTapped: function() {
+      if (this.data.isWaiting) {
+        return;
+      }
+      this.data.isWaiting = true;
       wx.cloud.callFunction({
         name: "SportsMeet2021DoPurchase",
         data: {
@@ -230,6 +262,7 @@ Component({
           itemId: this.data.items[this.data.selectedPurchaseItemIndex].id,
         }
       }).then((res) => {
+        this.data.isWaiting = false;
         let result: any = res.result;
         if (result.status === "success") {
           this.setData({

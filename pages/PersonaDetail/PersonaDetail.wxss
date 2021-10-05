@@ -10,7 +10,7 @@
   flex-direction: column;
   margin: 0 16px;
   padding-top: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 80px;
 }
 #persona-detail-gradeclass-text {
   font-weight: bold;
@@ -158,10 +158,10 @@
 #exchange-container {
   margin-bottom: 39px;
 }
-#past-logs-heading-text-container {
+.logs-heading-text-container {
   margin-bottom: 12px;
 }
-#past-logs-list {
+.logs-list {
   background-color: var(--subcontainer-background);
   border-radius: 8px;
 }
@@ -212,16 +212,19 @@
   position: relative;
   background-color: var(--list-separator);
 }
-#past-logs-delete-error {
+.logs-delete-error {
   margin: 0 53px;
   margin-bottom: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#past-logs-delete-error text {
+.logs-delete-error text {
   position: relative;
   width: 100%;
   color: var(--warn);
   text-align: center;
+}
+#past-logs-container {
+  margin-bottom: 39px;
 }
