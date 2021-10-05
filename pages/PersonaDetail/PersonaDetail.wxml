@@ -67,4 +67,25 @@
       <text class="{{purchaseHintClass}}">{{purchaseHintText}}</text>
     </view>
   </view>
+  <view id="past-logs-container">
+    <view id="past-logs-heading-text-container"><text class="heading-text">Past Activity logs</text></view>
+    <view id="past-logs-delete-error" wx:if="{{pastLogDeletionError !== '' && pastLogDeletionError !== undefined}}"><text>{{pastLogDeletionError}}</text></view>
+    <view id="past-logs-list">
+      <block wx:for="{{logs}}" wx:key="_id">
+        <view wx:if="{{index!==0}}" class="log-separator"></view>
+        <view class="past-logs-block">
+            <view class="past-logs-block-left">
+              <text class="past-logs-block-event">{{item.eventName}}</text>
+              <text class="past-logs-block-issue-person">from {{item.issuerName}}</text>
+            </view>
+            <view class="past-logs-block-right">
+              <view class="log-block-delete-button" wx:if="{{adminStatus.canDeleteAll || item.issuerId === userId}}" data-itemindex="{{index}}" bindtap="deleteActivityLog">
+                <text>Delete</text>
+              </view>
+              <view class="log-block-information"><text>{{item.stampNumber === null ? 'none' : item.stampNumber+'s'}} / {{item.pointNumber === null ? 'none' : item.pointNumber+'pts'}}</text></view>
+            </view>
+          </view>
+      </block>
+    </view>
+  </view>
 </view>

@@ -63,6 +63,7 @@ exports.main = async (event, context) => {
 
   let rankLeaderboard = undefined;
   let allowStamps = undefined;
+  let eventName = undefined;
   let studentNickname="";
   let studentGrade=0;
   let adminName="";
@@ -78,6 +79,7 @@ exports.main = async (event, context) => {
     if (eventData[i].id===event.eventId) {
       rankLeaderboard = eventData[i].rankLeaderboard;
       allowStamps = eventData[i].allowStamps;
+      eventName = eventData[i].name;
     }
   }
   if (rankLeaderboard === undefined) {
@@ -101,7 +103,7 @@ exports.main = async (event, context) => {
   tasks.push(db.collection(`SportsMeet2021StampLog${studentGrade}`).add({
     data: {
       eventId: event.eventId,
-      eventName: event.name,
+      eventName: eventName,
       issuerId: callerId,
       issuerName: adminName,
       userId: event.userId,

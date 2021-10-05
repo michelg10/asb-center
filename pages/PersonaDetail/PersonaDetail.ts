@@ -32,6 +32,7 @@ type UserDataType = {
 type LogType = {
   _id: string,
   eventId: string,
+  eventName: string,
   issuerId: string,
   issuerName: string,
   pointNumber: null|number,
@@ -46,7 +47,16 @@ type PurchaseLogType = {
   itemName: string,
   itemCost: number,
 };
+type AdminStatusType = {
+  wxId: string,
+  adminId: string,
+  canDeleteAll: boolean,
+  canDoPurchase: boolean,
+  name: string,
+}
 interface componentDataInterface {
+  myId: string,
+  adminStatus: AdminStatusType,
   userId: string,
   db: DB.Database,
   events: SMEventType[],
@@ -72,6 +82,7 @@ interface componentDataInterface {
   purchaseButtonClass: string,
   purchaseHintText: string,
   purchaseHintClass: string,
+  pastLogDeletionError: string,
 }
 
 Component({
@@ -115,6 +126,31 @@ Component({
       }
       this.setData({
         pointValue: value,
+      })
+    },
+    deleteActivityLog: function(x: any) {
+      if (this.data.isWaiting) {
+        return;
+      }
+      this.data.isWaiting = true;
+      wx.cloud.callFunction({
+        name: "SportsMeet2021DeleteActivityLog",
+        data: {
+          deleteLogId: this.data.logs[x.currentTarget.dataset.itemindex]._id,
+          logGrade: this.data.userData.student.grade,
+        }
+      }).then((res) => {
+        let result: any = res.result;
+        if (result.status !== "success") {
+          this.setData({
+            pastLogDeletionError: result.reason,
+          });
+        } else {
+          this.setData({
+            pastLogDeletionError: "",
+          });
+        }
+        this.data.isWaiting = false;
       })
     },
     updateCanAfford: function() {
@@ -167,7 +203,6 @@ Component({
           pointValue: this.data.pointValue,
         }
       }).then((res) => {
-        console.log(res);
         this.data.isWaiting=false;
         let logAddFeedback = "";
         let result: any = res.result;
@@ -243,6 +278,35 @@ Component({
         purchaseSelectContainerClass: "main-select-container",
         purchaseSelectorOpen: false,
       });
+      this.data.db = wx.cloud.database();
+      this.data.db.collection("userData").where({
+        "userId": '{openid}',
+      }).get().then((res) => {
+        if (res.data.length === 0) {
+          // this error literally makes no sense but just in case i do something dumb
+          console.log("Current user not registered!");
+        }
+        this.setData({
+          myId: res.data[0]._id as string,
+        });
+        // now fetch admin status
+        this.data.db.collection("SportsMeet2021Admin").where({
+          adminId: res.data[0]._id,
+        }).get().then((adminRes) => {
+          if (res.data.length === 0) {
+            console.log("Current user is not admin!");
+            this.setData({
+              adminStatus: {
+                wxId: adminRes.data[0]._id as string,
+                adminId: adminRes.data[0].adminId,
+                canDeleteAll: adminRes.data[0].canDeleteAll,
+                canDoPurchase: adminRes.data[0].canDoPurchase,
+                name: adminRes.data[0].name,
+              }
+            });
+          }
+        });
+      });
       eventChannel.on('userId', (data: string) => {
         this.setData({
           userId: data,
@@ -276,6 +340,7 @@ Component({
                   issuerName: snapshot.docs[i].issuerName,
                   userId: snapshot.docs[i].userId,
                   eventId: snapshot.docs[i].eventId,
+                  eventName: snapshot.docs[i].eventName,
                   pointNumber: snapshot.docs[i].pointNumber === undefined ? null : snapshot.docs[i].pointNumber,
                   stampNumber: snapshot.docs[i].stampNumber === undefined ? null : snapshot.docs[i].stampNumber,
                 });
@@ -324,7 +389,6 @@ Component({
         })
       });
       // fetch event, item database
-      this.data.db = wx.cloud.database();
       allCollectionsData(this.data.db, "SportsMeet2021Events").then((res) => {
         let events: SMEventType[] = [];
         let data = res.data;

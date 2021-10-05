@@ -8,8 +8,9 @@
 #persona-detail-container {
   display: flex;
   flex-direction: column;
-  margin: 16px;
+  margin: 0 16px;
   padding-top: 10px;
+  margin-bottom: 40px;
 }
 #persona-detail-gradeclass-text {
   font-weight: bold;
@@ -156,4 +157,71 @@
 }
 #exchange-container {
   margin-bottom: 39px;
+}
+#past-logs-heading-text-container {
+  margin-bottom: 12px;
+}
+#past-logs-list {
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+.past-logs-block {
+  height: 50px;
+  margin: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.past-logs-block-left {
+  display: flex;
+  flex-direction: column;
+}
+.past-logs-block-issue-person {
+  font-size: 13px;
+  color: var(--secondary);
+}
+.past-logs-block-event {
+  font-size: 17px;
+}
+.past-logs-block-right {
+  display: flex;
+}
+.log-block-delete-button {
+  height: 24px;
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FAD2D2;
+  border-radius: 12px;
+  margin-right: 16px;
+}
+.log-block-delete-button text {
+  color: var(--warn);
+  font-size: 13px;
+  font-weight: 500;
+}
+.log-block-information text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--secondary);
+}
+.log-separator {
+  margin-left: 17px;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+#past-logs-delete-error {
+  margin: 0 53px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#past-logs-delete-error text {
+  position: relative;
+  width: 100%;
+  color: var(--warn);
+  text-align: center;
 }
