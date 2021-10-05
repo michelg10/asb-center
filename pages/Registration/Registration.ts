@@ -31,7 +31,7 @@ Component({
       let studentData = await allCollectionsData(this.data.db, "studentData");
       let tmpStudentData=[];
       for (let i=0;i<studentData.data.length;i++) {
-        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class));
+        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class, studentData.data[i].pseudoId));
       }
       this.setData({
         studentData: tmpStudentData,

@@ -30,7 +30,7 @@ Component({
       let studentData = await allCollectionsData(this.data.db, "studentData");
       let tmpStudentData=[];
       for (let i=0;i<studentData.data.length;i++) {
-        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class));
+        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class, studentData.data[i].pseudoId));
       }
       this.setData({
         studentData: tmpStudentData,
@@ -38,7 +38,12 @@ Component({
     },
     handlePersonChoose: function(e: any) {
       let chosenId=e.currentTarget.dataset.chosenid;
-      console.log(this.data.studentData[chosenId]);
+      wx.navigateTo({
+        url: '/pages/PersonaDetail/PersonaDetail',
+        success: (res) => {
+          res.eventChannel.emit('userId', this.data.studentData[chosenId].pseudoId);
+        }
+      });
     },
     handleSearchBoxChange: function(e: any) {
       if (this.data.studentData === undefined) {

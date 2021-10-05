@@ -114,7 +114,7 @@ exports.main = async (event, context) => {
   if (rankLeaderboard) {
     // fetch the computed leaderboard
     tasks.push(db.collection(`SportsMeet2021LeaderboardProcessed${studentGrade}`).where({
-      userId: event.userId,
+      studentId: event.userId,
     }).get());
   }
   let currentComputedLeaderboardEntry;

@@ -155,7 +155,6 @@ Component({
       })
     },
     deleteExchangeLog: function(x: any) {
-      console.log("hi");
       if (this.data.isWaiting) {
         return;
       }
@@ -327,16 +326,16 @@ Component({
         }).get().then((adminRes) => {
           if (res.data.length === 0) {
             console.log("Current user is not admin!");
-            this.setData({
-              adminStatus: {
-                wxId: adminRes.data[0]._id as string,
-                adminId: adminRes.data[0].adminId,
-                canDeleteAll: adminRes.data[0].canDeleteAll,
-                canDoPurchase: adminRes.data[0].canDoPurchase,
-                name: adminRes.data[0].name,
-              }
-            });
           }
+          this.setData({
+            adminStatus: {
+              wxId: adminRes.data[0]._id as string,
+              adminId: adminRes.data[0].adminId,
+              canDeleteAll: adminRes.data[0].canDeleteAll,
+              canDoPurchase: adminRes.data[0].canDoPurchase,
+              name: adminRes.data[0].name,
+            }
+          });
         });
       });
       eventChannel.on('userId', (data: string) => {

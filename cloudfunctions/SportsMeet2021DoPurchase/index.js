@@ -63,7 +63,7 @@ exports.main = async (event, context) => {
   }).get());
   // fetch transaction information
   tasks.push(db.collection(`SportsMeet2021TransactionLog${userGrade}`).where({
-    userId: event.itemId,
+    userId: event.userId,
   }).get());
   res = await Promise.all(tasks);
   // admin information: check authorization, resolve issuerName
@@ -108,7 +108,6 @@ exports.main = async (event, context) => {
   for (let i=0;i<res[3].data.length;i++) {
     totalTransacted+=res[3].data[i].itemCost;
   }
-  
   if (totalStamps-totalTransacted<itemCost) {
     return {
       status: "failure",
