@@ -93,3 +93,6 @@
   font-size: 15px;
   margin-bottom: 12px;
 }
+#my-logs-header {
+  margin-bottom: 10px;
+}

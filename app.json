@@ -6,7 +6,8 @@
     "pages/RegistrationConfirmation/RegistrationConfirmation",
     "pages/ScanFailure/ScanFailure",
     "pages/PersonaDetail/PersonaDetail",
-    "pages/SportsMeetAdminPanel/SportsMeetAdminPanel"
+    "pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
+    "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin"
   ],
   "window": {
     "backgroundTextStyle": "light",

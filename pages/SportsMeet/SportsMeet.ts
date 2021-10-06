@@ -1,14 +1,14 @@
 import { Event } from "../../classes/event";
 import { createQRCode, userDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
-import { sha256 } from "../../utils/sha256";
-import { extendNumberToLengthString, getUnixTime } from "../../utils/util";
+import { extendNumberToLengthString } from "../../utils/util";
 import { PreviewGenerator } from "../MainMenu/MainMenu";
 
 // pages/SportsMeet.js
 
 interface componentDataInterface {
   userData: userDataType,
+  db: DB.Database,
   eventId: string;
   eventInfo: Event;
   previewInfo: PreviewGenerator;
@@ -16,6 +16,7 @@ interface componentDataInterface {
   previewPort: string;
   lastUpdateTime: string;
   recomputeCaller: any;
+  isAdmin: boolean;
 }
 
 Component({
@@ -35,14 +36,27 @@ Component({
    * Component methods
    */
   methods: {
+    adminButtonTapped: function() {
+      wx.navigateTo({
+        url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
+      });
+    },
     onLoad: function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
         previewPort: "SportsMeetInnerPreviewPort",
       });
+      this.data.db = wx.cloud.database();
       eventChannel.on('userData', (data: userDataType) => {
         this.setData({
           userData: data,
+        });
+        this.data.db.collection("SportsMeet2021Admin").where({
+          adminId: this.data.userData.id,
+        }).get().then((res) => {
+          this.setData({
+            isAdmin:  res.data.length !== 0,
+          });
         });
       });
       eventChannel.on('eventId', (data: string) => {

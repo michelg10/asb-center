@@ -115,5 +115,5 @@ exports.main = async (event, context) => {
       data: value
     }));
   }
-  // await Promise.all(tasks);
+  await Promise.all(tasks);
 }

@@ -25,15 +25,22 @@ Component({
    * Component methods
    */
   methods: {
-    onLoad: async function() {
+    onLoad: function() {
       this.data.db = wx.cloud.database();
-      let studentData = await allCollectionsData(this.data.db, "studentData");
-      let tmpStudentData=[];
-      for (let i=0;i<studentData.data.length;i++) {
-        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class, studentData.data[i].pseudoId));
-      }
-      this.setData({
-        studentData: tmpStudentData,
+      allCollectionsData(this.data.db, "studentData").then((res) => {
+        let tmpStudentData=[];
+        for (let i=0;i<res.data.length;i++) {
+          tmpStudentData.push(new Student(res.data[i]._id as string, res.data[i].nickname, res.data[i].englishName, res.data[i].chineseName, res.data[i].grade, res.data[i].class, res.data[i].pseudoId));
+        }
+        this.setData({
+          studentData: tmpStudentData,
+        });
+      });
+    },
+    homeroomPointsTap: function() {
+      console.log("What");
+      wx.navigateTo({
+        url: "/pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin"
       });
     },
     handlePersonChoose: function(e: any) {

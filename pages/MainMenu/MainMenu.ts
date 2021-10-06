@@ -104,7 +104,7 @@ Component({
       wx.navigateTo({
         url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          res.eventChannel.emit('userId', "14139e1261586d5110c7a8810faa7da7");
+          res.eventChannel.emit('userId', "cd045e75615dc8941383a3363689e702");
         }
       });
       // wx.scanCode({
@@ -165,9 +165,6 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5*1000*60);
-      wx.navigateTo({
-        url: '/pages/SportsMeetAdminPanel/SportsMeetAdminPanel'
-      })
     },
     recomputeData: function(incremental: boolean) {
       console.log("Tick");

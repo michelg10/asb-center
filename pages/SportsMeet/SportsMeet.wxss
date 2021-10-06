@@ -75,3 +75,21 @@
   color: white;
   font-size: 17px;
 }
+#sports-meet-admin-button {
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--subcontainer-background);
+  border-radius: 50%;
+}
+#sports-meet-heading-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#sports-meet-admin-image {
+  height: 20px;
+  width: 17px;
+}

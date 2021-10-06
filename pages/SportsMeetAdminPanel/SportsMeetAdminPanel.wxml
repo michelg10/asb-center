@@ -1,7 +1,7 @@
 <!--pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxml-->
 <view id="sports-meet-admin-panel-container">
   <text class="big-title-text">Admin</text>
-  <view id="admin-panel-homeroom-points-container">
+  <view id="admin-panel-homeroom-points-container" bindtap="homeroomPointsTap">
     <text>Homeroom points...</text>
   </view>
   <view id="search-pseudo-accounts-header"><text class="heading-text">Search Pseudo-Accounts</text></view>
