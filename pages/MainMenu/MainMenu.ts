@@ -148,6 +148,9 @@ Component({
       }
     },
     onLoad: function() {
+      wx.navigateTo({
+        url: "/pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin",
+      });
       wx.cloud.init();
       this.data.db = wx.cloud.database();
       this.data.previewGenerator = [];

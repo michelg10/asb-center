@@ -1,0 +1,31 @@
+.button {
+  border-radius: 9px;
+  width: 121px;
+  height: 38px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+}
+.button-text {
+  font-size: 17px;
+  font-weight: 500;
+}
+.button-feedback {
+  padding-top: 10px;
+  margin: 0 39px;
+  display: flex;
+  justify-content: center;
+}
+.button-feedback-success-text {
+  font-size: 17px;
+  color: #36B909;
+  text-align: center;
+  width: 100%;
+}
+.button-feedback-warn-text {
+  font-size: 17px;
+  color: var(--warn);
+  text-align: center;
+  width: 100%;
+}
