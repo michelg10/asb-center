@@ -44,7 +44,7 @@
     <view><text class="heading-text" id="persona-detail-activity-log-text">Exchange</text></view>
     <view><text id="exchange-container-subheading-text" wx:if="{{totalStamps !== undefined && usedStamps !== undefined}}">User balance: {{totalStamps-usedStamps}} stamps (total {{totalStamps}}, spent {{usedStamps}})</text></view>
 
-    <view class="select-container" id="exchange-select-container">
+    <view class="select-container" id="exchange-select-container" style="z-index: 4;">
       <view class="{{purchaseSelectorOpen ? 'main-select-container main-select-container-open' : 'main-select-container'}}" bindtap="purchaseSelectorClicked">
         <text class="main-select-text">{{items[selectedPurchaseItemIndex].name}} ({{items[selectedPurchaseItemIndex].cost}})</text>
         <image src="/icons/chevron-down.svg" class="select-chevron-down-image"></image>

@@ -13,6 +13,10 @@ exports.main = async (event, context) => {
       reason: "No such grade"
     };
   }
+  let pointValue = event.pointValue;
+  if (Number.isNaN(pointValue)) {
+    pointValue = 0;
+  }
   const wxContext = cloud.getWXContext()
   let tasks = [];
   // get the user ID
@@ -67,7 +71,7 @@ exports.main = async (event, context) => {
   tasks=[];
   tasks.push(db.collection(`SportsMeet2021HomeroomProcessed${event.grade}`).doc(classId).update({
     data: {
-      classPoints: db.command.inc(event.pointValue),
+      classPoints: db.command.inc(pointValue),
     }
   }));
   tasks.push(db.collection(`SportsMeet2021HomeroomLog`).add({
@@ -76,7 +80,7 @@ exports.main = async (event, context) => {
       eventName: eventName,
       issuerId: userId,
       issuerName: adminName,
-      pointValue: event.pointValue,
+      pointValue: pointValue,
       grade: event.grade,
       class: event.class,
     }

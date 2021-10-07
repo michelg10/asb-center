@@ -8,6 +8,15 @@ let db = cloud.database();
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
 
+  let pointValue = event.pointValue;
+  if (Number.isNaN(pointValue)) {
+    pointValue = 0;
+  }
+  let stampValue = event.stampValue;
+  if (Number.isNaN(stampValue)) {
+    stampValue = 0;
+  }
+
   // stage 1
   let tasks = [];
   tasks.push(db.collection("userData").where({
@@ -64,8 +73,6 @@ exports.main = async (event, context) => {
   let rankLeaderboard = undefined;
   let allowStamps = undefined;
   let eventName = undefined;
-  let studentNickname="";
-  let studentGrade=0;
   let adminName="";
   if (result[0].data.length === 0) {
     return {
@@ -94,8 +101,9 @@ exports.main = async (event, context) => {
       reason: "Student does not exist in student database!"
     };
   }
-  studentNickname = result[2].data[0].nickname;
-  studentGrade = result[2].data[0].grade;
+  let studentNickname = result[2].data[0].nickname;
+  let studentGrade = result[2].data[0].grade;
+  let studentClass = result[2].data[0].class;
   tasks=[];
 
   // stage 3
@@ -107,8 +115,8 @@ exports.main = async (event, context) => {
       issuerId: callerId,
       issuerName: adminName,
       userId: event.userId,
-      stampNumber: (allowStamps ? event.stampValue : undefined),
-      pointNumber: (rankLeaderboard ? event.pointValue : undefined),
+      stampNumber: (allowStamps ? stampValue : undefined),
+      pointNumber: (rankLeaderboard ? pointValue : undefined),
     }
   }));
   if (rankLeaderboard) {
@@ -116,6 +124,16 @@ exports.main = async (event, context) => {
     tasks.push(db.collection(`SportsMeet2021LeaderboardProcessed${studentGrade}`).where({
       studentId: event.userId,
     }).get());
+  }
+  if (allowStamps) {
+    // add it into the computed homeroom
+    tasks.push(db.collection(`SportsMeet2021HomeroomProcessed${studentGrade}`).where({
+      class: studentClass
+    }).update({
+      data: {
+        stampPoints: db.command.inc(stampValue),
+      }
+    }));
   }
   let currentComputedLeaderboardEntry;
   result = await Promise.all(tasks);
@@ -134,9 +152,9 @@ exports.main = async (event, context) => {
   if (rankLeaderboard) {
     // update the computed leaderboard
     let currentLeaderboardScore = currentComputedLeaderboardEntry[`studentPointScore${event.eventId}`];
-    if (event.pointValue > currentLeaderboardScore) {
+    if (pointValue > currentLeaderboardScore) {
       let setDataObject = {};
-      setDataObject[`studentPointScore${event.eventId}`]=event.pointValue;
+      setDataObject[`studentPointScore${event.eventId}`]=pointValue;
       await db.collection(`SportsMeet2021LeaderboardProcessed${studentGrade}`).doc(currentComputedLeaderboardEntry._id).update({
         data: setDataObject,
       });
