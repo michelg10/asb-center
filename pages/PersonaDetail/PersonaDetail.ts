@@ -364,7 +364,7 @@ Component({
           }).watch({
             onChange: (snapshot) => {
               let newLogs: LogType[]=[];
-              for (let i=0;i<snapshot.docs.length;i++) {
+              for (let i=snapshot.docs.length-1;i>=0;i--) {
                 newLogs.push({
                   _id: snapshot.docs[i]._id as string,
                   issuerId: snapshot.docs[i].issuerId,
@@ -400,7 +400,7 @@ Component({
           }).watch({
             onChange: (snapshot) => {
               let newPurchaseLog: PurchaseLogType[] = [];
-              for (let i=0;i<snapshot.docs.length;i++) {
+              for (let i=snapshot.docs.length-1;i>=0;i--) {
                 newPurchaseLog.push(snapshot.docs[i]);
               }
               let newUsedStamps = 0;

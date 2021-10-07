@@ -5,6 +5,13 @@ type teamEventsType = {
   id: string,
   name: string,
 };
+type AdminStatusType = {
+  wxId: string,
+  adminId: string,
+  canDeleteAll: boolean,
+  canDoPurchase: boolean,
+  name: string,
+};
 type componentDataInterface = {
   db: DB.Database,
   teamEvents: teamEventsType[],
@@ -20,6 +27,18 @@ type componentDataInterface = {
   isWaiting: boolean,
   logAddFeedback: string,
   logAddFeedbackClass: string,
+  logWatcher: DB.RealtimeListener,
+  logs: HomeroomLogType[],
+  pastLogDeletionError: string,
+  adminStatus: AdminStatusType,
+}
+type HomeroomLogType = {
+  _id: string,
+  class: number,
+  eventId: string,
+  grade: number,
+  issuerId: string,
+  pointValue: number,
 }
 Component({
   /**
@@ -38,6 +57,9 @@ Component({
    * Component methods
    */
   methods: {
+    onUnload: function() {
+      this.data.logWatcher.close();
+    },
     onLoad: function() {
       this.setData({
         sportsMeetGrades: [9,10,11,12],
@@ -45,6 +67,48 @@ Component({
         pointValue: 0,
       });
       this.data.db = wx.cloud.database();
+      this.data.db.collection("userData").where({
+        "userId": '{openid}',
+      }).get().then((res) => {
+        if (res.data.length === 0) {
+          // this error literally makes no sense but just in case i do something dumb
+          console.log("Current user not registered!");
+        }
+        this.setData({
+          myId: res.data[0]._id as string,
+        });
+        // now fetch admin status
+        this.data.db.collection("SportsMeet2021Admin").where({
+          adminId: res.data[0]._id,
+        }).get().then((adminRes) => {
+          if (res.data.length === 0) {
+            console.log("Current user is not admin!");
+          }
+          this.setData({
+            adminStatus: {
+              wxId: adminRes.data[0]._id as string,
+              adminId: adminRes.data[0].adminId,
+              canDeleteAll: adminRes.data[0].canDeleteAll,
+              canDoPurchase: adminRes.data[0].canDoPurchase,
+              name: adminRes.data[0].name,
+            }
+          });
+        });
+      });
+      this.data.logWatcher = this.data.db.collection("SportsMeet2021HomeroomLog").watch({
+        onChange: (snapshot) => {
+          let newLogs: HomeroomLogType[]=[];
+          for (let i=snapshot.docs.length-1;i>=0;i--) {
+            newLogs.push(snapshot.docs[i] as HomeroomLogType);
+          }
+          this.setData({
+            logs: newLogs,
+          })
+        },
+        onError: function(err) {
+          console.error('the homeroom log watch closed because of error', err);
+        }
+      });
       allCollectionsData(this.data.db, "SportsMeet2021TeamEvents").then((res) => {
         let nextTeamEvents: teamEventsType[] = [];
         for (let i=0;i<res.data.length;i++) {
@@ -127,7 +191,31 @@ Component({
         pointValue: value,
       })
     },
-    addActivityLog: function() {
+    deleteHomeroomLog: function(x: any) {
+        if (this.data.isWaiting) {
+          return;
+        }
+        this.data.isWaiting = true;
+        wx.cloud.callFunction({
+          name: "SportsMeet2021DeleteHomeroomLog",
+          data: {
+            deleteLogId: this.data.logs[x.currentTarget.dataset.itemindex]._id,
+          }
+        }).then((res) => {
+          let result: any = res.result;
+          if (result.status !== "success") {
+            this.setData({
+              pastLogDeletionError: result.reason,
+            });
+          } else {
+            this.setData({
+              pastLogDeletionError: "",
+            });
+          }
+          this.data.isWaiting = false;
+        })
+    },
+    addHomeroomLog: function() {
       if (this.data.isWaiting) return;
       this.data.isWaiting = true;
       wx.cloud.callFunction({
@@ -151,7 +239,6 @@ Component({
           logAddClass = "button-feedback-warn-text";
         }
         this.setData({
-          pointValue: 0,
           logAddFeedback: logAddFeedback,
           logAddFeedbackClass: logAddClass,
         });

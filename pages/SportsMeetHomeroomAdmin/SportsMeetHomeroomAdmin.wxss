@@ -1,6 +1,7 @@
 /* pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin.wxss */
 @import "/styles/options-container.wxss";
 @import "/styles/button.wxss";
+@import "/styles/SportsMeet2021Logs.wxss";
 #homeroom-admin-container {
   margin: 0 16px;
   padding-top: 10px;
@@ -10,6 +11,7 @@
   margin-top: 14px;
   display: flex;
   flex-direction: column;
+  margin-bottom: 18px;
 }
 #log-points-heading {
   margin-bottom: 18px;

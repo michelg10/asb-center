@@ -67,7 +67,7 @@
       <text class="{{purchaseHintClass}}">{{purchaseHintText}}</text>
     </view>
   </view>
-  <view id="past-logs-container">
+  <view class="past-logs-container">
     <view class="logs-heading-text-container"><text class="heading-text">Past Activity logs</text></view>
     <view class="logs-delete-error" wx:if="{{pastLogDeletionError !== '' && pastLogDeletionError !== undefined}}"><text>{{pastLogDeletionError}}</text></view>
     <view class="logs-list">

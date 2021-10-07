@@ -50,6 +50,7 @@ exports.main = async (event, context) => {
       reason: "Event does not exist!"
     };
   }
+  let eventName = res[2].data[0].name;
 
   res = await db.collection("SportsMeet2021Admin").where({
     adminId: userId,
@@ -72,13 +73,14 @@ exports.main = async (event, context) => {
   tasks.push(db.collection(`SportsMeet2021HomeroomLog`).add({
     data: {
       eventId: event.eventId,
+      eventName: eventName,
       issuerId: userId,
-      issuerId: adminName,
+      issuerName: adminName,
       pointValue: event.pointValue,
       grade: event.grade,
       class: event.class,
     }
-  }))
+  }));
   await Promise.all(tasks);
   return {
     status: "success",
