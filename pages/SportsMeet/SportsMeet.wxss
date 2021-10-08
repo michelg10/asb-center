@@ -3,6 +3,8 @@
 @import "../MainMenu/MainMenu.wxss";
 #sports-meet-container {
   margin: 0 16px;
+  margin-top: 10px;
+  margin-bottom: 80px;
 }
 #sports-meet-stamp-container {
   display: flex;
@@ -92,4 +94,58 @@
 #sports-meet-admin-image {
   height: 20px;
   width: 17px;
+}
+#sports-meet-upcoming-events-container {
+  margin-top: 23px;
+  display: flex;
+  flex-direction: column; 
+}
+#sports-meet-upcoming-events-inner-container {
+  margin-top: 12px;
+  background-color: var(--subcontainer-background);
+  border-radius: 11px;
+}
+.upcoming-events-separator {
+  margin-left: 18px;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+.upcoming-events-block {
+  height: 55px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 16px;
+  align-items: center;
+}
+.upcoming-events-left-block {
+  display: flex;
+  flex-direction: column;
+}
+.upcoming-event-upcoming {
+  color: #3671E0;
+  font-weight: bold;
+  font-size: 13px;
+}
+.upcoming-events-title {
+  font-size: 17px;
+  font-weight: 500;
+}
+.upcoming-events-right-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.upcoming-events-location {
+  color: var(--secondary);
+  font-size: 15px;
+  font-weight: 500;
+}
+.upcoming-events-time {
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+#upcoming-events-heading {
+  margin: 0 auto;
 }

@@ -1,10 +1,30 @@
 import { Event } from "../../classes/event";
+import allCollectionsData from "../../utils/allCollectionsData";
 import { createQRCode, userDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { extendNumberToLengthString } from "../../utils/util";
 import { PreviewGenerator } from "../MainMenu/MainMenu";
 
 // pages/SportsMeet.js
+
+type upcomingEventDisplayType = {
+  name: string,
+  location: string,
+  isUpcoming: boolean,
+  time: string,
+  id: string,
+};
+type EventsListItemType = {
+  dateDay: number,
+  dateMonth: number;
+  startHour: number;
+  startMinute: number;
+  endHour: number;
+  endMinute: number;
+  id: string,
+  location: string,
+  name: string;
+};
 
 interface componentDataInterface {
   userData: userDataType,
@@ -17,6 +37,9 @@ interface componentDataInterface {
   lastUpdateTime: string;
   recomputeCaller: any;
   isAdmin: boolean;
+  upcomingEventDisplay: upcomingEventDisplayType[];
+  eventsList: EventsListItemType[];
+  reloadEventListSetInterval: any;
 }
 
 Component({
@@ -41,6 +64,54 @@ Component({
         url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
       });
     },
+    reloadUpcomingEventList: function() {
+      let date = new Date();
+      console.log("Reload upcoming events list");
+      let currentDayTimeMark = date.getHours()*60+date.getMinutes();
+      currentDayTimeMark = 13*60+59;
+      let newUpcomingEventDisplay: upcomingEventDisplayType[] = [];
+      for (let i=0;i<this.data.eventsList.length;i++) {
+        let currentItem = this.data.eventsList[i];
+        // if it is not today
+        if (date.getMonth()+1 !== currentItem.dateMonth || date.getDate() !== currentItem.dateDay) {
+          continue;
+        }
+        let thisEntryStartDayTimeMark = currentItem.startHour*60+currentItem.startMinute;
+        let thisEntryEndDayTimeMark = currentItem.endHour*60+currentItem.endMinute;
+        if (currentDayTimeMark>thisEntryEndDayTimeMark) {
+          // after the end time
+          continue;
+        }
+        let includeEntry = false;
+        let entryIsNow = false;
+        if (thisEntryStartDayTimeMark<=currentDayTimeMark && currentDayTimeMark<=thisEntryEndDayTimeMark) {
+          includeEntry = true;
+          entryIsNow = true;
+        } else {
+          let minutesToEvent = thisEntryStartDayTimeMark-currentDayTimeMark;
+          if (minutesToEvent<30) {
+            includeEntry = true;
+          }
+        }
+        let convertToDisplayTime = (a: number, b: number) => {
+          let timePostfix = (a>=12 ? "PM" : "AM");
+          let actualA = a-12;
+          return `${actualA}:${extendNumberToLengthString(b, 2)}${timePostfix}`;
+        }
+        if (includeEntry) {
+          newUpcomingEventDisplay.push({
+            name: currentItem.name,
+            location: currentItem.location,
+            isUpcoming: !entryIsNow,
+            time: `${convertToDisplayTime(currentItem.startHour, currentItem.startMinute)} - ${convertToDisplayTime(currentItem.endHour, currentItem.endMinute)}`,
+            id: currentItem.id,
+          });
+        }
+      }
+      this.setData({
+        upcomingEventDisplay: newUpcomingEventDisplay,
+      });
+    },
     onLoad: function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
@@ -51,6 +122,76 @@ Component({
         this.setData({
           userData: data,
         });
+
+        allCollectionsData(this.data.db, "SportsMeet2021Timetable").then((res) => {
+          let newEventsList: EventsListItemType[] = [];
+          for (let i=0;i<res.data.length;i++) {
+            // if it isn't available for the current grade
+            if (res.data[i][`grade${data.student!.grade}StartHour`] === undefined) {
+              continue;
+            }
+
+            newEventsList.push({
+              dateDay: res.data[i].dateDay,
+              dateMonth: res.data[i].dateMonth,
+              startHour: res.data[i][`grade${data.student!.grade}StartHour`],
+              startMinute: res.data[i][`grade${data.student!.grade}StartMinute`],
+              endHour: res.data[i][`grade${data.student!.grade}EndHour`],
+              endMinute: res.data[i][`grade${data.student!.grade}EndMinute`],
+              id: res.data[i].id,
+              location: res.data[i].location,
+              name: res.data[i].name,
+            });
+          }
+          // earlier events first
+          newEventsList.sort((a, b) => {
+            if (a.dateMonth < b.dateMonth) {
+              return -1;
+            }
+            if (a.dateMonth > b.dateMonth) {
+              return 1;
+            }
+            if (a.dateDay < b.dateDay) {
+              return -1;
+            }
+            if (a.dateDay > b.dateDay) {
+              return 1;
+            }
+            if (a.startHour < b.startHour) {
+              return -1;
+            }
+            if (a.startHour > b.startHour) {
+              return 1;
+            }
+            if (a.startMinute < b.startMinute) {
+              return -1;
+            }
+            if (a.startMinute > b.startMinute) {
+              return 1;
+            }
+            if (a.endMinute < b.endMinute) {
+              return -1;
+            }
+            if (a.endMinute > b.endMinute) {
+              return 1;
+            }
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          });
+          this.setData({
+            eventsList: newEventsList,
+          });
+          this.reloadUpcomingEventList();
+          this.data.reloadEventListSetInterval = setInterval(() => {
+            this.reloadUpcomingEventList();
+          }, 10*1000);
+        });
+
         this.data.db.collection("SportsMeet2021Admin").where({
           adminId: this.data.userData.id,
         }).get().then((res) => {
@@ -96,6 +237,7 @@ Component({
     },
     onUnload: function() {
       clearInterval(this.data.recomputeCaller);
+      clearInterval(this.data.reloadEventListSetInterval);
     }
   }
 })

@@ -14,6 +14,24 @@
       <image src="/icons/bolt.svg" id="sports-meet-admin-image"></image>
     </view>
   </view>
+  <view id="sports-meet-upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0}}">
+    <text class="heading-text" id="upcoming-events-heading">Events</text>
+    <view id="sports-meet-upcoming-events-inner-container">
+      <block wx:for="{{upcomingEventDisplay}}" wx:key="id">
+        <view wx:if="{{index!==0}}" class="upcoming-events-separator"></view>
+        <view class="upcoming-events-block">
+          <view class="upcoming-events-left-block">
+            <text class="upcoming-event-upcoming" wx:if="{{item.isUpcoming}}">UPCOMING</text>
+            <text class="upcoming-events-title">{{item.name}}</text>
+          </view>
+          <view class="upcoming-events-right-block">
+            <text class="upcoming-events-location">{{item.location}}</text>
+            <text class="upcoming-events-time">{{item.time}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
   <view id="sports-meet-stamp-container">
     <text class="heading-text">Stickers</text>
     <view id="sports-meet-stamp-inner-container">

@@ -6,6 +6,7 @@ let db = cloud.database();
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+  console.log("Autorank routine - rank regular leaderboards");
   // go through Leaderboards
   let grades = [9,10,11,12];
   let tasks=[];
@@ -22,6 +23,14 @@ exports.main = async (event, context) => {
         collectionName: `SportsMeet2021LeaderboardProcessed${grades[i]}`,
       }
     }))
+  }
+  for (let i=0;i<grades.length;i++) {
+    tasks.push(cloud.callFunction({
+      name: "fetchAllCollections",
+      data: {
+        collectionName: `SportsMeet2021HomeroomProcessed${grades[i]}`,
+      }
+    }));
   }
   let res=await Promise.all(tasks);
   let eventNameList = [];
@@ -81,19 +90,53 @@ exports.main = async (event, context) => {
       }));
     }
   }
-  await Promise.all(tasks);
-  return {};
-  // go through homeroom processed
-  tasks = [];
-  for (let i=0;i<grades.length;i++) {
-    tasks.push(cloud.callFunction({
-      name: "fetchAllCollections",
-      data: {
-        collectionName: `SportsMeet2021HomeroomProcessed${grades[i]}`,
-      }
-    }))
-  }
-  for (let i=0;i<grades.length;i++) {
 
+  console.log("Autorank routine - rank homeroom leaderboards");
+  // go through homeroom processed
+
+  let gradesComputedHomeroomList=[];
+  for (let i=grades.length+1;i<2*grades.length+1;i++) {
+    gradesComputedHomeroomList.push(res[i].result.data);
   }
+  for (let i=0;i<grades.length;i++) {
+    // create an ID array
+    let idArray = Array(gradesComputedHomeroomList[i].length);
+    for (let k=0;k<idArray.length;k++) {
+      idArray[k]=k;
+    }
+    idArray.sort((a, b) => {
+      // negative if a<b, zero if equal and positive if a>b
+      let actualA = gradesComputedHomeroomList[i][a].classPoint+gradesComputedHomeroomList[i][a].stampPoints/10;
+      let actualB = gradesComputedHomeroomList[i][b].classPoint+gradesComputedHomeroomList[i][b].stampPoints/10;
+      if (actualA === actualB) {
+        return 0;
+      }
+      if (actualA < actualB) {
+        return 1;
+      }
+      return -1;
+    });
+    // reverse the ID array to get the rank
+    let reverseIdArray = Array(gradesComputedHomeroomList[i].length);
+    for (let k=0;k<idArray.length;k++) {
+      reverseIdArray[idArray[k]]=k;
+    }
+    // write soonLastRank to LastRank and then write to soonLastRank
+    for (let k=0;k<gradesComputedHomeroomList[i].length;k++) {
+      gradesComputedHomeroomList[i][k].lastRank = gradesComputedHomeroomList[i][k].soonLastRank;
+      gradesComputedHomeroomList[i][k].soonLastRank = reverseIdArray[k];
+    }
+  }
+  // now update everything
+  for (let i=0;i<grades.length;i++) {
+    for (let j=0;j<gradesComputedHomeroomList[i].length;j++) {
+      let leaderboardUpdateObj = {};
+      leaderboardUpdateObj.lastRank=gradesComputedHomeroomList[i][j].lastRank;
+      leaderboardUpdateObj.soonLastRank=gradesComputedHomeroomList[i][j].soonLastRank;
+      tasks.push(db.collection(`SportsMeet2021HomeroomProcessed${grades[i]}`).doc(gradesComputedHomeroomList[i][j]._id).update({
+        data: leaderboardUpdateObj
+      }));
+    }
+  }
+  await Promise.all(tasks);
 }

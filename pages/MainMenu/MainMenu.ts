@@ -6,6 +6,7 @@ import { createQRCode, previewEnum, studentDataType, userDataType } from '../../
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
+import { handleCode } from '../../utils/handleCode';
 interface SecureCodePreviewData {
   userCode: string;
 }
@@ -104,7 +105,7 @@ Component({
       wx.navigateTo({
         url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          res.eventChannel.emit('userId', "cd045e75615dc8941383a3363689e702");
+          res.eventChannel.emit('userId', "8937eaa9615fced1101294c969d6587e");
         }
       });
       // wx.scanCode({
