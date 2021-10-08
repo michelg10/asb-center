@@ -43,6 +43,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 25px;
 }
 #sports-meet-leaderboard-heading {
   margin-bottom: 10px;
@@ -105,7 +106,7 @@
   background-color: var(--subcontainer-background);
   border-radius: 11px;
 }
-.upcoming-events-separator {
+.logs-separator {
   margin-left: 18px;
   padding-top:1px;
   position: relative;
@@ -113,14 +114,15 @@
 }
 .upcoming-events-block {
   height: 55px;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 16px;
-  align-items: center;
 }
-.upcoming-events-left-block {
+.logs-left-top-down-arrange {
   display: flex;
   flex-direction: column;
+}
+.logs-right-top-down-arrange {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .upcoming-event-upcoming {
   color: #3671E0;
@@ -130,11 +132,6 @@
 .upcoming-events-title {
   font-size: 17px;
   font-weight: 500;
-}
-.upcoming-events-right-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 .upcoming-events-location {
   color: var(--secondary);
@@ -148,4 +145,38 @@
 }
 #upcoming-events-heading {
   margin: 0 auto;
+}
+.logs-lr-arrange-block {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 16px;
+  align-items: center;
+}
+.my-logs-block {
+  height: 53px;
+}
+#sports-meet-my-logs-inner-container {
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+.my-logs-event-title {
+  font-size: 17px;
+  font-weight: 500;
+}
+.my-logs-issuer {
+  font-size: 13px;
+  color: var(--secondary);
+}
+.my-logs-points {
+  font-size: 15px;
+  color: var(--secondary);
+  font-weight: 500;
+}
+#sports-meet-my-logs-container {
+  display: flex;
+  flex-direction: column;
+}
+#sports-meet-my-logs-heading {
+  margin: 0 auto;
+  margin-bottom: 10px;
 }

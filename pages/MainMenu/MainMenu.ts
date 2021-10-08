@@ -74,7 +74,7 @@ Component({
                 _id: userData[0].studentId, 
               }).get();
               if (studentData.data.length !== 0) {
-                let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class}; 
+                let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId}; 
                 userObject.student = studentDataObject;
               }
             }
@@ -105,7 +105,7 @@ Component({
       wx.navigateTo({
         url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          res.eventChannel.emit('userId', "8937eaa9615fced1101294c969d6587e");
+          res.eventChannel.emit('userId', "8937eaa9615fcdbb10127e6725015aa0");
         }
       });
       // wx.scanCode({

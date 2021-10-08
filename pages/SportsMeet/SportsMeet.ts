@@ -25,6 +25,17 @@ type EventsListItemType = {
   location: string,
   name: string;
 };
+type LogElementType = {
+  _id: string,
+  eventId: string,
+  eventName: string,
+  issuerId: string,
+  issuerName: string,
+  pointNumber: number|null,
+  stampNumber: number|null,
+  timeStamp: number,
+  userId: string,
+}
 
 interface componentDataInterface {
   userData: userDataType,
@@ -40,6 +51,11 @@ interface componentDataInterface {
   upcomingEventDisplay: upcomingEventDisplayType[];
   eventsList: EventsListItemType[];
   reloadEventListSetInterval: any;
+  regularLogs: LogElementType[],
+  pseudoLogs: LogElementType[],
+  mergedLogs: LogElementType[],
+  regularWatcher: DB.RealtimeListener,
+  pseudoWatcher: DB.RealtimeListener,
 }
 
 Component({
@@ -112,6 +128,21 @@ Component({
         upcomingEventDisplay: newUpcomingEventDisplay,
       });
     },
+    recomputeMerge: function() {
+      console.log("Running data merge...");
+      let newMergedResult: LogElementType[]=[];
+      newMergedResult.push.apply(newMergedResult, this.data.regularLogs);
+      newMergedResult.push.apply(newMergedResult, this.data.pseudoLogs);
+      newMergedResult.sort((a, b) => {
+        if (a.timeStamp < b.timeStamp) {
+          return -1;
+        }
+        return 1;
+      });
+      this.setData({
+        mergedLogs: newMergedResult,
+      });
+    },
     onLoad: function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
@@ -122,7 +153,26 @@ Component({
         this.setData({
           userData: data,
         });
-
+        this.data.regularWatcher=this.data.db.collection(`SportsMeet2021StampLog${data.student?.grade}`).where({
+          userId: data.id,
+        }).watch({
+          onChange: (snapshot) => {
+            this.data.regularLogs = snapshot.docs as any[],
+            this.recomputeMerge();
+          }, onError: function(err) {
+            console.error('the user watch closed because of error', err)
+          }
+        });
+        this.data.pseudoWatcher=this.data.db.collection(`SportsMeet2021StampLog${data.student?.grade}`).where({
+          userId: data.student!.pseudoId,
+        }).watch({
+          onChange: (snapshot) => {
+            this.data.pseudoLogs = snapshot.docs as any[],
+            this.recomputeMerge();
+          }, onError: function(err) {
+            console.error('the pseudo watch closed because of error', err)
+          }
+        });
         allCollectionsData(this.data.db, "SportsMeet2021Timetable").then((res) => {
           let newEventsList: EventsListItemType[] = [];
           for (let i=0;i<res.data.length;i++) {
@@ -238,6 +288,8 @@ Component({
     onUnload: function() {
       clearInterval(this.data.recomputeCaller);
       clearInterval(this.data.reloadEventListSetInterval);
+      this.data.regularWatcher.close();
+      this.data.pseudoWatcher.close();
     }
   }
 })

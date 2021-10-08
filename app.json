@@ -7,8 +7,7 @@
     "pages/ScanFailure/ScanFailure",
     "pages/PersonaDetail/PersonaDetail",
     "pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
-    "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin",
-    "pages/test"
+    "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -18,13 +18,13 @@
     <text class="heading-text" id="upcoming-events-heading">Events</text>
     <view id="sports-meet-upcoming-events-inner-container">
       <block wx:for="{{upcomingEventDisplay}}" wx:key="id">
-        <view wx:if="{{index!==0}}" class="upcoming-events-separator"></view>
-        <view class="upcoming-events-block">
-          <view class="upcoming-events-left-block">
+        <view wx:if="{{index!==0}}" class="logs-separator"></view>
+        <view class="upcoming-events-block logs-lr-arrange-block">
+          <view class="logs-left-top-down-arrange">
             <text class="upcoming-event-upcoming" wx:if="{{item.isUpcoming}}">UPCOMING</text>
             <text class="upcoming-events-title">{{item.name}}</text>
           </view>
-          <view class="upcoming-events-right-block">
+          <view class="logs-right-top-down-arrange">
             <text class="upcoming-events-location">{{item.location}}</text>
             <text class="upcoming-events-time">{{item.time}}</text>
           </view>
@@ -48,5 +48,20 @@
   <view id="sports-meet-leaderboard-container">
     <text class="heading-text" id="sports-meet-leaderboard-heading">Leaderboards</text>
     <template is="leaderboard-block" data="{{ ...{imageSrc: '../../images/SportsMeet/homeroom.jpg', blockTitle: 'Homeroom', blockText: 'Ranked 3rd'} }}"></template>
+  </view>
+  <view id="sports-meet-my-logs-container" wx:if="{{mergedLogs.length !== 0}}">
+    <text class="heading-text" id="sports-meet-my-logs-heading">My Logs</text>
+    <view id="sports-meet-my-logs-inner-container">
+      <block wx:for="{{mergedLogs}}" wx:key="_id">
+        <view wx:if="{{index!==0}}" class="logs-separator"></view>
+        <view class="my-logs-block logs-lr-arrange-block">
+          <view class="logs-left-top-down-arrange">
+            <text class="my-logs-event-title">{{item.eventName}}</text>
+            <text class="my-logs-issuer">from {{item.issuerName}}</text>
+          </view>
+          <text class="my-logs-points">{{item.pointNumber === undefined ? "none" : (item.pointNumber+"s")}} / {{item.stampNumber === undefined ? "none" : (item.stampNumber+"pts")}}</text>
+        </view>
+      </block>
+    </view>
   </view>
 </view>

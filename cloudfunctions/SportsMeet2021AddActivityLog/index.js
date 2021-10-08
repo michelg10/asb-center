@@ -117,6 +117,7 @@ exports.main = async (event, context) => {
       userId: event.userId,
       stampNumber: (allowStamps ? stampValue : undefined),
       pointNumber: (rankLeaderboard ? pointValue : undefined),
+      timeStamp: Date.now(),
     }
   }));
   if (rankLeaderboard) {
