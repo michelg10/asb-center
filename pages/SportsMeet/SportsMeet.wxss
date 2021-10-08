@@ -15,20 +15,19 @@
 }
 #sports-meet-stamp-inner-container {
   margin-top: 12px;
-  height: 97px;
   background-color: var(--subcontainer-background);
   width: 100%;
   border-radius: 11px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 .sports-meet-stamp-image {
   height: 62px;
   width: 62px;
 }
 #sports-meet-stamp-inner {
-  padding: 0 26px;
+  margin: 0 26px;
 }
 #sports-meet-code-container {
   display: flex;
@@ -179,4 +178,54 @@
 #sports-meet-my-logs-heading {
   margin: 0 auto;
   margin-bottom: 10px;
+}
+.stamp-view-main {
+  position: relative;
+  height: 62px;
+  width: 62px;
+}
+.clip-to-l-half {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  border-radius: 100%;
+  clip: rect(0px, 31px, 62px, 0px);
+}
+.stamp-dark-overlay {
+  background-color: #2B2B2B;
+  opacity: 0.54;
+}
+.overlay-pie {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  border-radius: 100%;
+}
+.r-half-clip-pie {
+  clip: rect(0px, 62px, 62px, 31px);
+}
+.clip-to-r-half {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  border-radius: 100%;
+  clip: rect(0px, 62px, 62px, 31px);
+}
+#sports-meet-stamps-row {
+  margin: 18px 0;
+  display: flex;
+}
+#total-stamps-display-text {
+  margin: 0 31px;
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  text-align: center;
+  line-height: 20px;
+}
+#stamp-conversion-hint {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  color: var(--secondary);
 }

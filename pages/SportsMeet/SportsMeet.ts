@@ -56,6 +56,10 @@ interface componentDataInterface {
   mergedLogs: LogElementType[],
   regularWatcher: DB.RealtimeListener,
   pseudoWatcher: DB.RealtimeListener,
+  purchaseWatcher: DB.RealtimeListener,
+  totalStamps: number,
+  totalUsedStamps: number,
+  stickerAngles: number[],
 }
 
 Component({
@@ -84,7 +88,6 @@ Component({
       let date = new Date();
       console.log("Reload upcoming events list");
       let currentDayTimeMark = date.getHours()*60+date.getMinutes();
-      currentDayTimeMark = 13*60+59;
       let newUpcomingEventDisplay: upcomingEventDisplayType[] = [];
       for (let i=0;i<this.data.eventsList.length;i++) {
         let currentItem = this.data.eventsList[i];
@@ -139,8 +142,38 @@ Component({
         }
         return 1;
       });
+      for (let i=0;i<newMergedResult.length;i++) {
+        if (newMergedResult[i].pointNumber === undefined) {
+          newMergedResult[i].pointNumber=null;
+        }
+        if (newMergedResult[i].stampNumber === undefined) {
+          newMergedResult[i].stampNumber=null;
+        }
+      }
+      let eventDoneMap = new Map();
+      let newTotalStampNumber = 0;
+      for (let i=0;i<newMergedResult.length;i++) {
+        if (!eventDoneMap.has(newMergedResult[i].eventId)) {
+          eventDoneMap.set(newMergedResult[i].eventId, true);
+          newTotalStampNumber+=5;
+        }
+        if (newMergedResult[i].stampNumber !== null) {
+          newTotalStampNumber+=newMergedResult[i].stampNumber!;
+        }
+      }
+      let stickerDisplayStamps = Math.min(3, newTotalStampNumber/5.0);
+      
+      let newStickerAngles = Array(3);
+      for (let i=0;i<3;i++) {
+        newStickerAngles[i]=360;
+      }
+      for (let i=0;i<stickerDisplayStamps;i++) {
+        newStickerAngles[i]=360-Math.min(stickerDisplayStamps-i, 1)*360;
+      }
       this.setData({
+        stickerAngles: newStickerAngles,
         mergedLogs: newMergedResult,
+        totalStamps: newTotalStampNumber,
       });
     },
     onLoad: function() {
@@ -172,6 +205,11 @@ Component({
           }, onError: function(err) {
             console.error('the pseudo watch closed because of error', err)
           }
+        });
+
+        // pretend this grabs purchasing data
+        this.setData({
+          totalUsedStamps: 0,
         });
         allCollectionsData(this.data.db, "SportsMeet2021Timetable").then((res) => {
           let newEventsList: EventsListItemType[] = [];

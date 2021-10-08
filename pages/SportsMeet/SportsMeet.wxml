@@ -6,6 +6,20 @@
       <text class="sports-meet-leaderboard-block-text">{{blockText}}</text>
   </view>
 </template>
+<template name="sports-meet-stamp">
+  <view class="stamp-view-main">
+    <view wx:if="{{degrees<=180}}" class="clip-to-l-half">
+      <view class="stamp-dark-overlay overlay-pie r-half-clip-pie" style="transform: rotate({{360-degrees}}deg)"></view>
+    </view>
+    <view wx:if="{{degrees>180}}" class="clip-to-l-half">
+      <view class="stamp-dark-overlay overlay-pie"></view>
+    </view>
+    <view wx:if="{{degrees>180}}" class="clip-to-r-half">
+      <view class="stamp-dark-overlay overlay-pie r-half-clip-pie" style="transform: rotate({{360-degrees}}deg)"></view>
+    </view>
+    <image src="/icons/SportsMeet/stamp.png" class="sports-meet-stamp-image"/>
+  </view>
+</template>
 
 <view id="sports-meet-container">
   <view id="sports-meet-heading-container">
@@ -35,9 +49,15 @@
   <view id="sports-meet-stamp-container">
     <text class="heading-text">Stickers</text>
     <view id="sports-meet-stamp-inner-container">
-      <image src="../../icons/SportsMeet/stamp.png" class="sports-meet-stamp-image"></image>
-      <image src="../../icons/SportsMeet/stamp.png" class="sports-meet-stamp-image" id="sports-meet-stamp-inner"></image>
-      <image src="../../icons/SportsMeet/stamp.png" class="sports-meet-stamp-image"></image>
+      <view id="sports-meet-stamps-row">
+        <template is="sports-meet-stamp" data="{{ ...{degrees: stickerAngles[0]} }}"></template>
+        <view id="sports-meet-stamp-inner">
+          <template is="sports-meet-stamp" data="{{ ...{degrees: stickerAngles[1]} }}"></template>
+        </view>
+        <template is="sports-meet-stamp" data="{{ ...{degrees: stickerAngles[2]} }}"></template>
+      </view>
+      <text id="total-stamps-display-text">{{totalStamps/5}} / 3 stickers • {{(totalStamps-totalUsedStamps)/5}} stickers left for exchange</text>
+      <text id="stamp-conversion-hint">5 stamps = 1 sticker</text>
     </view>
   </view>
   <view id="sports-meet-code-container">
@@ -59,7 +79,7 @@
             <text class="my-logs-event-title">{{item.eventName}}</text>
             <text class="my-logs-issuer">from {{item.issuerName}}</text>
           </view>
-          <text class="my-logs-points">{{item.pointNumber === undefined ? "none" : (item.pointNumber+"s")}} / {{item.stampNumber === undefined ? "none" : (item.stampNumber+"pts")}}</text>
+          <text class="my-logs-points">{{item.pointNumber === null ? "none" : (item.pointNumber+"s")}} / {{item.stampNumber === null ? "none" : (item.stampNumber+"pts")}}</text>
         </view>
       </block>
     </view>
