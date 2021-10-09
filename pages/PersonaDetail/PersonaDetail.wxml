@@ -1,7 +1,7 @@
 <!--pages/PersonaDetail/PersonaDetail.wxml-->
 <view id="persona-detail-container">
   <text class="big-title-text">{{userData.student.nickname}}</text>
-  <text id="persona-detail-id-text">{{userData._id}}</text>
+  <text id="persona-detail-id-text">{{userData._id}}{{accountIsPseudo ? " (Pseudo account) " : ""}}</text>
   <text id="persona-detail-gradeclass-text">Class {{userData.student.grade}}-{{userData.student.class}}</text>
   <view id="log-activity-container" wx:if="{{selectedEventIndex !== undefined}}">
     <text class="heading-text" id="persona-detail-activity-log-text">Log Activity</text>
@@ -42,7 +42,7 @@
   </view>
   <view id="exchange-container" wx:if="{{canDoPurchase}}">
     <view><text class="heading-text" id="persona-detail-activity-log-text">Exchange</text></view>
-    <view><text id="exchange-container-subheading-text" wx:if="{{totalStamps !== undefined && usedStamps !== undefined}}">User balance: {{totalStamps-usedStamps}} stamps (total {{totalStamps}}, spent {{usedStamps}})</text></view>
+    <view><text id="exchange-container-subheading-text" wx:if="{{totalStamps !== undefined && usedStamps !== undefined}}">User balance: {{userBalanceString}}</text></view>
 
     <view class="select-container" id="exchange-select-container" style="z-index: 4;">
       <view class="{{purchaseSelectorOpen ? 'main-select-container main-select-container-open' : 'main-select-container'}}" bindtap="purchaseSelectorClicked">

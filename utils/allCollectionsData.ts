@@ -1,11 +1,19 @@
-export default async function allCollectionsData(db: DB.Database, collectionName: string) {
+export default async function allCollectionsData(db: DB.Database, collectionName: string, whereClause?: any) {
   const MAX_LIMIT = 20.0;
-  const countResult = await db.collection(collectionName).count();
+  let dbCollection: any;
+  if (whereClause === undefined) {
+    dbCollection = db.collection(collectionName);
+  } else {
+    dbCollection = db.collection(collectionName).where({
+      ...whereClause
+    });
+  }
+  const countResult = await dbCollection.count();
   const total = countResult.total;
   const batchTimes = Math.ceil(total/MAX_LIMIT);
   const tasks = [];
   for (let i=0;i<batchTimes;i++) {
-    const promise = db.collection(collectionName).skip(i*MAX_LIMIT).limit(MAX_LIMIT).get();
+    const promise = dbCollection.skip(i*MAX_LIMIT).limit(MAX_LIMIT).get();
     tasks.push(promise);
   }
   if (batchTimes===0) {

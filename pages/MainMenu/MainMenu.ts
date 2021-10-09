@@ -105,7 +105,7 @@ Component({
       wx.navigateTo({
         url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          res.eventChannel.emit('userId', "8937eaa9615fcdbb10127e6725015aa0");
+          res.eventChannel.emit('userId', "8937eaa96161226e103dec2931cfe0ed");
         }
       });
       // wx.scanCode({

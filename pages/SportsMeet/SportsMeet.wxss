@@ -4,7 +4,7 @@
 #sports-meet-container {
   margin: 0 16px;
   margin-top: 10px;
-  margin-bottom: 80px;
+  padding-bottom: 80px;
 }
 #sports-meet-stamp-container {
   display: flex;

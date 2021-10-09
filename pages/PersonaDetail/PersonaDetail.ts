@@ -25,6 +25,7 @@ type UserDataType = {
     nickname: string,
     grade: number,
     class: number,
+    pseudoId: string,
   }
 }
 // pages/PersonaDetail/PersonaDetail.ts
@@ -57,6 +58,7 @@ type AdminStatusType = {
 interface componentDataInterface {
   myId: string,
   adminStatus: AdminStatusType,
+  accountIsPseudo: boolean,
   userId: string,
   db: DB.Database,
   events: SMEventType[],
@@ -70,13 +72,16 @@ interface componentDataInterface {
   purchaseWatcher: DB.RealtimeListener,
   logs: LogType[],
   purchaseLogs: PurchaseLogType[],
+  pseudoLogs: LogType[]|null,
   stampValue: number,
   pointValue: number,
   isWaiting: boolean,
   logAddFeedback: string,
   logAddFeedbackClass: string,
   totalStamps: number,
+  totalPseudoStamps: number|null,
   usedStamps: number,
+  usedPseudoStamps: number|null,
   selectedPurchaseItemIndex: number,
   purchaseSelectorOpen: boolean,
   purchaseButtonClass: string,
@@ -84,6 +89,7 @@ interface componentDataInterface {
   purchaseHintClass: string,
   pastLogDeletionError: string,
   exchangeLogDeletionError: string,
+  userBalanceString: string,
 }
 
 Component({
@@ -186,7 +192,12 @@ Component({
       if (this.data.totalStamps === undefined || this.data.usedStamps === undefined) {
         return;
       }
-      if (this.data.items[this.data.selectedPurchaseItemIndex].cost<=this.data.totalStamps-this.data.usedStamps) {
+      let totalBalance = this.data.totalStamps+(this.data.totalPseudoStamps === null ? 0 : this.data.totalPseudoStamps);
+      let totalSpent = this.data.usedStamps+(this.data.usedPseudoStamps === null ? 0 :this.data.usedPseudoStamps);
+      this.setData({
+        userBalanceString: `${totalBalance-totalSpent} stamps (total ${this.data.totalStamps}${this.data.totalPseudoStamps === null ? "" : ("+"+this.data.totalPseudoStamps)}, spent ${this.data.usedStamps}${this.data.usedPseudoStamps === null ? "" : ("+"+this.data.usedPseudoStamps)})`
+      });
+      if (this.data.items[this.data.selectedPurchaseItemIndex].cost<=totalBalance-totalSpent) {
         this.setData({
           purchaseButtonClass: "purchase-button-can-buy",
           purchaseHintClass: "",
@@ -299,6 +310,30 @@ Component({
         });
       }
     },
+    recomputeTotalStampInfo: function() {
+      let hasAStickerMap = new Map();
+      let computeStamps = (logs: LogType[]) => {
+        let rturn=0;
+        for (let i=0;i<logs.length;i++) {
+          if (!hasAStickerMap.has(logs[i].eventId)) {
+            rturn+=5; // new sticker!
+            hasAStickerMap.set(logs[i].eventId, true);
+          }
+          rturn+=(logs[i].stampNumber === null ? 0 : logs[i].stampNumber as number);
+        }
+        return rturn;
+      };
+      let newTotalStamps=computeStamps(this.data.logs);
+      let newPseudoTotalStamps: number|null=null;
+      if (this.data.pseudoLogs !== null) {
+        newPseudoTotalStamps=computeStamps(this.data.pseudoLogs);
+      }
+      this.setData({
+        totalStamps: newTotalStamps,
+        totalPseudoStamps: newPseudoTotalStamps,
+      });
+      this.updateCanAfford();
+    },
     onLoad: async function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
@@ -308,6 +343,9 @@ Component({
         pointValue: 0,
         purchaseSelectContainerClass: "main-select-container",
         purchaseSelectorOpen: false,
+        pseudoLogs: null,
+        totalPseudoStamps: null,
+        usedPseudoStamps: null,
       });
       this.data.db = wx.cloud.database();
       this.data.db.collection("userData").where({
@@ -351,13 +389,47 @@ Component({
           if (res === undefined) {
             wx.navigateBack();
           }
-          let studentResult = (res.result as AnyObject).data;
-          if (studentResult === {}) {
+          let studentResult:UserDataType = (res.result as AnyObject).data;
+          if (studentResult as any === {}) {
+            console.log("Student result is empty");
             wx.navigateBack();
           }
           this.setData({
             userData: studentResult,
+            accountIsPseudo: studentResult.student.pseudoId === this.data.userId
           });
+          if (!this.data.accountIsPseudo) {
+            // tally up other activity logs and exchange logs
+            allCollectionsData(this.data.db, `SportsMeet2021StampLog${studentResult.student.grade}`, {
+              userId: this.data.userData.student.pseudoId,
+            }).then((res) => {
+              let newPseudoLogs: LogType[] = res.data as any[];
+              for (let i=0;i<newPseudoLogs.length;i++) {
+                if (newPseudoLogs[i].pointNumber as any === undefined) {
+                  newPseudoLogs[i].pointNumber = null;
+                } 
+                if (newPseudoLogs[i].stampNumber as any === undefined) {
+                  newPseudoLogs[i].stampNumber = null;
+                }
+              }
+              this.setData({
+                pseudoLogs: newPseudoLogs,
+              });
+              this.recomputeTotalStampInfo();
+            });
+            allCollectionsData(this.data.db, `SportsMeet2021TransactionLog${studentResult.student.grade}`, {
+              userId: this.data.userData.student.pseudoId,
+            }).then((res2) => {
+              let newUsedPseudoStamps=0;
+              for (let i=0;i<res2.data.length;i++) {
+                newUsedPseudoStamps+=res2.data[i].itemCost;
+              }
+              this.setData({
+                usedPseudoStamps: newUsedPseudoStamps,
+              });
+              this.updateCanAfford();
+            })
+          }
           // monitor log (main, transaction)
           this.data.logWatcher = this.data.db.collection(`SportsMeet2021StampLog${studentResult.student.grade}`).where({
             userId: data,
@@ -376,20 +448,10 @@ Component({
                   stampNumber: snapshot.docs[i].stampNumber === undefined ? null : snapshot.docs[i].stampNumber,
                 });
               }
-              let newTotalStamps = 0;
-              let hasAStickerMap = new Map();
-              for (let i=0;i<newLogs.length;i++) {
-                if (!hasAStickerMap.has(newLogs[i].eventId)) {
-                  newTotalStamps+=5; // new sticker!
-                  hasAStickerMap.set(newLogs[i].eventId, true);
-                }
-                newTotalStamps+=(newLogs[i].stampNumber === null ? 0 : newLogs[i].stampNumber as number);
-              }
               this.setData({
-                totalStamps: newTotalStamps,
                 logs: newLogs,
               });
-              this.updateCanAfford();
+              this.recomputeTotalStampInfo();
             },
             onError: function(err) {
               console.error('the stamp log watch closed because of error', err);

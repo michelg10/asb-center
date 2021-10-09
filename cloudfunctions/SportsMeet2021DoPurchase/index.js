@@ -46,6 +46,8 @@ exports.main = async (event, context) => {
     };
   }
   let userGrade = fetchUserStudentId.data[0].grade;
+  let pseudoAccountId = fetchUserStudentId.data[0].pseudoId;
+  let isPseudoAccount = (event.userId === pseudoAccountId);
 
   // stage 3: fetch log information, fetch item information, fetch admin information
   tasks = [];
@@ -58,13 +60,47 @@ exports.main = async (event, context) => {
     id: event.itemId,
   }).get());
   // fetch stamp log information
-  tasks.push(db.collection(`SportsMeet2021StampLog${userGrade}`).where({
-    userId: event.userId,
-  }).get());
+  tasks.push(cloud.callFunction({
+    name: "fetchAllCollections",
+    data: {
+      collectionName: `SportsMeet2021StampLog${userGrade}`,
+      whereClause: {
+        userId: event.userId,
+      }
+    }
+  }));
   // fetch transaction information
-  tasks.push(db.collection(`SportsMeet2021TransactionLog${userGrade}`).where({
-    userId: event.userId,
-  }).get());
+  tasks.push(cloud.callFunction({
+    name: "fetchAllCollections",
+    data: {
+      collectionName: `SportsMeet2021TransactionLog${userGrade}`,
+      whereClause: {
+        userId: event.userId,
+      }
+    }
+  }));
+  if (!isPseudoAccount) {
+    // fetch related pseudoAccount log information
+    tasks.push(cloud.callFunction({
+      name: "fetchAllCollections",
+      data: {
+        collectionName: `SportsMeet2021StampLog${userGrade}`,
+        whereClause: {
+          userId: pseudoAccountId,
+        }
+      }
+    }));
+    // fetch related pseudoAccount transaction information
+    tasks.push(cloud.callFunction({
+      name: "fetchAllCollections",
+      data: {
+        collectionName: `SportsMeet2021TransactionLog${userGrade}`,
+        whereClause: {
+          userId: pseudoAccountId,
+        }
+      }
+    }));
+  }
   res = await Promise.all(tasks);
   // admin information: check authorization, resolve issuerName
   if (res[0].data.length === 0) {
@@ -93,20 +129,38 @@ exports.main = async (event, context) => {
 
   // stamp log information: compute the number of total stamps
   let totalStamps=0;
-  for (let i=0;i<res[2].data.length;i++) {
-    totalStamps+=(res[2].data[i].stampNumber === undefined ? 0 : res[2].data[i].stampNumber);
+  let cummulateStamps = (logs) => {
+    for (let i=0;i<logs.length;i++) {
+      totalStamps+=(logs[i].stampNumber === undefined ? 0 : logs[i].stampNumber);
+    }
+  }
+  cummulateStamps(res[2].result.data);
+  if (!isPseudoAccount) {
+    cummulateStamps(res[4].result.data);
   }
   let eventHasExperienced = new Map();
-  for (let i=0;i<res[2].data.length;i++) {
-    if (!eventHasExperienced.has(res[2].data[i].eventId)) {
-      totalStamps += 5;
-      eventHasExperienced.set(res[2].data[i].eventId, true);
+  let addExperiencePoints = (logs) => {
+    for (let i=0;i<logs.length;i++) {
+      if (!eventHasExperienced.has(logs[i].eventId)) {
+        totalStamps += 5;
+        eventHasExperienced.set(logs[i].eventId, true);
+      }
     }
+  }
+  addExperiencePoints(res[2].result.data);
+  if (!isPseudoAccount) {
+    addExperiencePoints(res[4].result.data);
   }
   // transaction log information: total up past transaction
   let totalTransacted = 0;
-  for (let i=0;i<res[3].data.length;i++) {
-    totalTransacted+=res[3].data[i].itemCost;
+  let cummulateTransactions = (logs) => {
+    for (let i=0;i<logs.length;i++) {
+      totalTransacted+=logs[i].itemCost;
+    }
+  }
+  cummulateTransactions(res[3].result.data);
+  if (!isPseudoAccount) {
+    cummulateTransactions(res[5].result.data);
   }
   if (totalStamps-totalTransacted<itemCost) {
     return {
