@@ -2,7 +2,7 @@ import { Event } from "../../classes/event";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { createQRCode, userDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
-import { extendNumberToLengthString } from "../../utils/util";
+import { extendNumberToLengthString, getUnixTime } from "../../utils/util";
 import { PreviewGenerator } from "../MainMenu/MainMenu";
 
 // pages/SportsMeet.js
@@ -84,6 +84,7 @@ interface componentDataInterface {
   homeroomData: HomeroomComputedLeaderboardType[],
   homeroomLeaderboardWatcher: DB.RealtimeListener,
   leaderboardPageEventChannel: null|any,
+  leaderboardLastUpdateTime: number,
 }
 
 Component({
@@ -117,7 +118,7 @@ Component({
       let pointProperty: string;
       let nameProperty: string;
 
-      if (x !== -1) {
+      if (x.currentTarget.dataset.index !== -1) {
         let tapped=this.data.leaderboardEvents[x.currentTarget.dataset.index];
         showSearch = true;
         title = tapped.name;
@@ -140,6 +141,7 @@ Component({
         events: {
           pageClose: () => {
             this.data.leaderboardPageEventChannel = null;
+            console.log("Closed connection to leaderboard page");
           }
         },
         success: (res) => {
@@ -252,6 +254,7 @@ Component({
         previewPort: "SportsMeetInnerPreviewPort",
         viewVisible: true,
         leaderboardPageEventChannel: null,
+        leaderboardLastUpdateTime: 0,
       });
       this.data.db = wx.cloud.database();
       {
@@ -276,6 +279,10 @@ Component({
         });
         this.data.leaderboardWatcher=this.data.db.collection(`SportsMeet2021LeaderboardProcessed${data.student!.grade}`).watch({
           onChange: (snapshot) => {
+            if (getUnixTime() - this.data.leaderboardLastUpdateTime < 1) {
+              return;
+            }
+            this.data.leaderboardLastUpdateTime = getUnixTime();
             let myIndexWithinDocs = -1;
             for (let i=0;i<snapshot.docs.length;i++) {
               if (snapshot.docs[i].studentId ===data.id) {
@@ -389,6 +396,10 @@ Component({
               myHomeroomRank: newMyHomeroomRank,
               homeroomData: newHomeroomData,
             });
+            if (this.data.leaderboardPageEventChannel !== null) {
+              console.log("Emitting change to homeroom leaderboard page");
+              this.data.leaderboardPageEventChannel.emit("data", newHomeroomData);
+            }
           }, onError: function(err) {
             console.error('the homeroom watch closed because of error', err);
           }
