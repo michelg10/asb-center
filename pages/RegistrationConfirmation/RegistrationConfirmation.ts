@@ -3,7 +3,10 @@ import { Student } from "../../classes/student";
 // pages/RegistrationConfirmation.ts
 interface componentDataInterface {
   studentData: Student;
-  yesBeenTapped: boolean; // prevent yes from being tapped multiple times
+  confirmBeenTapped: boolean; // prevent yes from being tapped multiple times
+  gNumber:string;
+  error: string|null,
+  gInput: string,
 };
 Component({
 
@@ -22,23 +25,48 @@ Component({
         });
       });
     },
-    handleNoClick: function() {
-      wx.navigateBack();
+    handleGInput: function(x: any) {
+      this.data.gInput = x.detail.value;
     },
-    handleYesClick: async function() {
-      if (this.data.yesBeenTapped) {
+    handleSubmitClick: async function() {
+      if (this.data.confirmBeenTapped) {
         return;
       }
-      this.data.yesBeenTapped=true;
-      await wx.cloud.callFunction({
+      if (this.data.gInput.length !== 10) {
+        this.setData({
+          error: "G-number invalid",
+        });
+        return;
+      }
+      for (let i=0;i<this.data.gInput.length;i++) {
+        if (!(this.data.gInput[i]>='0' && this.data.gInput[i]<='9')) {
+          this.setData({
+            error: "G-number invalid",
+          });
+          return;
+        }
+      }
+      this.setData({
+        error: "",
+      });
+      this.data.confirmBeenTapped=true;
+      let res = await wx.cloud.callFunction({
         name: "registerUser",
         data: {
           studentId: this.data.studentData.id,
+          gNumber: this.data.gInput,
         }
       })
-      wx.reLaunch({
-        url: "/pages/MainMenu/MainMenu",
-      });
+      this.data.confirmBeenTapped=false;
+      if ((res.result as any).status === "success") {
+        wx.reLaunch({
+          url: "/pages/MainMenu/MainMenu",
+        });
+      } else {
+        this.setData({
+          error: (res.result as any).reason,
+        });
+      }
     }
   }
 })

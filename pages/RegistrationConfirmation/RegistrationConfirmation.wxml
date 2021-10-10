@@ -22,14 +22,15 @@
     </view>
   </view>
   <view id="registrationconfirm-action-container">
-    <view id="registrationconfirm-action-buttons-container">
-      <view class="registrationconfirm-action-button" id="registrationconfirm-action-button-yes" bindtap="handleYesClick">
-        <text id="registrationconfirm-action-yes">Yes, I am {{studentData.nickname}}</text>
+    <view id="registrationconfirm-action-textbox-container">
+      <text id="enter-request-text">Enter your G-number below</text>
+      <view id="input-container">
+        <text id="g-hint">G -</text>
+        <input password id="g-password-box" bindinput="handleGInput"></input>
+        <image id="submit-button-image" src="/icons/enter.svg" bindtap="handleSubmitClick"></image>
       </view>
-      <view class="registrationconfirm-action-button" id="registrationconfirm-action-button-no" bindtap="handleNoClick">
-        <text id="registrationconfirm-action-no">No, I am not {{studentData.nickname}}</text>
-      </view>
+      <view id="error-display">{{error}}</view>
     </view>
-    <text class="subtext" id="registrationconfirm-subtext">Your registration is permanent and cannot be changed. Choosing a false identity may significantly impact your performance in events like Sports Carnival and Summer Bash and get you in trouble. The ASB is not responsible for any problems caused by choosing a false identity.</text>
+    <text class="subtext" id="registrationconfirm-subtext">Your registration is permanent and cannot be changed. Choosing a false identity may significantly impact your performance in events and get you in trouble. The ASB is not responsible for any problems caused by choosing a false identity.</text>
   </view>
 </view>

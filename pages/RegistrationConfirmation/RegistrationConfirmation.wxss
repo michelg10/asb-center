@@ -22,33 +22,17 @@
 }
 #registrationconfirm-big-title {
   text-align: center;
-  margin-bottom: 41px;
+  margin-bottom: 25px;
 }
 #registrationconfirm-subtext {
   margin: 0 45px;
-  padding-bottom:83px;
+  padding-bottom:65px;
   text-align: center;
 }
 #registrationconfirm-action-container {
   display: flex;
   flex-direction: column;
   flex-grow: 0;
-}
-.registrationconfirm-action-button {
-  margin: 0 16px;
-  box-sizing: border-box;
-  background-color: var(--subcontainer-background);
-  border-radius: 9px;
-  height: 45px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#registrationconfirm-action-button-yes {
-  margin-bottom: 8px;
-}
-#registrationconfirm-action-button-no {
-  margin-bottom: 20px;
 }
 .registrationconfirm-info-row-label {
   font-size: 17px;
@@ -58,13 +42,44 @@
   font-size: 17px;
   font-weight: 400;
 }
-#registrationconfirm-action-yes {
+#registrationconfirm-action-textbox-container {
+  margin-bottom: 150px;
+  display: flex;
+  flex-direction: column;
+}
+#enter-request-text {
+  margin: 0 45px;
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 13px;
+}
+#input-container {
+  display: flex;
+  margin: 0 16px;
+  padding: 0 13px;
+  height: 44px;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+  align-items: center;
+}
+#g-hint {
+  margin-right: 7px;
+  font-weight: 500;
+}
+#g-password-box {
+  flex-grow: 1;
+}
+#submit-button-image {
+  width: 26px;
+  height: 26px;
+}
+#error-display {
+  height: 20px;
+  padding: 0 80px;
+  margin-top: 9px;
   font-size: 17px;
   font-weight: 500;
-  color: var(--link);
-}
-#registrationconfirm-action-no {
-  font-size: 17px;
-  font-weight: 400;
   color: var(--warn);
+  text-align: center;
 }

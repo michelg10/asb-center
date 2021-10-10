@@ -12,44 +12,60 @@ exports.main = async (event, context) => {
   let checkIfUserAlreadyHasAccount = await db.collection('userData').where({
     userId: wxContext.OPENID,
   }).get();
-  let newAccountId=undefined;
-  if (checkIfUserAlreadyHasAccount.data.length === 0) {
-    // create a new account
-    let res = await db.collection('userData').add({
+  let userHasAccount = checkIfUserAlreadyHasAccount.data.length !== 0;
+  if (event.studentId !== undefined) {
+    if (userHasAccount && checkIfUserAlreadyHasAccount.data[0].studentId !== undefined) {
+      return {
+        status: "failure",
+        reason: "Account already has associated studentId",
+      };
+    }
+    // validate studentId
+    let studentIdValidate = await db.collection('gNumbers').where({
+      studentId: event.studentId,
+    }).get();
+    if (studentIdValidate.data.length === 0) {
+      return {
+        status: "failure",
+        reason: `studentId ${event.studentId} does not exist`,
+      };
+    }
+    if ('G'+event.gNumber !== studentIdValidate.data[0].gnumber) {
+      return {
+        status: "failure",
+        reason: `G-number invalid`,
+      };
+    }
+  }
+  if (userHasAccount && event.studentId === undefined) {
+    // user has account, user does not want to associate studentId. nothing needs to be done.
+  }
+  if (userHasAccount && event.studentId !== undefined) {
+    // associate current account with a student ID
+    await db.collection('userData').where({
+      userId: wxContext.OPENID,
+    }).update({
       data: {
-        info: {},
-        studentId: undefined,
-        userId: wxContext.OPENID
+        studentId: event.studentId,
       }
     });
-    newAccountId=res._id;
   }
-  // now update the user's id if the user does not have a studentId and the studentId is valid
-  if (event.studentId !== undefined) {
-    let userHasStudentId = false;
-    if (checkIfUserAlreadyHasAccount.data.length>0) {
-      if (checkIfUserAlreadyHasAccount.data[0].studentId !== undefined) {
-        userHasStudentId = true;
+  if (!userHasAccount) {
+    let newAccount = {
+      info: {},
+      studentId: undefined,
+      userId: wxContext.OPENID
+    };
+    if (event.studentId !== undefined) {
+      newAccount.studentId = event.studentId;
+    }
+    await db.collection('userData').add({
+      data: {
+        ...newAccount,
       }
-    }
-    let studentIdValid = false;
-    let checkStudentIdValid = await db.collection('studentData').where({
-      _id: event.studentId,
-    }).get();
-    if (checkStudentIdValid.data.length !== 0) {
-      studentIdValid = true;
-    }
-    if (!userHasStudentId && studentIdValid) {
-      // update the user ID
-      await db.collection("userData").where({
-        userId: wxContext.OPENID,
-      }).update({
-        data: {
-          studentId: event.studentId
-        }
-      });
-    }
+    });
   }
+
   // now run mandatory join on the user
   let unresolvedInfo = await db.collection("userData").where({
     userId: wxContext.OPENID,
@@ -64,12 +80,14 @@ exports.main = async (event, context) => {
         obj.student=studentInfo.data[0];
       }
     }
-    await cloud.callFunction({
+    cloud.callFunction({
       name: "mandatoryJoin",
       data: {
         suppliedUserDataInformation: [obj],
       }
     })
   }
-  return {};
+  return {
+    status: "success",
+  };
 }
