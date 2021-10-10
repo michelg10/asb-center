@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 17 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-470,0)">
+        <g id="Artboard13" transform="matrix(0.809524,0,0,0.586207,-63.746,0)">
+            <rect x="659.333" y="0" width="21" height="29" style="fill:none;"/>
+            <clipPath id="_clip1">
+                <rect x="659.333" y="0" width="21" height="29"/>
+            </clipPath>
+            <g clip-path="url(#_clip1)">
+                <g transform="matrix(0.375616,0,0,0.518707,481.05,14.9641)">
+                    <path d="M484.385,5.551C484.385,7.308 485.63,8.505 487.559,8.505L500.865,8.505L500.865,21.395C500.865,24.447 502.085,27.059 502.598,27.059C503.111,27.059 504.331,24.447 504.331,21.395L504.331,8.505L517.637,8.505C519.566,8.505 520.811,7.308 520.811,5.551C520.811,0.326 516.709,-4.923 510.044,-7.267L509.263,-18.644C512.364,-20.45 515.293,-22.721 516.563,-24.43C517.124,-25.187 517.417,-25.919 517.417,-26.578C517.417,-27.872 516.392,-28.849 514.854,-28.849L490.342,-28.849C488.804,-28.849 487.803,-27.872 487.803,-26.578C487.803,-25.919 488.072,-25.187 488.633,-24.43C489.927,-22.721 492.857,-20.45 495.933,-18.644L495.152,-7.267C488.487,-4.923 484.385,0.326 484.385,5.551Z" style="fill:rgb(255,216,30);fill-rule:nonzero;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

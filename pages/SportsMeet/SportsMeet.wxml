@@ -1,6 +1,6 @@
 <!--pages/SportsMeet.wxml-->
 <template name="leaderboard-block">
-  <view class="sports-meet-leaderboard-block{{' '+imageSrc+'BackgroundStyle'}}">
+  <view class="sports-meet-leaderboard-block{{' '+imageSrc+'BackgroundStyle'}}" bindtap="leaderboardButtonTapped" data-index="{{index}}">
       <text class="sports-meet-leaderboard-block-heading">{{blockTitle}}</text>
       <text class="sports-meet-leaderboard-block-text">{{blockText}}</text>
   </view>
@@ -66,10 +66,10 @@
   </view>
   <view id="sports-meet-leaderboard-container">
     <text class="heading-text" id="sports-meet-leaderboard-heading">Leaderboards</text>
-    <template is="leaderboard-block" data="{{ ...{imageSrc: 'homeroom', blockTitle: 'Homeroom', blockText: 'Ranked '+myHomeroomRank} }}"></template>
+    <template is="leaderboard-block" data="{{ ...{imageSrc: 'homeroom', blockTitle: 'Homeroom', blockText: 'Ranked '+myHomeroomRank, index: -1} }}"></template>
     <view id="sports-meet-competitive-leaderboards-grid">
       <block wx:for="{{leaderboardEvents}}" wx:key="id">
-        <template is="leaderboard-block" data="{{ ...{imageSrc: item.id, blockTitle: item.name, blockText: 'Ranked '+item.myRank} }}"></template>
+        <template is="leaderboard-block" data="{{ ...{imageSrc: item.id, blockTitle: item.name, blockText: 'Ranked '+item.myRank, index: index} }}"></template>
       </block>
     </view>
   </view>

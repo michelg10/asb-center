@@ -71,7 +71,7 @@ exports.main = async (event, context) => {
               // add the new user into the computed leaderboard
               let leaderboardObj = {
                 studentId: userDataInformation[j]._id,
-                studentNickname: userDataInformation[j].student.nickname,
+                studentNickname: userDataInformation[j].student.uniqueNickname,
               };
               if (cacheObj.SportsMeet2021Events===undefined) {
                 let result = await cloud.callFunction({

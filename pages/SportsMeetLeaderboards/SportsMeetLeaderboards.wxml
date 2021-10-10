@@ -1,0 +1,50 @@
+<!--pages/SportsMeetLeaderboards/SportsMeetLeaderboards.wxml-->
+<template name="leaderboard-entry">
+  <view class="leaderboard-entry">
+    
+  </view>
+</template>
+<view id="leaderboards-container-main" class="leaderboardsBackgroundImage">
+  <text class="big-title-text leaderboard-bigtexts" id="leaderboard-title">Activity 1</text>
+  <view id="pinned-container">
+    <view id="pinned-container-title">
+      <text class="heading-text leaderboard-bigtexts leaderboard-headings">Pinned</text>
+      <text id="leaderboard-pinned-count">1/5 Pinned</text>
+    </view>
+    <view id="pinned-main-container" class="main-leaderboards-container">
+      <view class="leaderboard-row-container">
+        <view class="leaderboard-row-left-container">
+          <image class="leaderboard-row-change-display" src="/icons/SportsMeet/down.svg" />
+          <text class="leaderboard-row-position leaderboard-smallTexts">256</text>
+          <text class="leaderboard-row-name leaderboard-smallTexts">Jack Beans</text>
+        </view>
+        <view class="leaderboard-row-right-container">
+          <image class="leaderboard-row-pin-icon" src="/icons/SportsMeet/pin-enabled.svg" />
+          <text class="leaderboard-row-point-display leaderboard-secondary">5342 pts</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view id="ranked-container">
+    <text class="heading-text leaderboard-bigtexts leaderboard-headings">Ranked</text>
+    <view id="ranked-main-container" class="main-leaderboards-container">
+      <view id="ranked-search-container">
+        <image id="leaderboard-search-icon" src="/icons/SportsMeet/leaderboard-search.svg"></image>
+        <input type="text" placeholder="Search Students..." placeholder-class="leaderboard-secondary" id="ranked-search-textfield" class="leaderboard-smallTexts"></input>
+      </view>
+      <view id="ranked-main-container">
+        <view class="leaderboard-row-container">
+          <view class="leaderboard-row-left-container">
+            <image class="leaderboard-row-change-display" src="/icons/SportsMeet/down.svg" />
+            <text class="leaderboard-row-position leaderboard-smallTexts">256</text>
+            <text class="leaderboard-row-name leaderboard-smallTexts">Jack Beans</text>
+          </view>
+          <view class="leaderboard-row-right-container">
+            <image class="leaderboard-row-pin-icon" src="/icons/SportsMeet/pin-disabled.svg" />
+            <text class="leaderboard-row-point-display leaderboard-secondary">5342 pts</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

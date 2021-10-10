@@ -47,6 +47,8 @@ type HomeroomComputedLeaderboardType = {
   classPoints: number,
   lastRank: number,
   stampPoints: number,
+  classComputedName: string,
+  computedScore: number,
 }
 interface componentDataInterface {
   userData: userDataType,
@@ -81,6 +83,7 @@ interface componentDataInterface {
   myHomeroomRank: string,
   homeroomData: HomeroomComputedLeaderboardType[],
   homeroomLeaderboardWatcher: DB.RealtimeListener,
+  leaderboardPageEventChannel: null|any,
 }
 
 Component({
@@ -104,6 +107,52 @@ Component({
       wx.navigateTo({
         url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
       });
+    },
+    leaderboardButtonTapped: function(x: any) {
+      let showSearch: boolean;
+      let title: string;
+      let usePins: boolean;
+      let data: any[];
+      let lastRankProperty: string;
+      let pointProperty: string;
+      let nameProperty: string;
+
+      if (x !== -1) {
+        let tapped=this.data.leaderboardEvents[x.currentTarget.dataset.index];
+        showSearch = true;
+        title = tapped.name;
+        usePins = true;
+        data = this.data.leaderboardData;
+        lastRankProperty = `studentLastRank${tapped.id}`;
+        pointProperty = `studentPointScore${tapped.id}`;
+        nameProperty = "studentNickname";
+      } else {
+        showSearch = false;
+        title = "Homeroom";
+        usePins = false;
+        data = this.data.homeroomData;
+        lastRankProperty = "lastRank";
+        pointProperty = "computedScore";
+        nameProperty = "classComputedName";
+      }
+      wx.navigateTo({
+        url: "/pages/SportsMeetLeaderboards/SportsMeetLeaderboards",
+        events: {
+          pageClose: () => {
+            this.data.leaderboardPageEventChannel = null;
+          }
+        },
+        success: (res) => {
+          this.data.leaderboardPageEventChannel = res.eventChannel;
+          res.eventChannel.emit("showSearch", showSearch);
+          res.eventChannel.emit("title", title);
+          res.eventChannel.emit("usePins", usePins);
+          res.eventChannel.emit("data", data);
+          res.eventChannel.emit("lastRankProperty", lastRankProperty);
+          res.eventChannel.emit("pointProperty", pointProperty);
+          res.eventChannel.emit("nameProperty", nameProperty);
+        }
+      })
     },
     reloadUpcomingEventList: function() {
       let date = new Date();
@@ -202,6 +251,7 @@ Component({
       this.setData({
         previewPort: "SportsMeetInnerPreviewPort",
         viewVisible: true,
+        leaderboardPageEventChannel: null,
       });
       this.data.db = wx.cloud.database();
       {
@@ -277,6 +327,10 @@ Component({
               leaderboardRanks: newLeaderboardRanks,
               leaderboardEvents: newLeaderboardEvents,
             });
+            if (this.data.leaderboardPageEventChannel !== null) {
+              console.log("Emitting change to leaderboard page");
+              this.data.leaderboardPageEventChannel.emit("data", this.data.leaderboardData);
+            }
           }, onError: function(err) {
             console.error('the leaderboard watch closed because of error', err)          
           }
@@ -284,6 +338,10 @@ Component({
         this.data.homeroomLeaderboardWatcher=this.data.db.collection(`SportsMeet2021HomeroomProcessed${data.student!.grade}`).watch({
           onChange: (snapshot) => {
             let newHomeroomData = snapshot.docs as HomeroomComputedLeaderboardType[];
+            for (let i=0;i<newHomeroomData.length;i++) {
+              newHomeroomData[i].classComputedName=`${data.student!.grade}-${newHomeroomData[i].class}`;
+              newHomeroomData[i].computedScore=newHomeroomData[i].classPoints+newHomeroomData[i].stampPoints/10;
+            }
             let myIndexWithinDocs = -1;
             let newMyHomeroomRank = "";
             for (let i=0;i<newHomeroomData.length;i++) {
@@ -297,8 +355,8 @@ Component({
             }
             sortMapping.sort((a, b) => {
               // negative if a<b, zero if equal and positive if a>b
-              let actualA = newHomeroomData[a].classPoints+newHomeroomData[a].stampPoints/10;
-              let actualB = newHomeroomData[b].classPoints+newHomeroomData[b].stampPoints/10;
+              let actualA = newHomeroomData[a].computedScore;
+              let actualB = newHomeroomData[b].computedScore;
               if (actualA === actualB) {
                 return 0;
               }
@@ -331,7 +389,6 @@ Component({
               myHomeroomRank: newMyHomeroomRank,
               homeroomData: newHomeroomData,
             });
-            console.log(newHomeroomData, ranking);
           }, onError: function(err) {
             console.error('the homeroom watch closed because of error', err);
           }
