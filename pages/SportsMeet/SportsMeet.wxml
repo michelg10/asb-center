@@ -1,7 +1,6 @@
 <!--pages/SportsMeet.wxml-->
 <template name="leaderboard-block">
-  <view class="sports-meet-leaderboard-block">
-      <image src="{{imageSrc}}" class="sports-meet-leaderboard-block-image"></image>
+  <view class="sports-meet-leaderboard-block{{' '+imageSrc+'BackgroundStyle'}}">
       <text class="sports-meet-leaderboard-block-heading">{{blockTitle}}</text>
       <text class="sports-meet-leaderboard-block-text">{{blockText}}</text>
   </view>
@@ -56,7 +55,7 @@
         </view>
         <template is="sports-meet-stamp" data="{{ ...{degrees: stickerAngles[2]} }}"></template>
       </view>
-      <text id="total-stamps-display-text">{{totalStamps/5}} / 3 stickers • {{(totalStamps-totalUsedStamps)/5}} stickers left for exchange</text>
+      <text id="total-stamps-display-text">{{totalStamps/5}} / 3 stickers • {{(totalStamps-usedPseudoStamps-regularUsedStamps)/5}} stickers left for exchange</text>
       <text id="stamp-conversion-hint">5 stamps = 1 sticker</text>
     </view>
   </view>
@@ -67,7 +66,12 @@
   </view>
   <view id="sports-meet-leaderboard-container">
     <text class="heading-text" id="sports-meet-leaderboard-heading">Leaderboards</text>
-    <template is="leaderboard-block" data="{{ ...{imageSrc: '../../images/SportsMeet/homeroom.jpg', blockTitle: 'Homeroom', blockText: 'Ranked 3rd'} }}"></template>
+    <template is="leaderboard-block" data="{{ ...{imageSrc: 'homeroom', blockTitle: 'Homeroom', blockText: 'Ranked '+myHomeroomRank} }}"></template>
+    <view id="sports-meet-competitive-leaderboards-grid">
+      <block wx:for="{{leaderboardEvents}}" wx:key="id">
+        <template is="leaderboard-block" data="{{ ...{imageSrc: item.id, blockTitle: item.name, blockText: 'Ranked '+item.myRank} }}"></template>
+      </block>
+    </view>
   </view>
   <view id="sports-meet-my-logs-container" wx:if="{{mergedLogs.length !== 0}}">
     <text class="heading-text" id="sports-meet-my-logs-heading">My Logs</text>
@@ -79,7 +83,7 @@
             <text class="my-logs-event-title">{{item.eventName}}</text>
             <text class="my-logs-issuer">from {{item.issuerName}}</text>
           </view>
-          <text class="my-logs-points">{{item.pointNumber === null ? "none" : (item.pointNumber+"s")}} / {{item.stampNumber === null ? "none" : (item.stampNumber+"pts")}}</text>
+          <text class="my-logs-points">{{item.stampNumber === null ? "none" : (item.stampNumber+"s")}} / {{item.pointNumber === null ? "none" : (item.pointNumber+"pts")}}</text>
         </view>
       </block>
     </view>

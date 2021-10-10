@@ -1,6 +1,7 @@
 /* pages/SportsMeet.wxss */
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
+@import "imageStyles.wxss";
 #sports-meet-container {
   margin: 0 16px;
   margin-top: 10px;
@@ -50,29 +51,23 @@
 .sports-meet-leaderboard-block {
   height: 98px;
   border-radius: 8px;
-  overflow: hidden;
   width: 100%;
   display: flex;
-  justify-content: center;
-  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 8px;
-}
-.sports-meet-leaderboard-block-image {
-  width: 100%;
-  height: auto;
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+  padding: 9px 9px;
+  box-sizing: border-box;
 }
 .sports-meet-leaderboard-block-heading {
-  position: absolute;
-  top: 9px;
-  left: 9px;
   font-weight: 700;
   color: white;
   font-size: 17px;
 }
 .sports-meet-leaderboard-block-text {
-  position: absolute;
-  bottom: 9px;
-  left: 9px;
   font-weight: 500;
   color: white;
   font-size: 17px;
@@ -228,4 +223,10 @@
   font-weight: 500;
   margin-bottom: 15px;
   color: var(--secondary);
+}
+#sports-meet-competitive-leaderboards-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: 100%;
+  grid-column-gap: 8px;
 }

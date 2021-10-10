@@ -106,8 +106,8 @@ exports.main = async (event, context) => {
     }
     idArray.sort((a, b) => {
       // negative if a<b, zero if equal and positive if a>b
-      let actualA = gradesComputedHomeroomList[i][a].classPoint+gradesComputedHomeroomList[i][a].stampPoints/10;
-      let actualB = gradesComputedHomeroomList[i][b].classPoint+gradesComputedHomeroomList[i][b].stampPoints/10;
+      let actualA = gradesComputedHomeroomList[i][a].classPoints+gradesComputedHomeroomList[i][a].stampPoints/10;
+      let actualB = gradesComputedHomeroomList[i][b].classPoints+gradesComputedHomeroomList[i][b].stampPoints/10;
       if (actualA === actualB) {
         return 0;
       }

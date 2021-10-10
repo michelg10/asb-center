@@ -35,11 +35,23 @@ type LogElementType = {
   stampNumber: number|null,
   timeStamp: number,
   userId: string,
+  leaderboardEvents: LeaderboardsEventItem[],
 }
-
+type LeaderboardsEventItem = {
+  name: string,
+  id: string,
+  myRank: string,
+};
+type HomeroomComputedLeaderboardType = {
+  class: number,
+  classPoints: number,
+  lastRank: number,
+  stampPoints: number,
+}
 interface componentDataInterface {
   userData: userDataType,
   db: DB.Database,
+  leaderboardEvents: LeaderboardsEventItem[];
   eventId: string;
   eventInfo: Event;
   previewInfo: PreviewGenerator;
@@ -58,8 +70,17 @@ interface componentDataInterface {
   pseudoWatcher: DB.RealtimeListener,
   purchaseWatcher: DB.RealtimeListener,
   totalStamps: number,
-  totalUsedStamps: number,
+  regularUsedStamps: number,
+  usedPseudoStamps: number;
   stickerAngles: number[],
+  viewVisible: boolean,
+  leaderboardWatcher: DB.RealtimeListener,
+  leaderboardRanks: number[][],
+  leaderboardData: any[];
+  homeroomRank: number[],
+  myHomeroomRank: string,
+  homeroomData: HomeroomComputedLeaderboardType[],
+  homeroomLeaderboardWatcher: DB.RealtimeListener,
 }
 
 Component({
@@ -176,16 +197,145 @@ Component({
         totalStamps: newTotalStampNumber,
       });
     },
-    onLoad: function() {
+    onLoad: async function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
         previewPort: "SportsMeetInnerPreviewPort",
+        viewVisible: true,
       });
       this.data.db = wx.cloud.database();
+      {
+        let getLeaderboardEvents = await allCollectionsData(this.data.db, "SportsMeet2021Events");
+        let newLeaderboardEvents: LeaderboardsEventItem[]=[];
+        for (let i=0;i<getLeaderboardEvents.data.length;i++) {
+          if (getLeaderboardEvents.data[i].rankLeaderboard) {
+            newLeaderboardEvents.push({
+              name: getLeaderboardEvents.data[i].name,
+              id: getLeaderboardEvents.data[i].id,
+              myRank: "",
+            });
+          }
+        }
+        this.setData({
+          leaderboardEvents: newLeaderboardEvents,
+        });
+      }
       eventChannel.on('userData', (data: userDataType) => {
         this.setData({
           userData: data,
         });
+        this.data.leaderboardWatcher=this.data.db.collection(`SportsMeet2021LeaderboardProcessed${data.student!.grade}`).watch({
+          onChange: (snapshot) => {
+            let myIndexWithinDocs = -1;
+            for (let i=0;i<snapshot.docs.length;i++) {
+              if (snapshot.docs[i].studentId ===data.id) {
+                myIndexWithinDocs = i;
+              }
+            }
+            let newLeaderboardEvents = this.data.leaderboardEvents;
+            let newLeaderboardRanks:number[][]=[];
+            for (let i=0;i<newLeaderboardEvents.length;i++) {
+              let sortMapping:number[] = Array(snapshot.docs.length); // eventually invert this to get everyone's ranking
+              for (let i=0;i<snapshot.docs.length;i++) {
+                sortMapping[i]=i;
+              }
+              let currentConsideringProperty = `studentPointScore${newLeaderboardEvents[i].id}`;
+              sortMapping.sort((a,b) => {
+                let actualA = snapshot.docs[a][currentConsideringProperty];
+                let actualB = snapshot.docs[b][currentConsideringProperty];
+                if (actualA === actualB) {
+                  return 0;
+                }
+                if (actualA < actualB) {
+                  return 1;
+                }
+                return -1;
+              });
+              let ranking:number[] = Array(sortMapping.length);
+              for (let i=0;i<ranking.length;i++) {
+                ranking[sortMapping[i]]=i;
+              }
+              newLeaderboardRanks.push(ranking);
+              if (myIndexWithinDocs === -1) {
+                newLeaderboardEvents[i].myRank = "Error";
+              } else {
+                let myRank=(ranking[myIndexWithinDocs]+1).toString();
+                if (ranking[myIndexWithinDocs]+1 === 1) {
+                  myRank=`${myRank}st`;
+                } else if (ranking[myIndexWithinDocs]+1 === 2) {
+                  myRank=`${myRank}nd`;
+                } else if (ranking[myIndexWithinDocs]+1 === 3) {
+                  myRank=`${myRank}rd`;
+                } else {
+                  myRank=`${myRank}th`;
+                }
+                newLeaderboardEvents[i].myRank = myRank;
+              }
+            }
+            this.setData({
+              leaderboardData: snapshot.docs as any[],
+              leaderboardRanks: newLeaderboardRanks,
+              leaderboardEvents: newLeaderboardEvents,
+            });
+          }, onError: function(err) {
+            console.error('the leaderboard watch closed because of error', err)          
+          }
+        });
+        this.data.homeroomLeaderboardWatcher=this.data.db.collection(`SportsMeet2021HomeroomProcessed${data.student!.grade}`).watch({
+          onChange: (snapshot) => {
+            let newHomeroomData = snapshot.docs as HomeroomComputedLeaderboardType[];
+            let myIndexWithinDocs = -1;
+            let newMyHomeroomRank = "";
+            for (let i=0;i<newHomeroomData.length;i++) {
+              if (newHomeroomData[i].class ===data.student!.class) {
+                myIndexWithinDocs = i;
+              }
+            }
+            let sortMapping:number[] = Array(newHomeroomData.length); // eventually invert this to get everyone's ranking
+            for (let i=0;i<newHomeroomData.length;i++) {
+              sortMapping[i]=i;
+            }
+            sortMapping.sort((a, b) => {
+              // negative if a<b, zero if equal and positive if a>b
+              let actualA = newHomeroomData[a].classPoints+newHomeroomData[a].stampPoints/10;
+              let actualB = newHomeroomData[b].classPoints+newHomeroomData[b].stampPoints/10;
+              if (actualA === actualB) {
+                return 0;
+              }
+              if (actualA < actualB) {
+                return 1;
+              }
+              return -1;
+            });
+            let ranking:number[] = Array(sortMapping.length);
+            for (let i=0;i<ranking.length;i++) {
+              ranking[sortMapping[i]]=i;
+            }
+            if (myIndexWithinDocs === -1) {
+              newMyHomeroomRank = "Error";
+            } else {
+              let myRank=(ranking[myIndexWithinDocs]+1).toString();
+              if (ranking[myIndexWithinDocs]+1 === 1) {
+                myRank=`${myRank}st`;
+              } else if (ranking[myIndexWithinDocs]+1 === 2) {
+                myRank=`${myRank}nd`;
+              } else if (ranking[myIndexWithinDocs]+1 === 3) {
+                myRank=`${myRank}rd`;
+              } else {
+                myRank=`${myRank}th`;
+              }
+              newMyHomeroomRank = myRank;
+            }
+            this.setData({
+              homeroomRank: ranking,
+              myHomeroomRank: newMyHomeroomRank,
+              homeroomData: newHomeroomData,
+            });
+            console.log(newHomeroomData, ranking);
+          }, onError: function(err) {
+            console.error('the homeroom watch closed because of error', err);
+          }
+        })
         this.data.regularWatcher=this.data.db.collection(`SportsMeet2021StampLog${data.student?.grade}`).where({
           userId: data.id,
         }).watch({
@@ -203,14 +353,35 @@ Component({
             this.data.pseudoLogs = snapshot.docs as any[],
             this.recomputeMerge();
           }, onError: function(err) {
-            console.error('the pseudo watch closed because of error', err)
+            console.error('the pseudo watch closed because of error', err);
           }
         });
-
-        // pretend this grabs purchasing data
-        this.setData({
-          totalUsedStamps: 0,
+        this.data.purchaseWatcher=this.data.db.collection(`SportsMeet2021TransactionLog${data.student?.grade}`).where({
+          userId: data.id,
+        }).watch({
+          onChange: (snapshot) => {
+            let totalPurchase=0;
+            for (let i=0;i<snapshot.docs.length;i++) {
+              totalPurchase+=snapshot.docs[i].itemCost;
+            }
+            this.setData({
+              regularUsedStamps: totalPurchase,
+            });
+          }, onError: function(err) {
+            console.error('the purchase watch closed because of error', err)
+          }
         });
+        allCollectionsData(this.data.db, `SportsMeet2021TransactionLog${data.student?.grade}`, {
+          userId: data.student!.pseudoId
+        }).then((res) => {
+          let newUsedPseudoStamps = 0;
+          for (let i=0;i<res.data.length;i++) {
+            newUsedPseudoStamps+=res.data[i].itemCost;
+          }
+          this.setData({
+            usedPseudoStamps: newUsedPseudoStamps,
+          });
+        })
         allCollectionsData(this.data.db, "SportsMeet2021Timetable").then((res) => {
           let newEventsList: EventsListItemType[] = [];
           for (let i=0;i<res.data.length;i++) {
@@ -310,24 +481,34 @@ Component({
         }, 500
       );
     },
+    onShow: function() {
+      this.data.viewVisible = true;
+    }, onHide: function() {
+      this.data.viewVisible = false;
+    },
     recomputeCode: function() {
-      let accessCodeContents=generatePreviewCode(this.data.previewInfo.previewData.userCode);
-      if (accessCodeContents !== this.data.codeLastGen) {
-        let myCreateQRCode = createQRCode.bind(this);
-        myCreateQRCode(this.data.previewPort, accessCodeContents, 'FFFFFF');
-        this.data.codeLastGen=accessCodeContents;
+      if (this.data.viewVisible) {
+        let accessCodeContents=generatePreviewCode(this.data.previewInfo.previewData.userCode);
+        if (accessCodeContents !== this.data.codeLastGen) {
+          let myCreateQRCode = createQRCode.bind(this);
+          myCreateQRCode(this.data.previewPort, accessCodeContents, 'FFFFFF');
+          this.data.codeLastGen=accessCodeContents;
+        }
+        let date = new Date();
+        let newUpdateString=`${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
+        this.setData({
+          lastUpdateTime: newUpdateString,
+        });
       }
-      let date = new Date();
-      let newUpdateString=`${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
-      this.setData({
-        lastUpdateTime: newUpdateString,
-      });
     },
     onUnload: function() {
       clearInterval(this.data.recomputeCaller);
       clearInterval(this.data.reloadEventListSetInterval);
       this.data.regularWatcher.close();
       this.data.pseudoWatcher.close();
+      this.data.purchaseWatcher.close();
+      this.data.leaderboardWatcher.close();
+      this.data.homeroomLeaderboardWatcher.close();
     }
   }
 })

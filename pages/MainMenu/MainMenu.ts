@@ -28,6 +28,7 @@ interface componentDataInterface {
   db: DB.Database;
   previewGenerator: Array<PreviewGenerator>;
   previewLastGen: Map<string, string>;
+  viewVisible: boolean,
 };
 Component({
 
@@ -153,6 +154,7 @@ Component({
       this.data.db = wx.cloud.database();
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
+      this.data.viewVisible = true;
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);
@@ -232,13 +234,15 @@ Component({
         });
       }
       // recompute preview data
-      for (let i=0;i<newPreviewGenerator.length;i++) {
-        if (newPreviewGenerator[i].previewMode==="secureCodePreview") {
-          let accessCodeContents=generatePreviewCode(newPreviewGenerator[i].previewData.userCode);
-          if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
-            let myCreateQRCode = createQRCode.bind(this);
-            myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');
-            this.data.previewLastGen.set(newPreviewGenerator[i].previewPort, accessCodeContents);
+      if (this.data.viewVisible) {
+        for (let i=0;i<newPreviewGenerator.length;i++) {
+          if (newPreviewGenerator[i].previewMode==="secureCodePreview") {
+            let accessCodeContents=generatePreviewCode(newPreviewGenerator[i].previewData.userCode);
+            if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
+              let myCreateQRCode = createQRCode.bind(this);
+              myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');
+              this.data.previewLastGen.set(newPreviewGenerator[i].previewPort, accessCodeContents);
+            }
           }
         }
       }
@@ -247,6 +251,12 @@ Component({
       this.setData({
         lastUpdateTime: newUpdateString,
       });
+    },
+    onShow: function() {
+      this.data.viewVisible = true;
+    },
+    onHide: function() {
+      this.data.viewVisible = false;
     },
     displayRowDiff: function(a: Array<DisplayRow>, b: Array<DisplayRow>) {
       if (a===undefined && b===undefined) {
