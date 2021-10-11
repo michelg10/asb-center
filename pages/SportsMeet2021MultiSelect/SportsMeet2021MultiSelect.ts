@@ -1,13 +1,12 @@
 import { Student } from "../../classes/student";
-import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
+// pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect.ts
 
-// pages/SportsMeetAdminPanel/SportsMeetAdminPanel.ts
 type componentDataInterface = {
-  db: DB.Database,
   studentData: Student[],
+  userSelect: boolean[],
   matchingIndexes: number[],
-  multiselectEnabled: boolean,
+  totalSelected: number,
 }
 Component({
   /**
@@ -26,41 +25,6 @@ Component({
    * Component methods
    */
   methods: {
-    onLoad: function() {
-      this.data.db = wx.cloud.database();
-      allCollectionsData(this.data.db, "studentData").then((res) => {
-        let tmpStudentData=[];
-        for (let i=0;i<res.data.length;i++) {
-          tmpStudentData.push(new Student(res.data[i]._id as string, res.data[i].nickname, res.data[i].englishName, res.data[i].chineseName, res.data[i].grade, res.data[i].class, res.data[i].pseudoId));
-        }
-        this.setData({
-          studentData: tmpStudentData,
-          multiselectEnabled: true,
-        });
-      });
-    },
-    selectMultipleTap: function() {
-      wx.navigateTo({
-        url: '/pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect',
-        success: (res) => {
-          res.eventChannel.emit('studentData', this.data.studentData);
-        }
-      });
-    },
-    homeroomPointsTap: function() {
-      wx.navigateTo({
-        url: "/pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin"
-      });
-    },
-    handlePersonChoose: function(e: any) {
-      let chosenId=e.currentTarget.dataset.chosenid;
-      wx.navigateTo({
-        url: '/pages/PersonaDetail/PersonaDetail',
-        success: (res) => {
-          res.eventChannel.emit('userId', this.data.studentData[chosenId].pseudoId);
-        }
-      });
-    },
     handleSearchBoxChange: function(e: any) {
       if (this.data.studentData === undefined) {
         return;
@@ -98,6 +62,12 @@ Component({
             matchingStudentDataIndexes.push(i);
           }
         }
+      } else {
+        for (let i=0;i<this.data.userSelect.length;i++) {
+          if (this.data.userSelect[i]) {
+            matchingStudentDataIndexes.push(i);
+          }
+        }
       }
       const limitItems=50;
       if (matchingStudentDataIndexes.length>limitItems) {
@@ -105,6 +75,53 @@ Component({
       }
       this.setData({
         matchingIndexes: matchingStudentDataIndexes,
+      });
+    },
+    handlePersonChoose: function(x: any) {
+      let newUserSelect = this.data.userSelect;
+      let newTotalSelected = this.data.totalSelected;
+      newUserSelect[x.currentTarget.dataset.chosenid] = !newUserSelect[x.currentTarget.dataset.chosenid];
+      if (newUserSelect[x.currentTarget.dataset.chosenid]) {
+        newTotalSelected+=1;
+      } else {
+        newTotalSelected-=1;
+      }
+      this.setData({
+        userSelect: newUserSelect,
+        totalSelected: newTotalSelected,
+      });
+    },
+    nextClicked: function() {
+      if (this.data.totalSelected === 0) {
+        return;
+      }
+      wx.navigateTo({
+        url: '/pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect',
+        success: (res) => {
+          let selectedData:Student[]=[];
+          for (let i=0;i<this.data.userSelect.length;i++) {
+            if (this.data.userSelect[i]) {
+              selectedData.push(this.data.studentData[i]);
+            }
+          }
+          res.eventChannel.emit('selectedData', selectedData);
+        }
+      });
+    },
+    onLoad: function() {
+      this.setData({
+        totalSelected: 0,
+      });
+      const eventChannel = this.getOpenerEventChannel();
+      eventChannel.on('studentData', (data) => {
+        let newUserSelect: boolean[] = Array(data.length);
+        for (let i=0;i<newUserSelect.length;i++) {
+          newUserSelect[i] = false;
+        }
+        this.setData({
+          studentData: data,
+          userSelect: newUserSelect,
+        });
       });
     }
   }

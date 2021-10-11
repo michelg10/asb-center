@@ -1,10 +1,11 @@
 /* pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxss */
+@import "/styles/studentContainer.wxss";
 #sports-meet-admin-panel-container {
   margin: 0 16px;
   padding-top: 10px;
   margin-bottom: 80px;
 }
-#admin-panel-homeroom-points-container {
+.admin-panel-full-width-button-container {
   margin-top: 12px;
   width: 100%;
   background-color: var(--subcontainer-background);
@@ -16,56 +17,14 @@
   align-items: center;
   margin-bottom: 22px;
 }
-#admin-panel-homeroom-points-container text {
+.admin-panel-full-width-button-container text {
   font-size: 17px;
   font-weight: 500;
   color: var(--link);
 }
-#registration-list-container {
-  margin-bottom: 15px;
-  background-color: var(--subcontainer-background);
-  border-radius: 8px;
-}
-#registration-list-search-container {
-  height: 44px;
-  background-color: var(--list-search-box);
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  border-radius: 8px;
-}
-#registration-list-main-container {
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  height: 298px;
-}
-#registration-search-image {
-  width: 24px;
-  height: 24px;
-  padding-right: 7px;
-}
-#registration-search-textfield {
-  font-size: 17px;
-  width: 100%;
-  font-weight: 500;
-}
-.registration-search-textfield-placeholder {
-  color: var(--secondary);
-}
 .admin-add-image {
   height: 16px;
   width: 16px;
-}
-.registration-select-container-block {
-  display: flex;
-  justify-content: space-between;
-  margin: 6px 16px;
-  align-items: center;
-}
-.registration-select-class {
-  font-size: 17px;
-  margin-right: 11px;
 }
 .admin-select-right-block {
   display: flex;
@@ -76,17 +35,6 @@
   border-radius: 13px;
   background-color: #D6EEC7;
 }
-.registration-select-left-block {
-  display: flex;
-  flex-direction: column;
-}
-.registration-select-nickname {
-  font-size: 17px;
-}
-.registration-select-name {
-  font-size: 13px;
-  color: var(--secondary);
-}
 #search-pseudo-accounts-subheading {
   color: var(--secondary);
   font-weight: 500;
@@ -95,4 +43,7 @@
 }
 #my-logs-header {
   margin-bottom: 10px;
+}
+#select-multiple-container {
+  margin-bottom: 80px;
 }

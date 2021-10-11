@@ -8,7 +8,10 @@
     "pages/PersonaDetail/PersonaDetail",
     "pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
     "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin",
-    "pages/SportsMeetLeaderboards/SportsMeetLeaderboards"
+    "pages/SportsMeetLeaderboards/SportsMeetLeaderboards",
+    "pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect",
+    "pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect",
+    "pages/SportsMeet2021MultiAddPoints/SportsMeet2021MultiAddPoints"
   ],
   "window": {
     "backgroundTextStyle": "light",

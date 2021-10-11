@@ -190,7 +190,7 @@ Component({
               this.reloadPins();
               this.applySearch();
             },
-            fail: (res) => {
+            fail: () => {
               this.setData({
                 pins: [],
               });

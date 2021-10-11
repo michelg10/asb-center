@@ -1,0 +1,53 @@
+.student-list-container {
+  margin-bottom: 22px;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+.student-list-search-container {
+  height: 44px;
+  background-color: var(--list-search-box);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+}
+.student-list-main-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 298px;
+}
+.student-search-image {
+  width: 24px;
+  height: 24px;
+  padding-right: 7px;
+}
+.student-search-textfield {
+  font-size: 17px;
+  width: 100%;
+  font-weight: 500;
+}
+.student-search-textfield-placeholder {
+  color: var(--secondary);
+}
+.student-select-container-block {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 16px;
+  align-items: center;
+}
+.student-select-class {
+  font-size: 17px;
+  margin-right: 11px;
+}
+.student-select-left-block {
+  display: flex;
+  flex-direction: column;
+}
+.student-select-nickname {
+  font-size: 17px;
+}
+.student-select-name {
+  font-size: 13px;
+  color: var(--secondary);
+}

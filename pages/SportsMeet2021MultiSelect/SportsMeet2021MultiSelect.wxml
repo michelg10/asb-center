@@ -1,0 +1,27 @@
+<!--pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect.wxml-->
+<view id="multi-select-main-container">
+  <text class="big-title-text">Select Multiple</text>
+  <text class="big-title-sub-text" id="">{{totalSelected}} student{{totalSelected === 1 ? '' : 's'}} selected</text>
+  <view class="student-list-container" id="multi-select-student-list-container">
+    <view class="student-list-search-container">
+      <image src="../../icons/search.svg" class="student-search-image"></image>  
+      <input type="text" class="student-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="student-search-textfield-placeholder"/>
+    </view>
+    <view class="student-list-main-container" id="multi-select-student-list-main-container">
+      <block wx:for="{{matchingIndexes}}" wx:key="*this">
+        <view class="student-select-container-block" bindtap="handlePersonChoose" data-chosenid="{{item}}">
+          <view class="student-select-left-block">
+            <text class="student-select-nickname">{{studentData[item].nickname}} {{studentData[item].studentGrade}}-{{studentData[item].studentClass}}</text>
+            <text class="student-select-name">{{ studentData[item].chineseName+" ("+studentData[item].englishName+")" }}</text>
+          </view>
+          <view class="admin-select-right-block">
+            <image src="{{'/icons/selector'+(userSelect[item] ? '-selected' : '')+'.svg'}}" class="selector-image"></image>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+  <view class="button" bindtap="nextClicked" id="add-multiple-log-button" wx:if="{{totalSelected !== 0}}">
+    <text class="button-text">Next</text>
+  </view>
+</view>

@@ -1,22 +1,22 @@
 <!--pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxml-->
 <view id="sports-meet-admin-panel-container">
   <text class="big-title-text">Admin</text>
-  <view id="admin-panel-homeroom-points-container" bindtap="homeroomPointsTap">
+  <view class="admin-panel-full-width-button-container" bindtap="homeroomPointsTap">
     <text>Homeroom points...</text>
   </view>
   <view id="search-pseudo-accounts-header"><text class="heading-text">Search Pseudo-Accounts</text></view>
   <view id="search-pseudo-accounts-subheading"><text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account.</text></view>
-  <view id="registration-list-container">
-    <view id="registration-list-search-container">
-      <image src="../../icons/search.svg" id="registration-search-image"></image>  
-      <input type="text" id="registration-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="registration-search-textfield-placeholder"/>
+  <view class="student-list-container">
+    <view class="student-list-search-container">
+      <image src="../../icons/search.svg" class="student-search-image"></image>  
+      <input type="text" class="student-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="student-search-textfield-placeholder"/>
     </view>
-    <view id="registration-list-main-container" style="height: {{scrollViewHeight}}px">
+    <view class="student-list-main-container">
       <block wx:for="{{matchingIndexes}}" wx:key="*this">
-        <view class="registration-select-container-block">
-          <view class="registration-select-left-block">
-            <text class="registration-select-nickname">{{studentData[item].nickname}}</text>
-            <text class="registration-select-name">{{ studentData[item].chineseName+" ("+studentData[item].englishName+")" }}</text>
+        <view class="student-select-container-block">
+          <view class="student-select-left-block">
+            <text class="student-select-nickname">{{studentData[item].nickname}} {{studentData[item].studentGrade}}-{{studentData[item].studentClass}}</text>
+            <text class="student-select-name">{{ studentData[item].chineseName+" ("+studentData[item].englishName+")" }}</text>
           </view>
           <view class="admin-select-right-block" bindtap="handlePersonChoose" data-chosenid="{{item}}">
             <image src="/icons/plus.svg" class="admin-add-image"></image>
@@ -24,5 +24,8 @@
         </view>
       </block>
     </view>
+  </view>
+  <view class="admin-panel-full-width-button-container" id="select-multiple-container" bindtap="selectMultipleTap" wx:if="{{multiselectEnabled}}">
+    <text>Select multiple...</text>
   </view>
 </view>

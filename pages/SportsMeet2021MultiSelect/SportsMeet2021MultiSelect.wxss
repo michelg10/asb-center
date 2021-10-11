@@ -1,0 +1,26 @@
+/* pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect.wxss */
+@import "/styles/studentContainer.wxss";
+@import "/styles/button.wxss";
+#multi-select-main-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+  margin-top: 10px;
+}
+#multi-select-student-list-container {
+  margin-top: 16px;
+  margin-bottom: 21px;
+}
+#multi-select-student-list-main-container {
+  height: 304px;
+}
+#add-multiple-log-button {
+  background-color: #D2E3FA;
+}
+#add-multiple-log-button text {
+  color: #3180E9;
+}
+.selector-image {
+  height: 19px;
+  width: 19px;
+}
