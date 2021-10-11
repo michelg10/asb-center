@@ -161,6 +161,7 @@ exports.main = async (event, context) => {
       });
     }
   }
+  await Promise.all(tasks);
 
   return {
     status: "success",

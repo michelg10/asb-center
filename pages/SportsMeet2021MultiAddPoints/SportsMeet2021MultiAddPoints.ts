@@ -76,7 +76,7 @@ Component({
       this.data.isWaiting = true;
       let userIds: string[] = [];
       for (let i=0;i<this.data.studentData.length;i++) {
-        userIds.push(this.data.studentData[i].id);
+        userIds.push(this.data.studentData[i].pseudoId);
       }
       console.log(userIds);
       wx.cloud.callFunction({
@@ -133,6 +133,9 @@ Component({
         let events: SMEventType[] = [];
         let data = res.data;
         for (let i=0;i<data.length;i++) {
+          if (data[i].rankLeaderboard || data[i].allowStamps) {
+            continue;
+          }
           events.push({
             wxId: data[i]._id as string,
             allowStamps: data[i].allowStamps,

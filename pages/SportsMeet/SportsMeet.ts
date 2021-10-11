@@ -164,7 +164,6 @@ Component({
       let date = new Date();
       console.log("Reload upcoming events list");
       let currentDayTimeMark = date.getHours()*60+date.getMinutes();
-      currentDayTimeMark=13*60+59;
       let newUpcomingEventDisplay: upcomingEventDisplayType[] = [];
       for (let i=0;i<this.data.eventsList.length;i++) {
         let currentItem = this.data.eventsList[i];
