@@ -84,7 +84,7 @@ Component({
       this.applySearch();
     },
     rerank: function() {
-      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined) {
+      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined && this.data.doubleBoundary !== undefined) {
         let newData = [];
         for (let i=0;i<this.data.data.length;i++) {
           if (this.data.data[i][this.data.pointProperty] !== 0) {
@@ -179,16 +179,21 @@ Component({
         });
       })
       eventChannel.on('usePins', (data: boolean) => {
+        console.log(data);
         if (data) {
           wx.getStorage({
             key: 'SportsMeet2021LeaderboardPins',
             success: (res) => {
-              this.data.pins = res.data;
+              this.setData({
+                pins: res.data,
+              });
               this.reloadPins();
               this.applySearch();
             },
             fail: (res) => {
-              this.data.pins = [];
+              this.setData({
+                pins: [],
+              });
               this.savePins();
               this.reloadPins();
             }
@@ -209,6 +214,10 @@ Component({
       });
       eventChannel.on("nameProperty", (data) => {
         this.data.nameProperty = data;
+        this.rerank();
+      });
+      eventChannel.on("doubleBoundary", (data) => {
+        this.data.doubleBoundary = data;
         this.rerank();
       });
     },

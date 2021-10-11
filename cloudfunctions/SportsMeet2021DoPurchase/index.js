@@ -79,6 +79,7 @@ exports.main = async (event, context) => {
       }
     }
   }));
+  let doPseudoaccountLinkTally = false;
   if (!isPseudoAccount) {
     // fetch related pseudoAccount log information
     tasks.push(cloud.callFunction({
@@ -100,6 +101,41 @@ exports.main = async (event, context) => {
         }
       }
     }));
+  } else {
+    let getRelatedAccounts = await db.collection("userData").where({
+      studentId: userStudentId,
+    }).get();
+    if (getRelatedAccounts.data.length > 2) {
+      return {
+        status: "failure",
+        reason: "Trying to purchase via multi-user pseudo account"
+      };
+    }
+    if (getRelatedAccounts.data.length === 2) {
+      doPseudoaccountLinkTally = true;
+      let otherAccountIndex = 0;
+      if (getRelatedAccounts.data[0]._id === pseudoAccountId) {
+        otherAccountIndex = 1;
+      }
+      tasks.push(cloud.callFunction({
+        name: "fetchAllCollections",
+        data: {
+          collectionName: `SportsMeet2021StampLog${userGrade}`,
+          whereClause: {
+            userId: getRelatedAccounts.data[otherAccountIndex]._id,
+          }
+        }
+      }));
+      tasks.push(cloud.callFunction({
+        name: "fetchAllCollections",
+        data: {
+          collectionName: `SportsMeet2021TransactionLog${userGrade}`,
+          whereClause: {
+            userId: getRelatedAccounts.data[otherAccountIndex]._id,
+          }
+        }
+      }));
+    }
   }
   res = await Promise.all(tasks);
   // admin information: check authorization, resolve issuerName
@@ -130,37 +166,43 @@ exports.main = async (event, context) => {
   // stamp log information: compute the number of total stamps
   let totalStamps=0;
   let cummulateStamps = (logs) => {
+    let rturn = 0;
     for (let i=0;i<logs.length;i++) {
-      totalStamps+=(logs[i].stampNumber === undefined ? 0 : logs[i].stampNumber);
+      rturn+=(logs[i].stampNumber === undefined ? 0 : logs[i].stampNumber);
     }
+    return rturn;
   }
-  cummulateStamps(res[2].result.data);
-  if (!isPseudoAccount) {
-    cummulateStamps(res[4].result.data);
+  totalStamps+=cummulateStamps(res[2].result.data);
+  if (!isPseudoAccount || doPseudoaccountLinkTally) {
+    totalStamps+=cummulateStamps(res[4].result.data);
   }
   let eventHasExperienced = new Map();
   let addExperiencePoints = (logs) => {
+    let rturn=0;
     for (let i=0;i<logs.length;i++) {
       if (!eventHasExperienced.has(logs[i].eventId)) {
-        totalStamps += 5;
+        rturn += 5;
         eventHasExperienced.set(logs[i].eventId, true);
       }
     }
+    return rturn;
   }
-  addExperiencePoints(res[2].result.data);
-  if (!isPseudoAccount) {
-    addExperiencePoints(res[4].result.data);
+  totalStamps+=addExperiencePoints(res[2].result.data);
+  if (!isPseudoAccount || doPseudoaccountLinkTally) {
+    totalStamps+=addExperiencePoints(res[4].result.data);
   }
   // transaction log information: total up past transaction
   let totalTransacted = 0;
   let cummulateTransactions = (logs) => {
+    let rturn=0;
     for (let i=0;i<logs.length;i++) {
-      totalTransacted+=logs[i].itemCost;
+      rturn+=logs[i].itemCost;
     }
+    return rturn;
   }
-  cummulateTransactions(res[3].result.data);
-  if (!isPseudoAccount) {
-    cummulateTransactions(res[5].result.data);
+  totalTransacted+=cummulateTransactions(res[3].result.data);
+  if (!isPseudoAccount || doPseudoaccountLinkTally) {
+    totalTransacted+=cummulateTransactions(res[5].result.data);
   }
   if (totalStamps-totalTransacted<itemCost) {
     return {

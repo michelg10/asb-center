@@ -8,6 +8,7 @@
     </view>
     <view id="pinned-main-container" class="main-leaderboards-container">
       <block wx:for="{{pinsDisplay}}" wx:key="id">
+        <view class="leaderboard-separator" wx:if="{{index !== 0}}"></view>
         <view class="leaderboard-row-container">
           <view class="leaderboard-row-left-container">
             <image class="leaderboard-row-change-display" src="/icons/SportsMeet/{{item.change}}.svg" />
@@ -29,8 +30,9 @@
         <image id="leaderboard-search-icon" src="/icons/SportsMeet/leaderboard-search.svg"></image>
         <input type="text" placeholder="Search Students..." placeholder-class="leaderboard-secondary" id="ranked-search-textfield" class="leaderboard-smallTexts" bindinput="handleSearchBoxChange"></input>
       </view>
-      <view id="ranked-main-container">
+      <view id="ranked-inner-main-container">
         <block wx:for="{{leaderboardDisplay}}" wx:key="id">
+          <view class="leaderboard-separator" wx:if="{{index !== 0}}"></view>
           <view class="leaderboard-row-container">
             <view class="leaderboard-row-left-container">
               <image class="leaderboard-row-change-display" src="/icons/SportsMeet/{{item.change}}.svg" />

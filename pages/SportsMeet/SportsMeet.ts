@@ -117,6 +117,7 @@ Component({
       let lastRankProperty: string;
       let pointProperty: string;
       let nameProperty: string;
+      let doubleBoundary: number;
 
       if (x.currentTarget.dataset.index !== -1) {
         let tapped=this.data.leaderboardEvents[x.currentTarget.dataset.index];
@@ -127,6 +128,7 @@ Component({
         lastRankProperty = `studentLastRank${tapped.id}`;
         pointProperty = `studentPointScore${tapped.id}`;
         nameProperty = "studentNickname";
+        doubleBoundary = 10;
       } else {
         showSearch = false;
         title = "Homeroom";
@@ -135,6 +137,7 @@ Component({
         lastRankProperty = "lastRank";
         pointProperty = "computedScore";
         nameProperty = "classComputedName";
+        doubleBoundary = 4;
       }
       wx.navigateTo({
         url: "/pages/SportsMeetLeaderboards/SportsMeetLeaderboards",
@@ -153,6 +156,7 @@ Component({
           res.eventChannel.emit("lastRankProperty", lastRankProperty);
           res.eventChannel.emit("pointProperty", pointProperty);
           res.eventChannel.emit("nameProperty", nameProperty);
+          res.eventChannel.emit("doubleBoundary", doubleBoundary);
         }
       })
     },
@@ -160,6 +164,7 @@ Component({
       let date = new Date();
       console.log("Reload upcoming events list");
       let currentDayTimeMark = date.getHours()*60+date.getMinutes();
+      currentDayTimeMark=13*60+59;
       let newUpcomingEventDisplay: upcomingEventDisplayType[] = [];
       for (let i=0;i<this.data.eventsList.length;i++) {
         let currentItem = this.data.eventsList[i];

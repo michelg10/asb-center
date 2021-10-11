@@ -19,7 +19,7 @@
   margin-bottom: 23px;
 }
 .leaderboard-bigtexts {
-  color: black;
+  color: white;
 }
 .leaderboard-headings {
   padding-bottom: 7px;
@@ -35,11 +35,11 @@
   align-items: center;
 }
 #leaderboard-pinned-count {
-  color: #893E09;
+  color: #FFDDFD;
   font-weight: 600;
 }
 .main-leaderboards-container {
-  background-color: rgba(238, 157, 82, 0.62);
+  background-color: rgba(157, 104, 220, 0.66);
   border-radius: 8px;
 }
 .leaderboard-row-container {
@@ -84,7 +84,7 @@
   text-align: end;
 }
 .leaderboard-secondary {
-  color: #FFE1CC;
+  color: #FFC9FA;
 }
 #ranked-container {
   display: flex;
@@ -96,12 +96,13 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 #ranked-search-container {
   display: flex;
   padding: 10px 16px;
   align-items: center;
-  background-color: rgba(214, 150, 101, 0.69);
+  background-color: rgba(210, 114, 193, 0.84);
   border-radius: 8px;
 }
 #leaderboard-search-icon {
@@ -114,9 +115,16 @@
   font-weight: 500;
   flex-grow: 1;
 }
-#ranked-main-container {
-  position: relative;
-  max-height: 500px;
+#ranked-inner-main-container {
+  position: absolute;
   overflow-y: scroll;
   font-size: 200px;
+  width: 100%;
+  bottom:0;
+  top: 44px;
+}
+.leaderboard-separator {
+  margin-left: 18px;
+  padding-top: 1px;
+  background-color: #8A4A8A;
 }

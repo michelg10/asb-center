@@ -72,16 +72,16 @@ interface componentDataInterface {
   purchaseWatcher: DB.RealtimeListener,
   logs: LogType[],
   purchaseLogs: PurchaseLogType[],
-  pseudoLogs: LogType[]|null,
+  otherAccountLogs: LogType[]|null,
   stampValue: number,
   pointValue: number,
   isWaiting: boolean,
   logAddFeedback: string,
   logAddFeedbackClass: string,
   totalStamps: number,
-  totalPseudoStamps: number|null,
+  totalOtherAccountStamps: number|null,
   usedStamps: number,
-  usedPseudoStamps: number|null,
+  usedOtherAccountStamps: number|null,
   selectedPurchaseItemIndex: number,
   purchaseSelectorOpen: boolean,
   purchaseButtonClass: string,
@@ -90,6 +90,7 @@ interface componentDataInterface {
   pastLogDeletionError: string,
   exchangeLogDeletionError: string,
   userBalanceString: string,
+  otherAccounts: number|null,
 }
 
 Component({
@@ -186,16 +187,19 @@ Component({
       })
     },
     updateCanAfford: function() {
+      if (this.data.otherAccounts!>1) {
+        return;
+      }
       if (this.data.selectedPurchaseItemIndex === undefined || this.data.selectedPurchaseItemIndex === -1) {
         return;
       }
       if (this.data.totalStamps === undefined || this.data.usedStamps === undefined) {
         return;
       }
-      let totalBalance = this.data.totalStamps+(this.data.totalPseudoStamps === null ? 0 : this.data.totalPseudoStamps);
-      let totalSpent = this.data.usedStamps+(this.data.usedPseudoStamps === null ? 0 :this.data.usedPseudoStamps);
+      let totalBalance = this.data.totalStamps+(this.data.totalOtherAccountStamps === null ? 0 : this.data.totalOtherAccountStamps);
+      let totalSpent = this.data.usedStamps+(this.data.usedOtherAccountStamps === null ? 0 :this.data.usedOtherAccountStamps);
       this.setData({
-        userBalanceString: `${totalBalance-totalSpent} stamps (total ${this.data.totalStamps}${this.data.totalPseudoStamps === null ? "" : ("+"+this.data.totalPseudoStamps)}, spent ${this.data.usedStamps}${this.data.usedPseudoStamps === null ? "" : ("+"+this.data.usedPseudoStamps)})`
+        userBalanceString: `${totalBalance-totalSpent} stamps (total ${this.data.totalStamps}${this.data.totalOtherAccountStamps === null ? "" : ("+"+this.data.totalOtherAccountStamps)}, spent ${this.data.usedStamps}${this.data.usedOtherAccountStamps === null ? "" : ("+"+this.data.usedOtherAccountStamps)})`
       });
       if (this.data.items[this.data.selectedPurchaseItemIndex].cost<=totalBalance-totalSpent) {
         this.setData({
@@ -208,7 +212,7 @@ Component({
           purchaseButtonClass: "purchase-button-cannot-buy",
           purchaseHintClass: "button-feedback-warn-text",
           purchaseHintText: "User balance insufficient",
-        })
+        });
       }
     },
     handleActivityOptionClick: function(x:any) {
@@ -324,13 +328,13 @@ Component({
         return rturn;
       };
       let newTotalStamps=computeStamps(this.data.logs);
-      let newPseudoTotalStamps: number|null=null;
-      if (this.data.pseudoLogs !== null) {
-        newPseudoTotalStamps=computeStamps(this.data.pseudoLogs);
+      let newOtherAccountTotalStamps: number|null=null;
+      if (this.data.otherAccountLogs !== null) {
+        newOtherAccountTotalStamps=computeStamps(this.data.otherAccountLogs);
       }
       this.setData({
         totalStamps: newTotalStamps,
-        totalPseudoStamps: newPseudoTotalStamps,
+        totalOtherAccountStamps: newOtherAccountTotalStamps,
       });
       this.updateCanAfford();
     },
@@ -343,9 +347,9 @@ Component({
         pointValue: 0,
         purchaseSelectContainerClass: "main-select-container",
         purchaseSelectorOpen: false,
-        pseudoLogs: null,
-        totalPseudoStamps: null,
-        usedPseudoStamps: null,
+        otherAccountLogs: null,
+        totalOtherAccountStamps: null,
+        usedOtherAccountStamps: null,
       });
       this.data.db = wx.cloud.database();
       this.data.db.collection("userData").where({
@@ -385,7 +389,7 @@ Component({
           data: {
             userId: data,
           }
-        }).then((res) => {
+        }).then(async (res) => {
           if (res === undefined) {
             wx.navigateBack();
           }
@@ -398,34 +402,64 @@ Component({
             userData: studentResult,
             accountIsPseudo: studentResult.student.pseudoId === this.data.userId
           });
+          let otherAccountId: null | string = null;
           if (!this.data.accountIsPseudo) {
             // tally up other activity logs and exchange logs
+            otherAccountId=this.data.userData.student.pseudoId;
+          } else {
+            let accountsNumber = await wx.cloud.callFunction({
+              name: "associatedAccountsNumber",
+              data: {
+                studentId: this.data.userData.studentId,
+              }
+            });
+            this.setData({
+              otherAccounts: (accountsNumber.result as any).result-1,
+            });
+            if (this.data.otherAccounts! > 1) {
+              this.setData({
+                purchaseButtonClass: "purchase-button-cannot-buy",
+                purchaseHintClass: "button-feedback-warn-text",
+                purchaseHintText: `Purchase not permitted with a multi-link pseudo account`,
+                userBalanceString: "Multi-Account Block"
+              })
+            }
+            if (this.data.otherAccounts === 1) {
+              let accountsList = (accountsNumber.result as any).detail;
+              let accountIndex = 0;
+              if (accountsList[0]._id === studentResult.student.pseudoId) {
+                accountIndex = 1;
+              }
+              otherAccountId = accountsList[accountIndex]._id;
+            }
+          }
+          if (otherAccountId !== null) { // if this account is a pseudo account, this would be counting the stamps from the corresponding wechat account. if this account is a main account, this would be counting the stamps from the corresponding pseudo account
             allCollectionsData(this.data.db, `SportsMeet2021StampLog${studentResult.student.grade}`, {
-              userId: this.data.userData.student.pseudoId,
+              userId: otherAccountId,
             }).then((res) => {
-              let newPseudoLogs: LogType[] = res.data as any[];
-              for (let i=0;i<newPseudoLogs.length;i++) {
-                if (newPseudoLogs[i].pointNumber as any === undefined) {
-                  newPseudoLogs[i].pointNumber = null;
+              let newOtherAccountLogs: LogType[] = res.data as any[];
+              for (let i=0;i<newOtherAccountLogs.length;i++) {
+                if (newOtherAccountLogs[i].pointNumber as any === undefined) {
+                  newOtherAccountLogs[i].pointNumber = null;
                 } 
-                if (newPseudoLogs[i].stampNumber as any === undefined) {
-                  newPseudoLogs[i].stampNumber = null;
+                if (newOtherAccountLogs[i].stampNumber as any === undefined) {
+                  newOtherAccountLogs[i].stampNumber = null;
                 }
               }
               this.setData({
-                pseudoLogs: newPseudoLogs,
+                otherAccountLogs: newOtherAccountLogs,
               });
               this.recomputeTotalStampInfo();
             });
             allCollectionsData(this.data.db, `SportsMeet2021TransactionLog${studentResult.student.grade}`, {
-              userId: this.data.userData.student.pseudoId,
+              userId: otherAccountId,
             }).then((res2) => {
-              let newUsedPseudoStamps=0;
+              let newUsedOtherAccountStamps=0;
               for (let i=0;i<res2.data.length;i++) {
-                newUsedPseudoStamps+=res2.data[i].itemCost;
+                newUsedOtherAccountStamps+=res2.data[i].itemCost;
               }
               this.setData({
-                usedPseudoStamps: newUsedPseudoStamps,
+                usedOtherAccountStamps: newUsedOtherAccountStamps,
               });
               this.updateCanAfford();
             })
