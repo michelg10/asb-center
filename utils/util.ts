@@ -10,7 +10,10 @@ export function getTimeDifference(fromTs: number, toTs: number) {
     diff=-diff;
   }
   if (diff<60) {
-    return "now";
+    if (diffPositive) {
+      return `${diff}s ago`;
+    }
+    return `${diff}s`;
   }
   diff/=60;
   if (diff<60) {

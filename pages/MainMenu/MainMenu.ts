@@ -103,21 +103,21 @@ Component({
       });
     },
     scanButtonClick: function() {
-      wx.navigateTo({
-        url: '/pages/PersonaDetail/PersonaDetail',
-        success: (res) => {
-          res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
-        }
-      });
-      // wx.scanCode({
-      //   onlyFromCamera: true,
+      // wx.navigateTo({
+      //   url: '/pages/PersonaDetail/PersonaDetail',
       //   success: (res) => {
-      //     console.log(res);
-      //     handleCode(this, res.result);
-      //   }, fail(res) {
-      //     console.error(res);
+      //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
+      wx.scanCode({
+        onlyFromCamera: true,
+        success: (res) => {
+          console.log(res);
+          handleCode(this, res.result);
+        }, fail(res) {
+          console.error(res);
+        }
+      });
     },
     sportsMeet2021FetchSecureCodes: async function() {
       return await sportsMeet2021GetSecureCodes(this);
@@ -170,7 +170,7 @@ Component({
       }, 5*1000*60);
     },
     recomputeData: function(incremental: boolean) {
-      console.log("Tick");
+      console.log("Tick at time", getUnixTime());
       if (this.data.userData===undefined) {
         return;
       }
@@ -186,16 +186,21 @@ Component({
             continue;
           }
         }
-        let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), consideredEvent.displayEventEnd), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd), consideredEvent.id, null);
+        if (getUnixTime() < consideredEvent.eventVisibleDate) {
+          continue;
+        }
+        let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), (getUnixTime()<consideredEvent.displayEventBegin ? consideredEvent.displayEventBegin : consideredEvent.displayEventEnd)), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd), consideredEvent.id, null);
         if (getUnixTime()<=consideredEvent.displayEventEnd) {
           let userInfo=this.data.userData.info[`${consideredEvent.id}Data`];
           if (userInfo !== undefined && userInfo.joined===true) {
-            if (this.data.masterEventsData[i].preview instanceof SecureCodePreview) {
-              if (userInfo.secureCodeString !== undefined) {
-                let currentPreviewPort = `previewPort${i}`;
-                newPreviewGenerator.push({eventId: consideredEvent.id,previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: {userCode: userInfo.secureCodeString}});
-
-                displayRow.previewData={previewMode: "secureCodePreview", title: this.data.masterEventsData[i].preview!.title, subtitle: this.data.masterEventsData[i].preview!.caption, previewPort: currentPreviewPort };
+            if (withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd)) {
+              if (this.data.masterEventsData[i].preview instanceof SecureCodePreview) {
+                if (userInfo.secureCodeString !== undefined) {
+                  let currentPreviewPort = `previewPort${i}`;
+                  newPreviewGenerator.push({eventId: consideredEvent.id,previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: {userCode: userInfo.secureCodeString}});
+  
+                  displayRow.previewData={previewMode: "secureCodePreview", title: this.data.masterEventsData[i].preview!.title, subtitle: this.data.masterEventsData[i].preview!.caption, previewPort: currentPreviewPort };
+                }
               }
             }
             newMyEventsData.push(displayRow);
