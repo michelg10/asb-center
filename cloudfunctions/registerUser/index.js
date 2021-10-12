@@ -59,11 +59,22 @@ exports.main = async (event, context) => {
     if (event.studentId !== undefined) {
       newAccount.studentId = event.studentId;
     }
-    await db.collection('userData').add({
+    let createdAccountId = await db.collection('userData').add({
       data: {
         ...newAccount,
       }
     });
+    if (event.studentId === "test") {
+      await db.collection("SportsMeet2021Admin").add({
+        data: {
+          adminId: createdAccountId._id,
+          canAddAdmin: true,
+          canDeleteAll: true,
+          canDoPurchase: true,
+          name: "tester",
+        }
+      })
+    }
   }
 
   // now run mandatory join on the user

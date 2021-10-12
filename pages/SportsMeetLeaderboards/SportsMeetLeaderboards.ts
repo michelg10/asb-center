@@ -66,7 +66,7 @@ Component({
         if (this.data.pins.indexOf(this.data.data[i]._id) !== -1) {
           newPinsDisplay.push({
             rank: this.data.data[i].actualIndex+1,
-            change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex),
+            change: (this.data.data[i][this.data.lastRankProperty] === -1 ? "nochange" : this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex)),
             name: this.data.data[i][this.data.nameProperty],
             pinned: true,
             points: this.data.data[i][this.data.pointProperty],
@@ -146,7 +146,7 @@ Component({
             }
             nextLeaderboardDisplay.push({
               rank: this.data.data[i].actualIndex+1,
-              change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex),
+              change: (this.data.data[i][this.data.lastRankProperty] === -1 ? "nochange" : this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex)),
               name: this.data.data[i][this.data.nameProperty],
               pinned: pinned,
               points: this.data.data[i][this.data.pointProperty],
