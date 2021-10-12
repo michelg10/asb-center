@@ -103,21 +103,21 @@ Component({
       });
     },
     scanButtonClick: function() {
-      // wx.navigateTo({
-      //   url: '/pages/PersonaDetail/PersonaDetail',
-      //   success: (res) => {
-      //     res.eventChannel.emit('userId', "34b0d32824ca3b6174ae02bd");
-      //   }
-      // });
-      wx.scanCode({
-        onlyFromCamera: true,
+      wx.navigateTo({
+        url: '/pages/PersonaDetail/PersonaDetail',
         success: (res) => {
-          console.log(res);
-          handleCode(this, res.result);
-        }, fail(res) {
-          console.error(res);
+          res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
         }
       });
+      // wx.scanCode({
+      //   onlyFromCamera: true,
+      //   success: (res) => {
+      //     console.log(res);
+      //     handleCode(this, res.result);
+      //   }, fail(res) {
+      //     console.error(res);
+      //   }
+      // });
     },
     sportsMeet2021FetchSecureCodes: async function() {
       return await sportsMeet2021GetSecureCodes(this);

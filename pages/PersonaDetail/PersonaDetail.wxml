@@ -3,6 +3,9 @@
   <text class="big-title-text">{{userData.student.nickname}}</text>
   <text id="persona-detail-id-text">{{userData._id}}{{accountIsPseudo ? " (Pseudo account, "+otherAccounts+" account"+(otherAccounts === 1 ? "" : "s")+" linked)" : ""}}</text>
   <text id="persona-detail-gradeclass-text">Class {{userData.student.grade}}-{{userData.student.class}}</text>
+  <view id="modify-admin-status-container" wx:if="{{adminStatus.canAddAdmin}}" bindtap="configureAdminClick">
+    <text>Configure Admin...</text>
+  </view>
   <view id="log-activity-container" wx:if="{{selectedEventIndex !== undefined}}">
     <text class="heading-text" id="persona-detail-activity-log-text">Log Activity</text>
     <view class="select-container" id="activity-select-container">

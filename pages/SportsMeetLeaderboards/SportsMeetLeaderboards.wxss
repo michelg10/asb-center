@@ -121,7 +121,12 @@
   font-size: 200px;
   width: 100%;
   bottom:0;
+}
+.ranked-inner-main-container-top-padded {
   top: 44px;
+}
+.ranked-inner-main-container-no-padded {
+  top: 0px;
 }
 .leaderboard-separator {
   margin-left: 18px;

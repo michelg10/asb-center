@@ -60,3 +60,14 @@
 #exchange-container {
   margin-bottom: 39px;
 }
+#modify-admin-status-container {
+  padding: 12px 16px;
+  border-radius: 9px;
+  background-color: var(--subcontainer-background);
+  margin-bottom: 22px;
+}
+#modify-admin-status-container text {
+  color: var(--link);
+  font-size: 17px;
+  font-weight: 500;
+}

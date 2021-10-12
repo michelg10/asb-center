@@ -53,6 +53,7 @@ type AdminStatusType = {
   adminId: string,
   canDeleteAll: boolean,
   canDoPurchase: boolean,
+  canAddAdmin: boolean,
   name: string,
 }
 interface componentDataInterface {
@@ -338,6 +339,14 @@ Component({
       });
       this.updateCanAfford();
     },
+    configureAdminClick: function() {
+      wx.navigateTo({
+        url: '/pages/ConfigureAdmin/ConfigureAdmin',
+        success: (res) => {
+          res.eventChannel.emit('userId', this.data.userId);
+        }
+      })
+    },
     onLoad: async function() {
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
@@ -375,6 +384,7 @@ Component({
               adminId: adminRes.data[0].adminId,
               canDeleteAll: adminRes.data[0].canDeleteAll,
               canDoPurchase: adminRes.data[0].canDoPurchase,
+              canAddAdmin: adminRes.data[0].canAddAdmin,
               name: adminRes.data[0].name,
             }
           });

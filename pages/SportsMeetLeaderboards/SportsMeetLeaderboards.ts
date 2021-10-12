@@ -19,6 +19,7 @@ interface componentDataInterface {
   doubleBoundary: number,
   leaderboardDisplay: leaderboardDisplayComponent[],
   pinsDisplay: leaderboardDisplayComponent[],
+  pinsDisabled: boolean,
 };
 Component({
   /**
@@ -64,8 +65,8 @@ Component({
       for (let i=0;i<this.data.data.length;i++) {
         if (this.data.pins.indexOf(this.data.data[i]._id) !== -1) {
           newPinsDisplay.push({
-            rank: i+1,
-            change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-i),
+            rank: this.data.data[i].actualIndex+1,
+            change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex),
             name: this.data.data[i][this.data.nameProperty],
             pinned: true,
             points: this.data.data[i][this.data.pointProperty],
@@ -84,13 +85,9 @@ Component({
       this.applySearch();
     },
     rerank: function() {
-      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined && this.data.doubleBoundary !== undefined) {
-        let newData = [];
-        for (let i=0;i<this.data.data.length;i++) {
-          if (this.data.data[i][this.data.pointProperty] !== 0) {
-            newData.push(this.data.data[i]);
-          }
-        }
+      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined && this.data.doubleBoundary !== undefined && this.data.pinsDisabled !== undefined && (this.data.pins !== null || this.data.pinsDisabled)) {
+        console.log("run rerank");
+        let newData = this.data.data;
         newData.sort((a, b) => {
           let actualA = a[this.data.pointProperty];
           let actualB = b[this.data.pointProperty];
@@ -102,8 +99,18 @@ Component({
           }
           return -1;
         });
+        let newNewData:any[] = [];
+        for (let i=0;i<newData.length;i++) {
+          if (newData[i][this.data.pointProperty] !== 0 || this.data.pins?.indexOf(newData[i]._id) !== -1) {
+            console.log("hi");
+            newNewData.push({
+              ...newData[i],
+              actualIndex: i,
+            });
+          }
+        }
         this.setData({
-          data: newData,
+          data: newNewData,
         });
         this.applySearch();
         this.reloadPins();
@@ -125,7 +132,7 @@ Component({
       return "down";
     },
     applySearch: function() {
-      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined) {
+      if (this.data.lastRankProperty !== undefined && this.data.pointProperty !== undefined && this.data.nameProperty !== undefined && this.data.data !== undefined && this.data.doubleBoundary !== undefined && this.data.pinsDisabled !== undefined && (this.data.pins !== null || this.data.pinsDisabled)) {
         let nextLeaderboardDisplay: leaderboardDisplayComponent[]=[];
         for (let i=0;i<this.data.data.length;i++) {
           let toSearch:string = this.data.data[i][this.data.nameProperty];
@@ -138,8 +145,8 @@ Component({
               pinned = this.data.pins.indexOf(this.data.data[i]._id) !== -1;
             }
             nextLeaderboardDisplay.push({
-              rank: i+1,
-              change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-i),
+              rank: this.data.data[i].actualIndex+1,
+              change: this.classifyChange(this.data.data[i][this.data.lastRankProperty]-this.data.data[i].actualIndex),
               name: this.data.data[i][this.data.nameProperty],
               pinned: pinned,
               points: this.data.data[i][this.data.pointProperty],
@@ -185,20 +192,32 @@ Component({
             key: 'SportsMeet2021LeaderboardPins',
             success: (res) => {
               this.setData({
+                pinsDisabled: false,
+              });
+              this.setData({
                 pins: res.data,
               });
+              this.rerank();
               this.reloadPins();
               this.applySearch();
             },
             fail: () => {
               this.setData({
+                pinsDisabled: false,
+              });
+              this.setData({
                 pins: [],
               });
+              this.rerank();
               this.savePins();
               this.reloadPins();
             }
           })
         }
+        this.setData({
+          pinsDisabled: true,
+        });
+        this.rerank();
       });
       eventChannel.on("data", (data: any[]) => {
         this.data.data = data;

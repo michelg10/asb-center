@@ -30,7 +30,7 @@
         <image id="leaderboard-search-icon" src="/icons/SportsMeet/leaderboard-search.svg"></image>
         <input type="text" placeholder="Search Students..." placeholder-class="leaderboard-secondary" id="ranked-search-textfield" class="leaderboard-smallTexts" bindinput="handleSearchBoxChange"></input>
       </view>
-      <view id="ranked-inner-main-container">
+      <view id="ranked-inner-main-container" class="{{showSearch ? 'ranked-inner-main-container-top-padded' : 'ranked-inner-main-container-no-padded'}}">
         <block wx:for="{{leaderboardDisplay}}" wx:key="id">
           <view class="leaderboard-separator" wx:if="{{index !== 0}}"></view>
           <view class="leaderboard-row-container">
