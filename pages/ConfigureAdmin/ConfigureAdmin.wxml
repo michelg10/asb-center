@@ -29,12 +29,12 @@
       </view>
     </view>
   </view>
-  <view class="button">
+  <view class="button" id="add-configure-button">
     <view class="button" bindtap="addConfigure" id="configure-button">
       <text class="button-text">Configure</text>
     </view>
-    <view wx:if="{{modFeedback!==undefined}}" class="button-feedback">
-      <text class="{{modFeedbackClass}}">{{logAddFeedback}}</text>
-    </view>
+  </view>
+  <view wx:if="{{modFeedback!==undefined}}" class="button-feedback">
+    <text class="{{modFeedbackClass}}">{{modFeedback}}</text>
   </view>
 </view>

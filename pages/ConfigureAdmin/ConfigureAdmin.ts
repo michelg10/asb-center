@@ -82,6 +82,7 @@ Component({
       this.data.db = wx.cloud.database();
       const eventChannel = this.getOpenerEventChannel();
       eventChannel.on('userId', async (data: string) => {
+        this.data.userId = data;
         let getAdminData = await this.data.db.collection('SportsMeet2021Admin').where({
           adminId: data,
         }).get();

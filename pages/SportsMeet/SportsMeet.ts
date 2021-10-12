@@ -107,6 +107,9 @@ Component({
     adminButtonTapped: function() {
       wx.navigateTo({
         url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
+        success: (res) => {
+          res.eventChannel.emit("myId", this.data.userData.id);
+        }
       });
     },
     leaderboardButtonTapped: function(x: any) {

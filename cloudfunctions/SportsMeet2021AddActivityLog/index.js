@@ -101,7 +101,7 @@ exports.main = async (event, context) => {
       reason: "Student does not exist in student database!"
     };
   }
-  let studentNickname = result[2].data[0].nickname;
+  let studentNickname = result[2].data[0].uniqueNickname;
   let studentGrade = result[2].data[0].grade;
   let studentClass = result[2].data[0].class;
   tasks=[];
@@ -117,6 +117,7 @@ exports.main = async (event, context) => {
       userId: event.userId,
       stampNumber: (allowStamps ? stampValue : undefined),
       pointNumber: (rankLeaderboard ? pointValue : undefined),
+      studentNickname: studentNickname,
       timeStamp: Date.now(),
     }
   }));

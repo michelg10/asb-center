@@ -1,13 +1,23 @@
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
+import { LogType, PurchaseLogType } from "../PersonaDetail/PersonaDetail";
 
 // pages/SportsMeetAdminPanel/SportsMeetAdminPanel.ts
+let grades=[9,10,11,12];
 type componentDataInterface = {
+  myId: string,
   db: DB.Database,
   studentData: Student[],
   matchingIndexes: number[],
   multiselectEnabled: boolean,
+  pastLogDeletionError: string,
+  logs: LogType[],
+  purchaseLogs: PurchaseLogType[],
+  exchangeLogDeletionError: string,
+  indivGradesLogs: LogType[][],
+  indivGradesPurchaseLogs: PurchaseLogType[][],
+  isWaiting: boolean,
 }
 Component({
   /**
@@ -26,8 +36,70 @@ Component({
    * Component methods
    */
   methods: {
+    deleteActivityLog: function(x: any) {
+      if (this.data.isWaiting) {
+        return;
+      }
+      this.data.isWaiting = true;
+      wx.cloud.callFunction({
+        name: "SportsMeet2021DeleteActivityLog",
+        data: {
+          deleteLogId: this.data.logs[x.currentTarget.dataset.itemindex]._id,
+          logGrade: this.data.logs[x.currentTarget.dataset.itemindex].studentGrade,
+        }
+      }).then((res) => {
+        let result: any = res.result;
+        if (result.status !== "success") {
+          this.setData({
+            pastLogDeletionError: result.reason,
+          });
+        } else {
+          this.setData({
+            pastLogDeletionError: "",
+          });
+          let newLogs = this.data.logs;
+          newLogs.splice(x.currentTarget.dataset.itemindex, 1);
+          this.setData({
+            logs: newLogs,
+          });
+        }
+        this.data.isWaiting = false;
+      })
+    },
+    deleteExchangeLog: function(x: any) {
+      if (this.data.isWaiting) {
+        return;
+      }
+      this.data.isWaiting = true;
+      wx.cloud.callFunction({
+        name: "SportsMeet2021DeleteExchangeLog",
+        data: {
+          deleteLogId: this.data.purchaseLogs[x.currentTarget.dataset.itemindex]._id,
+          logGrade: this.data.purchaseLogs[x.currentTarget.dataset.itemindex].studentGrade,
+        }
+      }).then((res) => {
+        let result: any = res.result;
+        if (result.status !== "success") {
+          this.setData({
+            exchangeLogDeletionError: result.reason,
+          });
+        } else {
+          this.setData({
+            exchangeLogDeletionError: "",
+          });
+          let newPurchaseLogs = this.data.purchaseLogs;
+          newPurchaseLogs.splice(x.currentTarget.dataset.itemindex, 1);
+          this.setData({
+            purchaseLogs: newPurchaseLogs,
+          });
+        }
+        this.data.isWaiting = false;
+      })
+    },
     onLoad: function() {
       this.data.db = wx.cloud.database();
+      this.data.indivGradesLogs=Array(grades.length);
+      this.data.indivGradesPurchaseLogs=Array(grades.length);
       allCollectionsData(this.data.db, "studentData").then((res) => {
         let tmpStudentData=[];
         for (let i=0;i<res.data.length;i++) {
@@ -37,6 +109,99 @@ Component({
           studentData: tmpStudentData,
           multiselectEnabled: true,
         });
+      });
+      const eventChannel = this.getOpenerEventChannel();
+      eventChannel.on('myId', (data) => {
+        this.data.myId=data;
+        for (let i=0;i<grades.length;i++) {
+          allCollectionsData(this.data.db, `SportsMeet2021TransactionLog${grades[i]}`, {
+            issuerId: this.data.myId,
+          }).then((res) => {
+            let newPurchaseLogs: PurchaseLogType[]=[];
+            for (let j=0;j<res.data.length;j++) {
+              newPurchaseLogs.push({
+                userId: res.data[j].userId,
+                issuerId: res.data[j].issuerId,
+                issuerName: res.data[j].issuerName,
+                itemId: res.data[j].itemId,
+                itemName: res.data[j].itemName,
+                itemCost: res.data[j].itemCost,
+                _id: res.data[j]._id,
+                studentNickname: res.data[j].studentNickname,
+                timeStamp: res.data[j].timeStamp,
+                studentGrade: grades[i],
+              });
+            }
+            this.data.indivGradesPurchaseLogs[i] = newPurchaseLogs;
+            this.generatePurchaseLogs();
+          });
+        }
+        for (let i=0;i<grades.length;i++) {
+          allCollectionsData(this.data.db, `SportsMeet2021StampLog${grades[i]}`, {
+            issuerId: this.data.myId,
+          }).then((res) => {
+            let newLogs: LogType[]=[];
+            for (let j=0;j<res.data.length;j++) {
+              newLogs.push({
+                _id: res.data[j]._id as string,
+                issuerId: res.data[j].issuerId,
+                issuerName: res.data[j].issuerName,
+                userId: res.data[j].userId,
+                eventId: res.data[j].eventId,
+                eventName: res.data[j].eventName,
+                pointNumber: res.data[j].pointNumber === undefined ? null : res.data[j].pointNumber,
+                stampNumber: res.data[j].stampNumber === undefined ? null : res.data[j].stampNumber,
+                studentNickname: res.data[j].studentNickname,
+                timeStamp: res.data[j].timeStamp,
+                studentGrade: grades[i]
+              });
+            }
+            this.data.indivGradesLogs[i] = newLogs;
+            this.generateLogs();
+          });
+        }
+      });
+    },
+    generateLogs: function() {
+      for (let i=0;i<this.data.indivGradesLogs.length;i++) {
+        if (this.data.indivGradesLogs[i] === undefined) {
+          return;
+        }
+      }
+      console.log("Generating log...");
+      let newLog: LogType[] = [];
+      for (let i=0;i<this.data.indivGradesLogs.length;i++) {
+        newLog.push.apply(newLog, this.data.indivGradesLogs[i]);
+      }
+      newLog.sort((a,b) => {
+        if (a.timeStamp > b.timeStamp) {
+          return -1;
+        }
+        return 1;
+      });
+      this.setData({
+        logs: newLog,
+      });
+    },
+    generatePurchaseLogs: function() {
+      for (let i=0;i<this.data.indivGradesPurchaseLogs.length;i++) {
+        if (this.data.indivGradesPurchaseLogs[i] === undefined) {
+          return;
+        }
+      }
+      console.log("Generating purchase log...");
+      let newPurchaseLog: PurchaseLogType[] = [];
+      for (let i=0;i<this.data.indivGradesPurchaseLogs.length;i++) {
+        newPurchaseLog.push.apply(newPurchaseLog, this.data.indivGradesPurchaseLogs[i]);
+      }
+      newPurchaseLog.sort((a,b) => {
+        if (a.timeStamp > b.timeStamp) {
+          return -1;
+        }
+        return 1;
+      });
+      this.setData({
+        purchaseLogs: newPurchaseLog,
       });
     },
     selectMultipleTap: function() {

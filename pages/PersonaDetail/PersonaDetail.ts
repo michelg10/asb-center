@@ -29,7 +29,7 @@ type UserDataType = {
   }
 }
 // pages/PersonaDetail/PersonaDetail.ts
-type LogType = {
+export type LogType = {
   _id: string,
   eventId: string,
   eventName: string,
@@ -38,8 +38,11 @@ type LogType = {
   pointNumber: null|number,
   stampNumber: null|number,
   userId: string,
+  studentNickname: string,
+  timeStamp: number,
+  studentGrade?: number
 };
-type PurchaseLogType = {
+export type PurchaseLogType = {
   userId: string,
   issuerId: string,
   issuerName: string,
@@ -47,6 +50,9 @@ type PurchaseLogType = {
   itemName: string,
   itemCost: number,
   _id: string,
+  studentNickname: string,
+  timeStamp: number,
+  studentGrade?: number,
 };
 type AdminStatusType = {
   wxId: string,
@@ -490,6 +496,8 @@ Component({
                   eventName: snapshot.docs[i].eventName,
                   pointNumber: snapshot.docs[i].pointNumber === undefined ? null : snapshot.docs[i].pointNumber,
                   stampNumber: snapshot.docs[i].stampNumber === undefined ? null : snapshot.docs[i].stampNumber,
+                  studentNickname: snapshot.docs[i].studentNickname,
+                  timeStamp: snapshot.docs[i].timeStamp,
                 });
               }
               this.setData({

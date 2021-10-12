@@ -40,18 +40,21 @@ exports.main = async (event, context) => {
     };
   }
   callerId = grabCallerId.data[0]._id;
-  // build studentId -> grade cache
+  // build studentId -> grade cache and studentId -> unique nickname cache
   let studentIdToGradeCache = new Map();
+  let studentIdToNicknameCache = new Map();
   for (let i=0;i<result[2].result.data.length;i++) {
     studentIdToGradeCache.set(result[2].result.data[i]._id, result[2].result.data[i].grade);
+    studentIdToNicknameCache.set(result[2].result.data[i]._id, result[2].result.data[i].uniqueNickname);
   }
 
-  // build user _id -> grade cache
+  // build user _id -> grade cache and user _id -> unqiue nickname cache
   let userIdToGradeCache = new Map();
+  let userIdToNicknameCache = new Map();
   for (let i=0;i<result[1].result.data.length;i++) {
     userIdToGradeCache.set(result[1].result.data[i]._id, studentIdToGradeCache.get(result[1].result.data[i].studentId));
+    userIdToNicknameCache.set(result[1].result.data[i]._id, studentIdToNicknameCache.get(result[1].result.data[i].studentId));
   }
-
 
   tasks = [];
 
@@ -102,7 +105,8 @@ exports.main = async (event, context) => {
         eventName: eventName,
         issuerId: callerId,
         issuerName: adminName,
-        userId: event.userIds[i], 
+        userId: event.userIds[i],
+        studentNickname: userIdToNicknameCache.get(event.userIds[i]), 
         timeStamp: Date.now(),
       }
     }));

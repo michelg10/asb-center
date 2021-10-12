@@ -1,9 +1,10 @@
 /* pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxss */
 @import "/styles/studentContainer.wxss";
+@import "/styles/SportsMeet2021Logs.wxss";
 #sports-meet-admin-panel-container {
   margin: 0 16px;
-  padding-top: 10px;
-  margin-bottom: 80px;
+  margin-top: 10px;
+  padding-bottom: 80px;
 }
 .admin-panel-full-width-button-container {
   margin-top: 12px;
@@ -43,7 +44,4 @@
 }
 #my-logs-header {
   margin-bottom: 10px;
-}
-#select-multiple-container {
-  margin-bottom: 80px;
 }

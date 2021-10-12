@@ -46,6 +46,7 @@ exports.main = async (event, context) => {
     };
   }
   let userGrade = fetchUserStudentId.data[0].grade;
+  let userNickname = fetchUserStudentId.data[0].uniqueNickname;
   let pseudoAccountId = fetchUserStudentId.data[0].pseudoId;
   let isPseudoAccount = (event.userId === pseudoAccountId);
 
@@ -218,6 +219,8 @@ exports.main = async (event, context) => {
       itemId: event.itemId,
       itemName: itemName,
       itemCost: itemCost,
+      studentNickname: userNickname,
+      timeStamp: Date.now(),
     }
   });
   return {

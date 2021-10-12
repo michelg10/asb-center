@@ -43,3 +43,6 @@
 #configure-button text {
   color: #3180E9;
 }
+#add-configure-button {
+  margin-bottom: 10px;
+}
