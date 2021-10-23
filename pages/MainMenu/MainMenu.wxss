@@ -89,6 +89,7 @@
   margin: 0 30px;
   padding-bottom: 10px;
   margin-top: 13px;
+  text-align: center;
 }
 #main-menu-footer {
   display: flex;
