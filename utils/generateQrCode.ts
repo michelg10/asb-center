@@ -23,7 +23,7 @@ function toBase64(x: boolean[]) {
   console.log("error in to base 64:", x, value);
   return ""; 
 }
-export function generateQrCode(type: string, event: string, payload: number[]) {
+export function generateQrCode(type: string, event: string|null, payload: number[]) {
   let payloadBinaryData:boolean[]=[];
   type binaryMapType = {[key:number]: boolean[]};
   let binaryMap: binaryMapType=get256ToBinaryMap();
@@ -37,5 +37,5 @@ export function generateQrCode(type: string, event: string, payload: number[]) {
   for (let i=0;i<payloadBinaryData.length;i+=6) {
     base64EncodedPayload+=toBase64(payloadBinaryData.slice(i,i+6));
   }
-  return `asC;1;type-${type};event-${event};payload-${payload.length}-${base64EncodedPayload}`;
+  return `asC;1;type-${type};${event === null ? "" : `event-${event};`}payload-${payload.length}-${base64EncodedPayload}`;
 }

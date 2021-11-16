@@ -51,10 +51,29 @@ exports.main = async (event, context) => {
     });
   }
   if (!userHasAccount) {
+    // generate compact id
+    let compactIdCharacters="QWERTYUPASDFGHJKLZXCVBNM1234567890";
+    let resultCompactId="";
+    while (true) {
+      let genRandomId="";
+      for (let i=0;i<6;i++) {
+        let randomIndex=Math.floor(Math.random()*compactIdCharacters.length);
+        genRandomId+=compactIdCharacters[randomIndex];
+      }
+      let testForCompactIdExist = await db.collection('userData').where({
+        compactId: genRandomId,
+      }).get();
+      if (testForCompactIdExist.data.length===0) {
+        resultCompactId=genRandomId;
+        break;
+      }
+    }
+
     let newAccount = {
       info: {},
       studentId: undefined,
-      userId: wxContext.OPENID
+      userId: wxContext.OPENID,
+      compactId: resultCompactId,
     };
     if (event.studentId !== undefined) {
       newAccount.studentId = event.studentId;

@@ -23,3 +23,17 @@ text, input {
   font-size: 15px;
   line-height: 18px;
 }
+
+.admin-button {
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--subcontainer-background);
+  border-radius: 50%;
+}
+.admin-image {
+  height: 20px;
+  width: 17px;
+}

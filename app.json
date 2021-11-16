@@ -12,7 +12,8 @@
     "pages/SportsMeet2021MultiSelect/SportsMeet2021MultiSelect",
     "pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect",
     "pages/SportsMeet2021MultiAddPoints/SportsMeet2021MultiAddPoints",
-    "pages/ConfigureAdmin/ConfigureAdmin"
+    "pages/ConfigureAdmin/ConfigureAdmin",
+    "pages/PersonalCode/PersonalCode"
   ],
   "window": {
     "backgroundTextStyle": "light",

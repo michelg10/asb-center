@@ -1,0 +1,22 @@
+<view id="personal-code-container">
+  <view id="personal-code-heading-container">
+    <text class="big-title-text">Personal Code</text>
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+      <image src="/icons/bolt.svg" class="admin-image"></image>
+    </view>
+  </view>
+  <view id="compact-id-display">
+    <view id="compact-id-display-title">
+        <text>Your Compact ID</text>
+    </view>
+    <view id="compact-id-display-id">
+        <text>{{userData.compactId}}</text>
+    </view>
+  </view>
+  <view id="personal-code-code-container">
+    <view class="secure-code-preview-container">
+        <canvas class="secure-code-canvas" canvas-id="personalcodecanvas"></canvas>
+        <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nYour Personal Code is unique and updates with time. Do not share your Personal Code.'}}</text>
+    </view>
+  </view>
+</view>

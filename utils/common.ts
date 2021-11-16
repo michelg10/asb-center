@@ -1,6 +1,6 @@
 export type previewEnum = "noPreview" | "secureCodePreview";
 export type studentDataType = {id: string, name: string, grade: number, class: number, pseudoId: string};
-export type userDataType = {id: string, student: studentDataType | null, info: any};
+export type userDataType = {id: string, student: studentDataType | null, info: any, compactId: string};
 let QRCode = require('weapp-qrcode')
 
 export function createQRCode(canvasId: string, data: string, backgroundColor: string) { // data is the string value of the qr code

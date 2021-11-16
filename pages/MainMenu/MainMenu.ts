@@ -22,6 +22,7 @@ interface componentDataInterface {
   myEventsData: Array<DisplayRow>;
   currentEventsData: Array<DisplayRow>;
   pastEventsData: Array<DisplayRow>;
+  servicesData: Array<DisplayRow>;
   lastUpdateTime: string;
 
   // UI-independent variables
@@ -69,7 +70,7 @@ Component({
             }
           }
           if (userData.length>0) {
-            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info};
+            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId};
             if (userData[0].studentId !== undefined) {
               let studentData = await this.data.db.collection("studentData").where({
                 _id: userData[0].studentId, 
@@ -148,6 +149,14 @@ Component({
           }
         });
       }
+      if (eventClickedId==="personalCode") {
+        wx.navigateTo({
+          url: '/pages/PersonalCode/PersonalCode',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+          }
+        })
+      }
     },
     onLoad: function() {
       wx.cloud.init();
@@ -164,6 +173,11 @@ Component({
          }, 500
         );
       });
+      let newServiceData=new Array<DisplayRow>();
+      newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
+      this.setData({
+        servicesData: newServiceData
+      })
       // preform cleanup operations
       setInterval(() => {
         this.data.previewLastGen = new Map();
@@ -242,7 +256,7 @@ Component({
       if (this.data.viewVisible) {
         for (let i=0;i<newPreviewGenerator.length;i++) {
           if (newPreviewGenerator[i].previewMode==="secureCodePreview") {
-            let accessCodeContents=generatePreviewCode(newPreviewGenerator[i].previewData.userCode);
+            let accessCodeContents=generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, newPreviewGenerator[i].eventId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
               let myCreateQRCode = createQRCode.bind(this);
               myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');

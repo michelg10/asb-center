@@ -32,6 +32,7 @@
     <template is="eventsList" data="{{ ...{listData: myEventsData, listTitle: 'My Events', lastUpdateTime: lastUpdateTime} }}"></template>
     <template is="eventsList" data="{{ ...{listData: currentEventsData, listTitle: 'Current Events'} }}"></template>
     <template is="eventsList" data="{{ ...{listData: pastEventsData, listTitle: 'Past Events'} }}"></template>
+    <template is="eventsList" data="{{ ...{listData: servicesData, listTitle: 'Services'} }}"></template>
   </view>
   <view id="main-menu-footer">
     <text class="main-menu-registration-information" wx:if="{{userData.student !== null}}">Registered as {{userData.student.name}} {{userData.student.grade}}-{{userData.student.class}}</text>
@@ -39,5 +40,8 @@
       <text class="main-menu-registration-information">Not registered</text>
       <text id="main-menu-registration-button" bindtap="handleRegister">Register now...</text>
     </view>
+  </view>
+  <view id="version-footer">
+    Version 2.0
   </view>
 </view>

@@ -563,7 +563,7 @@ Component({
     },
     recomputeCode: function() {
       if (this.data.viewVisible) {
-        let accessCodeContents=generatePreviewCode(this.data.previewInfo.previewData.userCode);
+        let accessCodeContents=generatePreviewCode("secureCode", this.data.previewInfo.previewData.userCode, "SportsMeet2021");
         if (accessCodeContents !== this.data.codeLastGen) {
           let myCreateQRCode = createQRCode.bind(this);
           myCreateQRCode(this.data.previewPort, accessCodeContents, 'FFFFFF');

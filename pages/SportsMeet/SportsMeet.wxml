@@ -23,8 +23,8 @@
 <view id="sports-meet-container">
   <view id="sports-meet-heading-container">
     <text class="big-title-text">Sports Carnival</text>
-    <view wx:if="{{isAdmin}}" id="sports-meet-admin-button" bindtap="adminButtonTapped">
-      <image src="/icons/bolt.svg" id="sports-meet-admin-image"></image>
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+      <image src="/icons/bolt.svg" class="admin-image"></image>
     </view>
   </view>
   <view id="sports-meet-upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0}}">
