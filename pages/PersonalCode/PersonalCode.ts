@@ -1,5 +1,6 @@
 import { createQRCode, userDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
+import { generateQrCode } from "../../utils/generateQrCode";
 import { extendNumberToLengthString } from "../../utils/util";
 
 // pages/PersonalCode/PersonalCode.ts
@@ -7,6 +8,7 @@ interface componentDataInterface {
   isAdmin: boolean,
   userData: userDataType,
   recomputeCaller: any,
+  db: DB.Database,
   viewVisible: boolean,
   codeLastGen: string,
 }
@@ -28,12 +30,19 @@ Component({
   */
   methods: {
     onLoad: function() {
+      this.data.db = wx.cloud.database();
       this.data.viewVisible = true;
       const eventChannel = this.getOpenerEventChannel();
       eventChannel.on('userData', (data: userDataType) => {
         this.setData({
           userData: data,
         });
+        this.data.db.collection("globalAdmins").where({
+          userId:this.data.userData.id,
+        }).get().then((res) => {
+          console.log(res);
+          
+        })
         setTimeout(
           () => {
             this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
@@ -43,7 +52,11 @@ Component({
     },
     recomputeCode: function() {
       if (this.data.viewVisible) {
-        let accessCodeContents=generatePreviewCode("userCode", this.data.userData.compactId,null);
+        let qrCodeData=[];
+        for (let i=0;i<this.data.userData.compactId.length;i++) {
+          qrCodeData.push(this.data.userData.compactId.charCodeAt(i));
+        }
+        let accessCodeContents=generateQrCode("userCode", null, qrCodeData);
         if (accessCodeContents !== this.data.codeLastGen) {
           let myCreateQRCode = createQRCode.bind(this);
           myCreateQRCode("personalcodecanvas", accessCodeContents, 'FFFFFF');

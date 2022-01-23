@@ -54,6 +54,7 @@ Component({
         userId: '{openid}'
       }).watch({
         onChange: async (snapshot) => {
+          parseInt("User data updated")
           let userData = snapshot.docs;
           if (snapshot.type==="init") {
             if (userData.length === 0) {
@@ -70,7 +71,7 @@ Component({
             }
           }
           if (userData.length>0) {
-            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId};
+            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null};
             if (userData[0].studentId !== undefined) {
               let studentData = await this.data.db.collection("studentData").where({
                 _id: userData[0].studentId, 
@@ -82,6 +83,17 @@ Component({
             }
             this.setData({
               userData: userObject,
+            });
+            this.data.db.collection("globalAdmins").where({
+              userId: userObject.id,
+            }).get().then((res) => {
+              if (res.data.length>0) {
+                let newUserData = this.data.userData;
+                newUserData.globalAdminName = res.data[0].adminName;
+                this.setData({
+                  userData: newUserData,
+                });
+              }
             });
           }
         }, onError: function(err) {
@@ -110,6 +122,8 @@ Component({
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
+      // handleCode(this, "asC;1;type-userCode;payload-6-SzYwNkxE");
+      // return;
       wx.scanCode({
         onlyFromCamera: true,
         success: (res) => {
@@ -157,6 +171,14 @@ Component({
           }
         })
       }
+      if (eventClickedId==="suggestionsBox") {
+        wx.navigateTo({
+          url: '/pages/SuggestionsBox/SuggestionsBox',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+          }
+        })
+      }
     },
     onLoad: function() {
       wx.cloud.init();
@@ -175,6 +197,8 @@ Component({
       });
       let newServiceData=new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
+      newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
+      // newServiceData.push(new DisplayRow("Order Lunch", "", true, "lunchOrdering", null));
       this.setData({
         servicesData: newServiceData
       })
@@ -196,7 +220,7 @@ Component({
       for (let i=0;i<this.data.masterEventsData.length;i++) {
         const consideredEvent = this.data.masterEventsData[i];
         if (consideredEvent.grades !== null && this.data.userData.student !== null) {
-          if (!consideredEvent.grades.includes(this.data.userData.student.grade)) {
+          if (!(consideredEvent.grades.includes(this.data.userData.student.grade) || consideredEvent.grades[0] === -1 && this.data.userData.globalAdminName !== null)) {
             continue;
           }
         }

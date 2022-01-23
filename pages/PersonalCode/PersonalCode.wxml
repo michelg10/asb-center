@@ -16,7 +16,7 @@
   <view id="personal-code-code-container">
     <view class="secure-code-preview-container">
         <canvas class="secure-code-canvas" canvas-id="personalcodecanvas"></canvas>
-        <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nYour Personal Code is unique and updates with time. Do not share your Personal Code.'}}</text>
+        <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nYour Personal Code and Compact ID uniquely identify your account.'}}</text>
     </view>
   </view>
 </view>

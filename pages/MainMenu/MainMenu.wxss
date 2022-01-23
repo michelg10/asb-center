@@ -44,7 +44,7 @@
   margin-bottom: 20px;
 }
 .event-title-text {
-  font-size: 20px;
+  font-size: 17px;
 }
 .event-till-time-text {
   color: var(--secondary);

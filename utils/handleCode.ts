@@ -109,6 +109,21 @@ export async function handleCode(obj: any, x: string) {
         }
       });
       return;
+    } else {
+      reportCodeScanError(`This Sports Carnival ID Code is of unknown type ${keyToValueMap.get("type")}.`);
     }
+  } else if (keyToValueMap.get("event") === undefined) {
+    if (keyToValueMap.get("type") === "userCode") {
+      let compactId = String.fromCharCode(...keyToValueMap.get("payload"))
+      console.log(compactId);
+      if (obj.data.userData.globalAdminName !== null) {
+        console.log("Handle by "+obj.data.userData.globalAdminName);
+      }
+      // send to server to check 
+    } else {
+      reportCodeScanError(`This Agnostic Code is of unknown type ${keyToValueMap.get("type")}.`);
+    }
+  } else {
+    reportCodeScanError(`This Code is bound to the unknown event ${keyToValueMap.get("event")}.`);
   }
 }

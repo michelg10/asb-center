@@ -13,7 +13,8 @@
     "pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect",
     "pages/SportsMeet2021MultiAddPoints/SportsMeet2021MultiAddPoints",
     "pages/ConfigureAdmin/ConfigureAdmin",
-    "pages/PersonalCode/PersonalCode"
+    "pages/PersonalCode/PersonalCode",
+    "pages/SuggestionsBox/SuggestionsBox"
   ],
   "window": {
     "backgroundTextStyle": "light",
