@@ -1,5 +1,6 @@
 /* pages/AnyOrderMainPage/AnyOrderMainPage.wxss */
 @import "imageStyles.wxss";
+@import "/styles/listSelection.wxss";
 #AnyOrderMainPageContainer {
     margin-top: 10px;
     margin-bottom: 80px;
@@ -55,28 +56,8 @@
     padding-left: 16px;
     padding-right: 35px;
 }
-#anonymity-selection-row {
-    height: 44px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-#AnyOrderMainPageSelectionRowCheck {
-    height: 15px;
-    width: 15px;
-}
 #anonymity-selection {
-    background-color: #ECECEC;
-    border-radius: 8px;
-    margin-top: 10px;
-    margin-bottom: 18px;
-}
-#anonymity-selection-row-separator {
-    margin-left: 17px;
-    height: 1px;
-    background-color: #979797;
-    width: calc(100%-17px);
+    margin-bottom: 21px;
 }
 .information-input-row {
     display: flex;

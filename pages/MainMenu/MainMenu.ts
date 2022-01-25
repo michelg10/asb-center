@@ -7,6 +7,7 @@ import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
 import { handleCode } from '../../utils/handleCode';
+import { Student } from '../../classes/student';
 interface SecureCodePreviewData {
   userCode: string;
 }
@@ -15,6 +16,9 @@ export interface PreviewGenerator {
   previewMode: PreviewEnum;
   previewPort: string;
   previewData: SecureCodePreviewData;
+}
+export type CacheSingleton = {
+  studentData: Student[] | undefined,
 }
 interface componentDataInterface {
   masterEventsData: Array<Event>;
@@ -30,6 +34,8 @@ interface componentDataInterface {
   previewGenerator: Array<PreviewGenerator>;
   previewLastGen: Map<string, string>;
   viewVisible: boolean,
+
+  cacheSingleton: CacheSingleton,
 };
 Component({
 
@@ -170,6 +176,7 @@ Component({
             res.eventChannel.emit('userData', this.data.userData);
             res.eventChannel.emit('eventId', "WhiteV2022");
             res.eventChannel.emit('eventName', "White Valentines");
+            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
           }
         })
       }
@@ -196,6 +203,7 @@ Component({
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
       this.data.viewVisible = true;
+      this.data.cacheSingleton = {studentData: undefined};
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);

@@ -1,9 +1,11 @@
 // pages/AnyOrderMainPage/AnyOrderMainPage.ts
 
+import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
+import { CacheSingleton } from "../MainMenu/MainMenu";
 
-type OrderObject = {
+export type OrderObject = {
     _id: String,
     cost: Number,
     name: String,
@@ -16,30 +18,31 @@ type ComponentDataInterface = {
     db: DB.Database,
     errorMessage: String | undefined,
     orderHasDelta: boolean,
-    orderObjects: [OrderObject]
+    orderObjects: OrderObject[],
+    cacheSingleton: CacheSingleton,
 }
 type StudentOrderInfo = {
     name: String,
     class: String,
 }
-type ObjectAndQuantity = {
+export type ObjectAndQuantity = {
     objectId: String,
     computedObjectName: String,
     computedSingleObjectCost: Number,
     quantity: Number,
 }
-type Suborder = {
+export type Suborder = {
     recipientType: "student" | "teacher",
-    studentRecipientId: String,
-    computedStudentRecipientName: String,
+    studentRecipientId: String | null,
+    computedStudentRecipientName: String | null,
     teacherRecipientName: String,
-    objects: [ObjectAndQuantity],
+    objects: ObjectAndQuantity[],
     computedTotalCost: Number
 }
 type Order = {
     orderUser: String,
     orderFrom: StudentOrderInfo | null,
-    subordersList: [Suborder],
+    subordersList: Suborder[],
     orderStatus: "unsub" | "sub" | "acc",
     computedTotalCost: Number,
 }
@@ -87,28 +90,80 @@ Component({
                 order: newOrder,
             });
         },
-        nameBind: function(x: any) {
-            let newOrder = this.data.order;
-            if (newOrder.orderFrom !== null) {
-                newOrder.orderFrom!.name=x.detail.value;
-            }
-            this.setData({
-                order: newOrder,
-            });
-        },
         submitButtonClicked: function() {
             let newOrder = this.data.order;
             newOrder.orderStatus = "sub";
             this.setData({
                 order: newOrder,
+                orderHasDelta: true,
             });
-        }, classBind: function(x: any) {
+            this.uploadOrder();
+        },
+        deleteOrderTapped: function(x: any) {
+            let newOrder = this.data.order;
+            let index: number = x.currentTarget.dataset.index;
+            newOrder.subordersList.splice(index, 1);
+            this.setData({
+                order: newOrder,
+                orderHasDelta: true,
+            });
+            this.computeCosts();
+        },
+        editOrderTapped: function(x: any) {
+            let index: number = x.currentTarget.dataset.index;
+            wx.navigateTo({
+                url: "/pages/AnyOrderSuborder/AnyOrderSuborder",
+                success: (res) => {
+                    res.eventChannel.emit("data", {
+                        eventId: this.data.eventId,
+                        suborder: {...this.data.order.subordersList[index]},
+                        suborderIndex: index,
+                        orderObjects: this.data.orderObjects,
+                        cacheSingleton: this.data.cacheSingleton,
+                    });
+                }
+            });
+        },
+        newOrderTapped: function() {
+            let newSuborder: Suborder = {
+                recipientType: "student",
+                studentRecipientId: null,
+                computedStudentRecipientName: null,
+                teacherRecipientName: "",
+                objects: [],
+                computedTotalCost: 0,
+            };
+            wx.navigateTo({
+                url: "/pages/AnyOrderSuborder/AnyOrderSuborder",
+                success: (res) => {
+                    res.eventChannel.emit("data", {
+                        eventId: this.data.eventId,
+                        suborder: newSuborder,
+                        suborderIndex: null,
+                        orderObjects: this.data.orderObjects,
+                        cacheSingleton: this.data.cacheSingleton,
+                    });
+                }
+            });
+        },
+        classBind: function(x: any) { // class text field edited
             let newOrder = this.data.order;
             if (newOrder.orderFrom !== null) {
                 newOrder.orderFrom!.class=x.detail.value;
             }
             this.setData({
                 order: newOrder,
+                orderHasDelta: true,
+            });
+        },
+        nameBind: function(x: any) { // name text field edited
+            let newOrder = this.data.order;
+            if (newOrder.orderFrom !== null) {
+                newOrder.orderFrom!.name=x.detail.value;
+            }
+            this.setData({
+                order: newOrder,
+                orderHasDelta: true,
             });
         },
         setAnonymity: function(x: any) {
@@ -123,11 +178,13 @@ Component({
                 };
                 this.setData({
                     order: newOrder,
+                    orderHasDelta: true,
                 });
             } else if (x.currentTarget.dataset.id === "anonymous") {
                 newOrder.orderFrom = null;
                 this.setData({
                     order: newOrder,
+                    orderHasDelta: true,
                 });
             }
         }, 
@@ -136,9 +193,13 @@ Component({
             newOrder.orderStatus = "unsub";
             this.setData({
                 order: newOrder,
+                orderHasDelta: true,
             });
+            this.uploadOrder();
         }, uploadOrder: function() {
-
+            if (!this.data.orderHasDelta) {
+                return;
+            }
         }, onLoad: function() {
             this.data.db = wx.cloud.database();
             const eventChannel = this.getOpenerEventChannel();
@@ -146,11 +207,14 @@ Component({
                 this.setData({
                     userData: data,
                 });
-            })
+            });
             eventChannel.on('eventName', (data: String) => {
                 this.setData({
                     eventName: data,
                 });
+            });
+            eventChannel.on('cacheSingleton', (data: CacheSingleton) => {
+                this.data.cacheSingleton = data;
             });
             eventChannel.on('eventId', async (data: String) => {
                 this.setData({
@@ -179,7 +243,7 @@ Component({
                                 order: (myOrder.result as AnyObject).data,
                                 orderHasDelta: false,
                             });
-                            console.log(this.data.order);
+                            this.computeCosts();
                         }
                     } else {
                         this.setData({

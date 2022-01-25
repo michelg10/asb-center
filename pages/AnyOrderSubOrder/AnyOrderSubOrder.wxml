@@ -1,2 +1,52 @@
 <!--pages/AnyOrderSubOrder/AnyOrderSubOrder.wxml-->
-<text>pages/AnyOrderSubOrder/AnyOrderSubOrder.wxml</text>
+<view id="any-order-suborder-container">
+    <text class="big-title-text">{{suborderIndex === null ? "New Order" : "Edit Order"}}</text>
+    <text class="heading-text" id="recipient-heading">Recipient</text>
+    <view class="list-selection" id="recipient-selection">
+        <view class="list-selection-row" bindtap="setRecipient" data-id="student">
+            <text>Student</text>
+            <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{suborder.recipientType === 'student'}}"></image>
+        </view>
+        <view class="list-selection-row-separator"></view>
+        <view class="list-selection-row" bindtap="setRecipient" data-id="teacher">
+            <text>Teacher</text>
+            <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{suborder.recipientType === 'teacher'}}"></image>
+        </view>
+    </view>
+    <view id="select-specific-person-view">
+        <block wx:if="{{suborder.recipientType === 'student'}}">
+            <view class="select-specific-person-row">
+                <text class="select-specific-person-row-text">Name</text>
+                <text class="select-specific-person-input" id="select-specific-student">{{suborder.computedStudentRecipientName === null ? 'Tap to choose...' : suborder.computedStudentRecipientName}}</text>
+            </view>
+        </block>
+        <block wx:if="{{suborder.recipientType === 'teacher'}}">
+            <view class="select-specific-person-row">
+                <text class="select-specific-person-row-text">Name</text>
+                <input class="select-specific-person-input" type="text" value="{{suborder.teacherRecipientName}}" bindinput="teacherNameInputChanged" />
+            </view>
+        </block>
+    </view>
+    <view wx:for="{{suborder.objects}}" class="suborder-objects-container">
+        <view class="suborder-objects-container-top {{item.objectId}}-background-style">
+            <text class="suborder-objects-title">{{item.computedObjectName}}</text>
+            <text class="suborder-objects-cost">{{item.computedSingleObjectCost}} points</text>
+        </view>
+        <view class="suborder-objects-container-bottom">
+            <text class="suborder-objects-quantity-text">Quantity</text>
+            <view class="quantity-nudge-container">
+                <image src="/icons/minus{{item.quantity === 0 ? '-disabled' : ''}}.svg" class="quantity-nudge-icon"></image>
+                <text class="quantity-display">{{item.quantity}}</text>
+                <image src="/icons/add.svg" class="quantity-nudge-icon"></image>
+            </view>
+        </view>
+    </view>
+    <view id="total-cost-display">
+        <text class="suborder-headerfooter-title">TOTAL</text>
+        <text class="suborder-headerfooter-text">{{suborder.computedTotalCost}}pts</text>
+    </view>
+    <view id="add-order-button" wx:if="{{suborderTotalItems>0}}" bindtap="addOrEditOrderTapped">
+        <image src="/icons/add-icon.svg" id="add-icon-image"></image>
+        <text id="add-order-text">{{suborderIndex === null ? "Add Order" : "Edit Order"}}</text>
+    </view>
+</view>

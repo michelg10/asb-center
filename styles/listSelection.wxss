@@ -1,0 +1,22 @@
+.list-selection-row {
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.list-selection-check {
+    height: 15px;
+    width: 15px;
+}
+.list-selection {
+    background-color: #ECECEC;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+.list-selection-row-separator {
+    margin-left: 17px;
+    height: 1px;
+    background-color: #979797;
+    width: calc(100%-17px);
+}

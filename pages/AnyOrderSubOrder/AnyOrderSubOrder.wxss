@@ -1,1 +1,88 @@
 /* pages/AnyOrderSubOrder/AnyOrderSubOrder.wxss */
+@import "/styles/listSelection.wxss";
+@import "../AnyOrderMainPage/imageStyles.wxss";
+@import "../AnyOrderMainPage/AnyOrderMainPage.wxss";
+#any-order-suborder-container {
+    margin-top: 10px;
+    margin-bottom: 80px;
+    margin-left: 16px;
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+}
+#recipient-selection {
+    margin-top: 10px;
+    margin-bottom: 21px;
+}
+#recipient-heading {
+    margin-top: 14px;
+}
+#select-specific-person-view {
+    margin-bottom: 28px;
+}
+.select-specific-person-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.select-specific-person-input {
+    font-size: 17px;
+    padding: 11px;
+    background-color: #ECECEC;
+    border-radius: 8px;
+    width: 176px;
+    height: 22px;
+}
+#select-specific-student {
+    color: #366AEF;
+}
+.suborder-objects-container-top {
+    height: 208px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+.suborder-objects-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+}
+.suborder-objects-cost {
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    padding-bottom: 12px;
+}
+.suborder-objects-container {
+    background-color: #ECECEC;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+.suborder-objects-container-bottom {
+    height: 61px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.suborder-objects-quantity-text {
+    font-size: 17px;
+    font-weight: 500;
+}
+.quantity-nudge-icon {
+    height: 28px;
+    width: 28px;
+}
+.quantity-nudge-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 113px;
+}
+.quantity-display {
+    font-size: 17px;
+}

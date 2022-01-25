@@ -15,7 +15,8 @@
     "pages/ConfigureAdmin/ConfigureAdmin",
     "pages/PersonalCode/PersonalCode",
     "pages/SuggestionsBox/SuggestionsBox",
-    "pages/AnyOrderMainPage/AnyOrderMainPage"
+    "pages/AnyOrderMainPage/AnyOrderMainPage",
+    "pages/AnyOrderSuborder/AnyOrderSuborder"
   ],
   "window": {
     "backgroundTextStyle": "light",
