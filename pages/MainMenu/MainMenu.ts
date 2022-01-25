@@ -2,7 +2,7 @@
 import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
 import {DisplayRow} from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
-import { createQRCode, previewEnum, studentDataType, userDataType } from '../../utils/common';
+import { createQRCode, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
@@ -12,13 +12,13 @@ interface SecureCodePreviewData {
 }
 export interface PreviewGenerator {
   eventId: string;
-  previewMode: previewEnum;
+  previewMode: PreviewEnum;
   previewPort: string;
   previewData: SecureCodePreviewData;
 }
 interface componentDataInterface {
   masterEventsData: Array<Event>;
-  userData: userDataType;
+  userData: UserDataType;
   myEventsData: Array<DisplayRow>;
   currentEventsData: Array<DisplayRow>;
   pastEventsData: Array<DisplayRow>;
@@ -71,13 +71,13 @@ Component({
             }
           }
           if (userData.length>0) {
-            let userObject: userDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null};
+            let userObject: UserDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null};
             if (userData[0].studentId !== undefined) {
               let studentData = await this.data.db.collection("studentData").where({
                 _id: userData[0].studentId, 
               }).get();
               if (studentData.data.length !== 0) {
-                let studentDataObject: studentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId}; 
+                let studentDataObject: StudentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId}; 
                 userObject.student = studentDataObject;
               }
             }
@@ -117,7 +117,7 @@ Component({
     },
     scanButtonClick: function() {
       // wx.navigateTo({
-      //   url: '/pages/PersonaDetail/PersonaDetail',
+      //   url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
       //   success: (res) => {
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
@@ -162,6 +162,16 @@ Component({
             }));
           }
         });
+      }
+      if (eventClickedId==="WhiteV2022") {
+        wx.navigateTo({
+          url: '/pages/AnyOrderMainPage/AnyOrderMainPage',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('eventId', "WhiteV2022");
+            res.eventChannel.emit('eventName', "White Valentines");
+          }
+        })
       }
       if (eventClickedId==="personalCode") {
         wx.navigateTo({

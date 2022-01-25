@@ -103,7 +103,7 @@ export async function handleCode(obj: any, x: string) {
       }
       // navigate to the persona detail page
       wx.navigateTo({
-        url: '/pages/PersonaDetail/PersonaDetail',
+        url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
         success: (res) => {
           res.eventChannel.emit('userId', secureCodeVerification);
         }

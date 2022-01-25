@@ -1,6 +1,6 @@
 import { Event } from "../../classes/event";
 import allCollectionsData from "../../utils/allCollectionsData";
-import { createQRCode, userDataType } from "../../utils/common";
+import { createQRCode, UserDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { extendNumberToLengthString, getUnixTime } from "../../utils/util";
 import { PreviewGenerator } from "../MainMenu/MainMenu";
@@ -51,7 +51,7 @@ type HomeroomComputedLeaderboardType = {
   computedScore: number,
 }
 interface componentDataInterface {
-  userData: userDataType,
+  userData: UserDataType,
   db: DB.Database,
   leaderboardEvents: LeaderboardsEventItem[];
   eventId: string;
@@ -280,7 +280,7 @@ Component({
           leaderboardEvents: newLeaderboardEvents,
         });
       }
-      eventChannel.on('userData', (data: userDataType) => {
+      eventChannel.on('userData', (data: UserDataType) => {
         this.setData({
           userData: data,
         });

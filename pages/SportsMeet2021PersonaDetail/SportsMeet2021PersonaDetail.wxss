@@ -1,4 +1,4 @@
-/* pages/PersonaDetail/PersonaDetail.wxss */
+/* pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail.wxss */
 @import "/styles/options-container.wxss";
 @import "/styles/button.wxss";
 @import "/styles/SportsMeet2021Logs.wxss";

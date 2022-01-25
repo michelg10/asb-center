@@ -1,7 +1,7 @@
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
-import { LogType, PurchaseLogType } from "../PersonaDetail/PersonaDetail";
+import { LogType, PurchaseLogType } from "../SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail";
 
 // pages/SportsMeetAdminPanel/SportsMeetAdminPanel.ts
 let grades=[9,10,11,12];
@@ -220,7 +220,7 @@ Component({
     handlePersonChoose: function(e: any) {
       let chosenId=e.currentTarget.dataset.chosenid;
       wx.navigateTo({
-        url: '/pages/PersonaDetail/PersonaDetail',
+        url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
         success: (res) => {
           res.eventChannel.emit('userId', this.data.studentData[chosenId].pseudoId);
         }

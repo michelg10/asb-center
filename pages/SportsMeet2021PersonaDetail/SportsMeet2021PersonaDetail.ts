@@ -28,7 +28,7 @@ type UserDataType = {
     pseudoId: string,
   }
 }
-// pages/PersonaDetail/PersonaDetail.ts
+// pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail.ts
 export type LogType = {
   _id: string,
   eventId: string,

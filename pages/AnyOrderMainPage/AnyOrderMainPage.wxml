@@ -1,2 +1,109 @@
 <!--pages/AnyOrderMainPage/AnyOrderMainPage.wxml-->
-<text>pages/AnyOrderMainPage/AnyOrderMainPage.wxml</text>
+<view id="AnyOrderMainPageContainer">
+    <text class="big-title-text">{{eventName}}</text>
+    <block wx:if="{{errorMessage !== undefined}}">
+        <text id="AnyOrderMainPageErrorMessage">{{errorMessage}}</text>
+    </block>
+    <block wx:else>
+        <view id="order-status">
+            <view id="order-status-title">
+                <text wx:if="{{order.orderStatus === 'unsub'}}">Unsubmitted Order</text>
+                <text wx:if="{{order.orderStatus === 'sub'}}">Submitted Order</text>
+                <text wx:if="{{order.orderStatus === 'acc'}}">Verified Order</text>
+            </view>
+            <view id="order-status-subtitle">
+                <text wx:if="{{order.orderStatus === 'unsub'}}">Create your order below and submit your order</text>
+                <text wx:if="{{order.orderStatus === 'sub'}}">Verify your order with an ASB member or cancel your submission</text>
+                <text wx:if="{{order.orderStatus === 'acc'}}">Thanks for your order! We’ll deliver this to you on delivery day. You can view your order below.</text>
+            </view>
+            <view wx:if="{{order.orderStatus === 'sub'}}" id="AnyOrderMainPageCancelButton" bindtap="cancelButtonPressed">
+                <image id="AnyOrderMainPageCancelButtonIcon" src="/icons/redx.svg"></image>
+                <text id="AnyOrderMainPageCancelButtonText">Cancel</text>
+            </view>
+        </view>
+        <text class="heading-text">Anonymity</text>
+        <view id="anonymity-container">
+            <view id="anonymity-selection">
+                <view id="anonymity-selection-row" bindtap="setAnonymity" data-id="anonymous">
+                    <text>Anonymous</text>
+                    <image id="AnyOrderMainPageSelectionRowCheck" src="/icons/checkmark.svg" wx:if="{{order.orderFrom === null}}"></image>
+                </view>
+                <view id="anonymity-selection-row-separator"></view>
+                <view id="anonymity-selection-row" bindtap="setAnonymity" data-id="named">
+                    <text>Named</text>
+                    <image id="AnyOrderMainPageSelectionRowCheck" src="/icons/checkmark.svg" wx:if="{{order.orderFrom !== null && order.orderFrom !== undefined}}"></image>
+                </view>
+            </view>
+            <block wx:if="{{order.orderFrom !== null && order.orderFrom !== undefined}}">
+                <view class="information-input-row">
+                    <text>Name</text>
+                    <input class="anonymity-input" type="text" value="{{order.orderFrom.name}}" bindinput="nameBind" disabled="{{order.orderStatus !== 'unsub'}}"/>
+                </view>
+                <view class="information-input-row information-input-row-last">
+                    <text>Class</text>
+                    <input class="anonymity-input" type="text" value="{{order.orderFrom.class}}" bindinput="classBind" disabled="{{order.orderStatus !== 'unsub'}}"/>
+                </view>
+                <view id="information-input-info">
+                    <text>This does not have to be your real name or class.</text>
+                </view>
+            </block>
+        </view>
+
+        <block wx:if="{{order.subordersList.length>0}}">
+            <text class="heading-text">Your Orders</text>
+            <text id="order-number-display">{{order.subordersList.length}} order{{order.subordersList.length === 1 ? "" : "s"}}</text>
+            <view wx:for="{{order.subordersList}}">
+                <view class="suborder-container">
+                    <view class="suborder-headerfooter">
+                        <text class="suborder-headerfooter-title">RECIPIENT</text>
+                        <text class="suborder-headerfooter-text">{{item.recipientType === "student" ? item.computedStudentRecipientName : item.teacherRecipientName}}</text>
+                    </view>
+                    <view class="suborder-container-separator"></view>
+                    <block wx:for="{{item.objects}}" wx:for-item="items" wx:for-index="index2">
+                        <view class="suborder-separator" wx:if="{{index2!==0}}"></view>
+                        <view class="suborder-item-container">
+                            <view class="{{items.objectId}}-background-style" id="suborder-item-image"></view>
+                            <view class="suborder-item-desc">
+                                <text class="suborder-item-name">{{items.computedObjectName}}</text>
+                                <text class="suborder-item-cost">{{items.computedSingleObjectCost}} x {{items.quantity}}={{items.computedSingleObjectCost*items.quantity}}pts</text>
+                            </view>
+                        </view>
+                    </block>
+                    <view class="suborder-container-separator"></view>
+                    <view class="suborder-headerfooter">
+                        <text class="suborder-headerfooter-title">COST</text>
+                        <text class="suborder-headerfooter-text">{{item.recipientType === "student" ? item.computedStudentRecipientName : item.teacherRecipientName}}</text>
+                    </view>
+                    <block wx:if="{{order.orderStatus === 'unsub'}}">
+                        <view class="suborder-container-separator"></view>
+                        <view class="edit-options-container">
+                            <view class="edit-options-icon-container">
+                                <image src="/icons/editPencil.svg" id="edit-options-edit-icon"></image>
+                            </view>
+                            <text class="edit-options-text" id="edit-options-edit-text">Edit Order</text>
+                        </view>
+                        <view class="edit-options-separator"></view>
+                        <view class="edit-options-container">
+                            <view class="edit-options-icon-container">
+                                <image src="/icons/trash.svg" id="edit-options-delete-icon"></image>
+                            </view>
+                            <text class="edit-options-text" id="edit-options-delete-text">Delete Order</text>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </block>
+        <view id="add-order-button" wx:if="{{order.orderStatus === 'unsub'}}">
+            <image src="/icons/add-icon.svg" id="add-icon-image"></image>
+            <text id="add-order-text">Add Order</text>
+        </view>
+        <view id="total-cost-display">
+            <text class="suborder-headerfooter-title">TOTAL</text>
+            <text class="suborder-headerfooter-text">{{order.computedTotalCost}}pts</text>
+        </view>
+        <view id="submit-order-button" bindtap="submitButtonClicked" wx:if="{{order.orderStatus === 'unsub'}}">
+            <image src="/icons/submit.svg" id="submit-icon-image"></image>
+            <text id="submit-order-text">Submit</text>
+        </view>
+    </block>
+</view>

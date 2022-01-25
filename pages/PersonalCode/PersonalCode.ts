@@ -1,4 +1,4 @@
-import { createQRCode, userDataType } from "../../utils/common";
+import { createQRCode, UserDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { generateQrCode } from "../../utils/generateQrCode";
 import { extendNumberToLengthString } from "../../utils/util";
@@ -6,7 +6,7 @@ import { extendNumberToLengthString } from "../../utils/util";
 // pages/PersonalCode/PersonalCode.ts
 interface componentDataInterface {
   isAdmin: boolean,
-  userData: userDataType,
+  userData: UserDataType,
   recomputeCaller: any,
   db: DB.Database,
   viewVisible: boolean,
@@ -33,7 +33,7 @@ Component({
       this.data.db = wx.cloud.database();
       this.data.viewVisible = true;
       const eventChannel = this.getOpenerEventChannel();
-      eventChannel.on('userData', (data: userDataType) => {
+      eventChannel.on('userData', (data: UserDataType) => {
         this.setData({
           userData: data,
         });

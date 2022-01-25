@@ -24,14 +24,14 @@ exports.main = async (event, context) => {
     }
     let userId = getAccountIdForUser.data[0]._id
     let getUserOrder = await(db.collection(event.orderEvent+"Orders")).where({
-        OrderUser: userId
+        orderUser: userId
     }).get();
     if (getUserOrder.data.length === 0) {
         let newOrder = {
-            OrderUser: userId,
-            OrderFrom: null,
-            SubOrdersList: [],
-            OrderStatus: "unsub",
+            orderUser: userId,
+            orderFrom: null,
+            subordersList: [],
+            orderStatus: "unsub",
         }
         db.collection(event.orderEvent+"Orders").add({data: newOrder})
         return {
