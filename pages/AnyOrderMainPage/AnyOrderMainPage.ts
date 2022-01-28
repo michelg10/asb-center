@@ -109,11 +109,29 @@ Component({
             });
             this.computeCosts();
         },
+        handleSuborderPassBack: function(res: any) {
+            let index: number|null = res.index;
+            let suborder: Suborder = res.suborder;
+            let newOrder = this.data.order;
+            if (index === null) {
+                newOrder.subordersList.push(suborder);
+            } else {
+                newOrder.subordersList[index] = suborder;
+            }
+            this.setData({
+                order: newOrder,
+                orderHasDelta: true,
+            });
+            this.computeCosts();
+        },
         editOrderTapped: function(x: any) {
             let index: number = x.currentTarget.dataset.index;
             wx.navigateTo({
                 url: "/pages/AnyOrderSuborder/AnyOrderSuborder",
                 success: (res) => {
+                    res.eventChannel.on("suborderPassBack", (res) => {
+                        this.handleSuborderPassBack(res);
+                    });
                     res.eventChannel.emit("data", {
                         eventId: this.data.eventId,
                         suborder: {...this.data.order.subordersList[index]},
@@ -136,6 +154,9 @@ Component({
             wx.navigateTo({
                 url: "/pages/AnyOrderSuborder/AnyOrderSuborder",
                 success: (res) => {
+                    res.eventChannel.on("suborderPassBack", (res) => {
+                        this.handleSuborderPassBack(res);
+                    });
                     res.eventChannel.emit("data", {
                         eventId: this.data.eventId,
                         suborder: newSuborder,
@@ -165,6 +186,9 @@ Component({
                 order: newOrder,
                 orderHasDelta: true,
             });
+        },
+        onUnload: function(x: any) {
+            this.uploadOrder();
         },
         setAnonymity: function(x: any) {
             if (this.data.order.orderStatus !== "unsub") {
@@ -196,9 +220,56 @@ Component({
                 orderHasDelta: true,
             });
             this.uploadOrder();
-        }, uploadOrder: function() {
+        }, uploadOrder: async function() {
             if (!this.data.orderHasDelta) {
                 return;
+            }
+            console.log("Running upload...");
+            this.data.orderHasDelta=false;
+            let result=await wx.cloud.callFunction({
+                name: "AnyOrderUpdateOrder",
+                data: {
+                    orderEvent: this.data.eventId,
+                    order: this.data.order,
+                }
+            });
+            let returnedError = (result!.result! as AnyObject).error;
+            if (returnedError !== "") {
+                console.log("Error reported: "+returnedError);
+                // refetch
+                await this.loadOrderFromServer(this.data.eventId);
+            } else {
+                console.log("Upload completed without fail");
+            }
+        }, loadOrderFromServer: async function(event: String) {
+            let myOrder=await wx.cloud.callFunction({
+                name: "AnyOrderGetOrders",
+                data: {
+                    orderEvent: event,
+                }
+            });
+            if (myOrder !== undefined) {
+                if (myOrder.result !== undefined) {
+                    if ((myOrder.result as AnyObject).error !== "") {
+                        this.setData({
+                            errorMessage: "An error occurred. ("+(myOrder.result as AnyObject).error+")",
+                        });
+                    } else {
+                        this.setData({
+                            order: (myOrder.result as AnyObject).data,
+                            orderHasDelta: false,
+                        });
+                        this.computeCosts();
+                    }
+                } else {
+                    this.setData({
+                        errorMessage: "An unexpected error occurred (MYORDERRESUNDEF). Check your network connection?",
+                    });
+                }
+            } else {
+                this.setData({
+                    errorMessage: "An unexpected error occurred (MYORDERUNDEF). Check your network connection?",
+                });
             }
         }, onLoad: function() {
             this.data.db = wx.cloud.database();
@@ -226,36 +297,13 @@ Component({
                     });
                     this.computeCosts();
                 });
-                let myOrder=await wx.cloud.callFunction({
-                    name: "AnyOrderGetOrders",
-                    data: {
-                        orderEvent: data,
-                    }
-                });
-                if (myOrder !== undefined) {
-                    if (myOrder.result !== undefined) {
-                        if ((myOrder.result as AnyObject).error !== "") {
-                            this.setData({
-                                errorMessage: "An error occurred. ("+(myOrder.result as AnyObject).error+")",
-                            });
-                        } else {
-                            this.setData({
-                                order: (myOrder.result as AnyObject).data,
-                                orderHasDelta: false,
-                            });
-                            this.computeCosts();
-                        }
-                    } else {
-                        this.setData({
-                            errorMessage: "An unexpected error occurred (MYORDERRESUNDEF). Check your network connection?",
-                        });
-                    }
-                } else {
-                    this.setData({
-                        errorMessage: "An unexpected error occurred (MYORDERUNDEF). Check your network connection?",
-                    });
-                }
-            });
+                await this.loadOrderFromServer(data);
+            })
+            setTimeout(
+                () => {
+                    setInterval(() => {this.uploadOrder()}, 30*1000);
+                }, 38*1000
+            );
         }
     }
 })

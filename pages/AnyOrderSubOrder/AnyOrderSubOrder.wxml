@@ -17,7 +17,7 @@
         <block wx:if="{{suborder.recipientType === 'student'}}">
             <view class="select-specific-person-row">
                 <text class="select-specific-person-row-text">Name</text>
-                <text class="select-specific-person-input" id="select-specific-student">{{suborder.computedStudentRecipientName === null ? 'Tap to choose...' : suborder.computedStudentRecipientName}}</text>
+                <text class="select-specific-person-input" id="select-specific-student" bindtap="studentChooseTapped">{{suborder.computedStudentRecipientName === null ? 'Tap to choose...' : suborder.computedStudentRecipientName}}</text>
             </view>
         </block>
         <block wx:if="{{suborder.recipientType === 'teacher'}}">
@@ -35,9 +35,9 @@
         <view class="suborder-objects-container-bottom">
             <text class="suborder-objects-quantity-text">Quantity</text>
             <view class="quantity-nudge-container">
-                <image src="/icons/minus{{item.quantity === 0 ? '-disabled' : ''}}.svg" class="quantity-nudge-icon"></image>
+                <image src="/icons/minus{{item.quantity === 0 ? '-disabled' : ''}}.svg" class="quantity-nudge-icon" bindtap="nudgeChangeTapped" data-change="{{-1}}" data-index="{{index}}"></image>
                 <text class="quantity-display">{{item.quantity}}</text>
-                <image src="/icons/add.svg" class="quantity-nudge-icon"></image>
+                <image src="/icons/add.svg" class="quantity-nudge-icon" bindtap="nudgeChangeTapped" data-change="{{1}}" data-index="{{index}}"></image>
             </view>
         </view>
     </view>
@@ -45,8 +45,11 @@
         <text class="suborder-headerfooter-title">TOTAL</text>
         <text class="suborder-headerfooter-text">{{suborder.computedTotalCost}}pts</text>
     </view>
-    <view id="add-order-button" wx:if="{{suborderTotalItems>0}}" bindtap="addOrEditOrderTapped">
-        <image src="/icons/add-icon.svg" id="add-icon-image"></image>
-        <text id="add-order-text">{{suborderIndex === null ? "Add Order" : "Edit Order"}}</text>
+    <view id="add-suborder-warn" wx:if="{{warningText !== null}}">
+        <text>{{warningText}}</text>
+    </view>
+    <view class="add-order-button" id="add-order-button-{{warningText === null ? '' : 'disabled'}}" bindtap="addOrEditOrderTapped">
+        <image src="/icons/add-icon{{warningText === null ? '' : '-disabled'}}.svg" id="add-icon-image"></image>
+        <text class="add-order-text" id="add-order-text{{warningText === null ? '' : '-disabled'}}">{{suborderIndex === null ? "Add Order" : "Edit Order"}}</text>
     </view>
 </view>

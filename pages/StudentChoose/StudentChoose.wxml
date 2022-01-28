@@ -1,0 +1,22 @@
+<!--pages/StudentChoose/StudentChoose.wxml-->
+<view id="student-choose-container">
+    <text class="big-title-text">Select student</text>
+    <view id="student-choose-main-container">
+        <view id="student-choose-search-container">
+            <image src="/icons/search.svg" id="search-image"></image>
+            <input type="text" id="student-search-input" bindinput="doSearch" placeholder="Search students..." placeholder-class="student-search-input-placeholder"/>
+        </view>
+        <view id="student-list-container">
+            <view class="student-display-row" wx:for="{{matchingIndexes}}">
+                <view class="student-display-row-left">
+                    <text class="student-display-nickname">{{studentData[item].nickname}}</text>
+                    <text class="student-display-name">{{studentData[item].chineseName}} ({{studentData[item].englishName}})</text>
+                </view>
+                <view class="student-display-row-right">
+                    <text class="student-display-class">{{studentData[item].studentGrade}}-{{studentData[item].studentClass}}</text>
+                    <image class="student-select-button" src="/icons/select-student-add.svg" bindtap="selectStudent" data-index="{{item}}"></image>
+                </view>
+            </view>
+        </view>
+    </view>
+</view>

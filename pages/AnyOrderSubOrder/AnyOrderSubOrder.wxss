@@ -4,7 +4,7 @@
 @import "../AnyOrderMainPage/AnyOrderMainPage.wxss";
 #any-order-suborder-container {
     margin-top: 10px;
-    margin-bottom: 80px;
+    padding-bottom: 80px;
     margin-left: 16px;
     margin-right: 16px;
     display: flex;
@@ -85,4 +85,18 @@
 }
 .quantity-display {
     font-size: 17px;
+}
+#add-suborder-warn {
+    margin-bottom: 15px;
+    padding: 0 32px;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 500;
+    color: #D81717;
+}
+#add-order-button-disabled {
+    background-color: #F0F1FF;
+}
+#add-order-text-disabled {
+    color: #A7B0C8;
 }

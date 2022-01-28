@@ -3,7 +3,7 @@
 @import "/styles/listSelection.wxss";
 #AnyOrderMainPageContainer {
     margin-top: 10px;
-    margin-bottom: 80px;
+    padding-bottom: 80px;
     margin-left: 16px;
     margin-right: 16px;
     display: flex;
@@ -83,6 +83,7 @@
     font-size: 15px;
     line-height: 18px;
     color: var(--secondary);
+    margin-bottom: 18px;
 }
 #anonymity-container {
     margin-bottom: 18px;
@@ -190,7 +191,7 @@
     height: 38px;
     padding: 3px;
 }
-#add-order-button {
+.add-order-button {
     height: 44px;
     border-radius: 22px;
     width: 164px;
@@ -200,7 +201,7 @@
     align-items: center;
     margin-bottom: 22px;
 }
-#add-order-text {
+.add-order-text {
     margin-left: 14px;
     font-size: 17px;
     font-weight: 500;

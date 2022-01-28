@@ -1,5 +1,6 @@
 // pages/AnyOrderSubOrder/AnyOrderSubOrder.ts
 
+import { Student } from "../../classes/student";
 import { ObjectAndQuantity, OrderObject, Suborder } from "../AnyOrderMainPage/AnyOrderMainPage"
 import { CacheSingleton } from "../MainMenu/MainMenu"
 
@@ -10,6 +11,7 @@ type ComponentDataInterface = {
     orderObjects: OrderObject[],
     cacheSingleton: CacheSingleton,
     suborderTotalItems: Number;
+    warningText: string|null,
 }
 
 Component({
@@ -29,7 +31,17 @@ Component({
      * Component methods
      */
     methods: {
-        computeCosts: function() {
+        nudgeChangeTapped: function(x: any) {
+            let changeBy:number = x.currentTarget.dataset.change;
+            let index:number = x.currentTarget.dataset.index;
+            let newSuborder = this.data.suborder;
+            newSuborder.objects[index].quantity=Math.max(newSuborder.objects[index].quantity.valueOf()+changeBy, 0);
+            this.setData({
+                suborder: newSuborder,
+            });
+            this.recompute();
+        },
+        recompute: function() {
             let totalCost = 0;
             let totalQuantity = 0;
             for (let i=0;i<this.data.suborder.objects.length;i++) {
@@ -38,10 +50,28 @@ Component({
             }
             let newSuborder = this.data.suborder;
             newSuborder.computedTotalCost = totalCost;
+            let newWarning = null;
+            if (newSuborder.recipientType === "student" && newSuborder.studentRecipientId === null) {
+                newWarning = "Select a student";
+            }
+            if (newSuborder.recipientType === "teacher" && newSuborder.teacherRecipientName === "") {
+                newWarning = "Type a teacher's name";
+            }
+            if (totalQuantity === 0) {
+                if (newWarning === null) {
+                    newWarning = "Order something";
+                } else {
+                    newWarning += " and order something"; 
+                }
+            }
+            if (newWarning !== null) {
+                newWarning+=" before adding your order";
+            }
             this.setData({
                 suborder: newSuborder,
                 suborderTotalItems: totalQuantity,
-            })
+                warningText: newWarning,
+            });
         },
         onLoad: function() {
             const eventChannel = this.getOpenerEventChannel();
@@ -67,8 +97,9 @@ Component({
                     newSuborderObjects[orderObjectIdToIndexMap.get(currentObjectsAndQuantityArray[i].objectId.valueOf())!.valueOf()].quantity = currentObjectsAndQuantityArray[i].quantity;
                 }
                 newData.suborder.objects = newSuborderObjects;
+                newData.warningText = null;
                 this.setData(newData);
-                this.computeCosts();
+                this.recompute();
             })
         },
         teacherNameInputChanged: function(x: any) {
@@ -77,6 +108,7 @@ Component({
             this.setData({
                 suborder: newSuborder,
             });
+            this.recompute();
         },
         setRecipient: function(x: any) {
             let newRecipientType = x.currentTarget.dataset.id;
@@ -85,6 +117,46 @@ Component({
             this.setData({
                 suborder: newSuborder,
             });
+            this.recompute();
+        },
+        studentChooseTapped: function() {
+            wx.navigateTo({
+                url: "/pages/StudentChoose/StudentChoose",
+                success: (res) => {
+                    res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
+                    res.eventChannel.on("selectedStudent", (res) => {
+                        let student: Student = res;
+                        let newSuborder = this.data.suborder;
+                        newSuborder.computedStudentRecipientName = student.uniqueNickname;
+                        newSuborder.studentRecipientId = student.id;
+                        this.setData({
+                            suborder: newSuborder,
+                        });
+                        this.recompute();
+                    })
+                }
+            })
+        },
+        addOrEditOrderTapped: function() {
+            this.recompute();
+            if (this.data.warningText !== null) {
+                return;
+            }
+            // cleanup suborder
+            let cleanedSuborder = this.data.suborder;
+            let newObjects: ObjectAndQuantity[] = [];
+            for (let i=0;i<cleanedSuborder.objects.length;i++) {
+                if (cleanedSuborder.objects[i].quantity > 0) {
+                    newObjects.push(cleanedSuborder.objects[i]);
+                }
+            }
+            cleanedSuborder.objects=newObjects;
+            const eventChannel = this.getOpenerEventChannel();
+            eventChannel.emit("suborderPassBack", {
+                index: this.data.suborderIndex,
+                suborder: cleanedSuborder,
+            });
+            wx.navigateBack();
         }
     }
 })

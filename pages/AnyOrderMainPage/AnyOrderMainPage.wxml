@@ -72,7 +72,7 @@
                     <view class="suborder-container-separator"></view>
                     <view class="suborder-headerfooter">
                         <text class="suborder-headerfooter-title">COST</text>
-                        <text class="suborder-headerfooter-text">{{item.recipientType === "student" ? item.computedStudentRecipientName : item.teacherRecipientName}}</text>
+                        <text class="suborder-headerfooter-text">{{item.computedTotalCost}} pts</text>
                     </view>
                     <block wx:if="{{order.orderStatus === 'unsub'}}">
                         <view class="suborder-container-separator"></view>
@@ -93,9 +93,9 @@
                 </view>
             </view>
         </block>
-        <view id="add-order-button" wx:if="{{order.orderStatus === 'unsub'}}" bindtap="newOrderTapped">
+        <view class="add-order-button" wx:if="{{order.orderStatus === 'unsub'}}" bindtap="newOrderTapped">
             <image src="/icons/add-icon.svg" id="add-icon-image"></image>
-            <text id="add-order-text">Add Order</text>
+            <text class="add-order-text">Add Order</text>
         </view>
         <view id="total-cost-display" wx:if="{{order.subordersList.length>0}}">
             <text class="suborder-headerfooter-title">TOTAL</text>

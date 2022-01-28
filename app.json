@@ -16,7 +16,8 @@
     "pages/PersonalCode/PersonalCode",
     "pages/SuggestionsBox/SuggestionsBox",
     "pages/AnyOrderMainPage/AnyOrderMainPage",
-    "pages/AnyOrderSuborder/AnyOrderSuborder"
+    "pages/AnyOrderSuborder/AnyOrderSuborder",
+    "pages/StudentChoose/StudentChoose"
   ],
   "window": {
     "backgroundTextStyle": "light",
