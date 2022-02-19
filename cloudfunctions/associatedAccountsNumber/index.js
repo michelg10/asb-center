@@ -18,8 +18,8 @@ exports.main = async (event, context) => {
     };
   }
 
-  let getUserAdmin = await db.collection("SportsMeet2021Admin").where({
-    adminId: getUserId.data[0]._id,
+  let getUserAdmin = await db.collection("admins").where({
+    userId: getUserId.data[0]._id,
   }).get();
   if (getUserId.data.length === 0) {
     return {

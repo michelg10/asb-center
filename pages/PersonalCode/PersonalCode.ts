@@ -37,7 +37,7 @@ Component({
         this.setData({
           userData: data,
         });
-        this.data.db.collection("globalAdmins").where({
+        this.data.db.collection("admins").where({
           userId:this.data.userData.id,
         }).get().then((res) => {
           console.log(res);

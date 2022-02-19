@@ -117,7 +117,25 @@ export async function handleCode(obj: any, x: string) {
       let compactId = String.fromCharCode(...keyToValueMap.get("payload"))
       console.log(compactId);
       if (obj.data.userData.globalAdminName !== null) {
-        console.log("Handle by "+obj.data.userData.globalAdminName);
+        // get the student ID
+        let getUserIdCall = await wx.cloud.callFunction({
+          name: "FindUserByCompactId",
+          data: {
+            requestedUserCompactId: compactId,
+          },
+        });
+        let getUserIdResult = getUserIdCall.result;
+        if ((getUserIdResult as AnyObject).status === "error") {
+          reportCodeScanError(`Error while resolving Compact ID: ${(getUserIdResult as AnyObject).reason}.`);
+          return;
+        }
+        // launch the student detail page
+        wx.navigateTo({
+          url: '/pages/StudentDetailForAdmin/StudentDetailForAdmin',
+          success: (res) => {
+            res.eventChannel.emit('userId', (getUserIdResult as AnyObject).user);
+          }
+        });
       }
       // send to server to check 
     } else {

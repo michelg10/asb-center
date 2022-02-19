@@ -39,7 +39,7 @@ export type Suborder = {
     objects: ObjectAndQuantity[],
     computedTotalCost: Number
 }
-type Order = {
+export type Order = {
     orderUser: String,
     orderFrom: StudentOrderInfo | null,
     subordersList: Suborder[],
@@ -196,6 +196,9 @@ Component({
             }
             let newOrder = this.data.order;
             if (x.currentTarget.dataset.id === "named") {
+                if (this.data.order.orderFrom !== null) {
+                    return;
+                }
                 newOrder.orderFrom = {
                     name: "",
                     class: "",

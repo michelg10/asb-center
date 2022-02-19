@@ -8,7 +8,7 @@ export function verifySecureCode(secureCode: number[], currentTime: number, code
   for (let i=0;i<secureCode.length;i++) {
     secureCodeOriginal+=base256to16map[secureCode[i]];
   }
-  let acceptableTimes = [Math.floor(currentTime/3), Math.floor(currentTime/3)-1];
+  let acceptableTimes = [Math.floor(currentTime/7), Math.floor(currentTime/7)-1];
   for (let i=0;i<acceptableTimes.length;i++) {
     for (let j=0;j<codeList.length;j++) {
       let accessCodeContents=codeList[j].code+acceptableTimes[i].toString();

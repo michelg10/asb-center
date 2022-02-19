@@ -90,7 +90,7 @@ Component({
             this.setData({
               userData: userObject,
             });
-            this.data.db.collection("globalAdmins").where({
+            this.data.db.collection("admins").where({
               userId: userObject.id,
             }).get().then((res) => {
               if (res.data.length>0) {
@@ -128,7 +128,7 @@ Component({
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
-      // handleCode(this, "asC;1;type-userCode;payload-6-SzYwNkxE");
+      // handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
       // return;
       wx.scanCode({
         onlyFromCamera: true,
@@ -194,7 +194,7 @@ Component({
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
           }
-        })
+        });
       }
     },
     onLoad: function() {
@@ -215,7 +215,7 @@ Component({
       });
       let newServiceData=new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
-      newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
+      // newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
       // newServiceData.push(new DisplayRow("Order Lunch", "", true, "lunchOrdering", null));
       this.setData({
         servicesData: newServiceData

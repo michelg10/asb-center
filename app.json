@@ -17,7 +17,8 @@
     "pages/SuggestionsBox/SuggestionsBox",
     "pages/AnyOrderMainPage/AnyOrderMainPage",
     "pages/AnyOrderSuborder/AnyOrderSuborder",
-    "pages/StudentChoose/StudentChoose"
+    "pages/StudentChoose/StudentChoose",
+    "pages/StudentDetailForAdmin/StudentDetailForAdmin"
   ],
   "window": {
     "backgroundTextStyle": "light",
