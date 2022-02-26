@@ -47,20 +47,55 @@ exports.main = async (event, context) => {
     }
 
     let idToObjectMap = new Map();
-    idToObjectMap.set("rose", {
-        _id: "rose",
+    idToObjectMap.set("succulent", {
+        _id: "succulent",
+        cost: 5,
+        name: "Succulent",
+    });
+    idToObjectMap.set("redrosesingle", {
+        _id: "redrosesingle",
+        cost: 8,
+        name: "Red Rose",
+    });
+    idToObjectMap.set("whiterosesingle", {
+        _id: "whiterosesingle",
+        cost: 8,
+        name: "White Rose",
+    });
+    idToObjectMap.set("sunsetrosesingle", {
+        _id: "sunsetrosesingle",
+        cost: 8,
+        name: "Sunset Rose",
+    });
+    idToObjectMap.set("sunflowersingle", {
+        _id: "sunflowersingle",
         cost: 10,
-        name: "Rose",
-    });
-    idToObjectMap.set("tulip", {
-        _id: "tulip",
-        cost: 20,
-        name: "Tulip",
-    });
-    idToObjectMap.set("sunflower", {
-        _id: "sunflower",
-        cost: 25,
         name: "Sunflower",
+    });
+    idToObjectMap.set("daisybouquet", {
+        _id: "daisybouquet",
+        cost: 35,
+        name: "Daisies Bouquet",
+    });
+    idToObjectMap.set("redrosebouquet", {
+        _id: "redrosebouquet",
+        cost: 65,
+        name: "Red Rose Bouquet",
+    });
+    idToObjectMap.set("whiterosebouquet", {
+        _id: "whiterosebouquet",
+        cost: 65,
+        name: "White Rose Bouquet",
+    });
+    idToObjectMap.set("sunflowerbouquet", {
+        _id: "sunflowerbouquet",
+        cost: 70,
+        name: "Sunflower Bouquet",
+    });
+    idToObjectMap.set("redrosebigbouquet", {
+        _id: "redrosebigbouquet",
+        cost: 520,
+        name: "99 Red Rose Bouquet",
     });
     // manually set this! this is to accelerate the cloud function. 
     // recompute everything that the user has computed and then update the order

@@ -62,7 +62,7 @@
                     <block wx:for="{{item.objects}}" wx:for-item="items" wx:for-index="index2">
                         <view class="suborder-separator" wx:if="{{index2!==0}}"></view>
                         <view class="suborder-item-container">
-                            <view class="{{items.objectId}}-background-style" id="suborder-item-image"></view>
+                            <view class="{{items.objectId}}-icon-background-style" id="suborder-item-image"></view>
                             <view class="suborder-item-desc">
                                 <text class="suborder-item-name">{{items.computedObjectName}}</text>
                                 <text class="suborder-item-cost">{{items.computedSingleObjectCost}} x {{items.quantity}}={{items.computedSingleObjectCost*items.quantity}}pts</text>

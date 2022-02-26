@@ -1,5 +1,6 @@
 /* pages/AnyOrderMainPage/AnyOrderMainPage.wxss */
 @import "imageStyles.wxss";
+@import "ImageIconStyles.wxss";
 @import "/styles/listSelection.wxss";
 #AnyOrderMainPageContainer {
     margin-top: 10px;

@@ -5,7 +5,7 @@ import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString
 import { createQRCode, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
-import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions';
+// import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions'; // thinned
 import { handleCode } from '../../utils/handleCode';
 import { Student } from '../../classes/student';
 interface SecureCodePreviewData {
@@ -140,9 +140,9 @@ Component({
         }
       });
     },
-    sportsMeet2021FetchSecureCodes: async function() {
-      return await sportsMeet2021GetSecureCodes(this);
-    },
+    // sportsMeet2021FetchSecureCodes: async function() { // thinned
+    //   return await sportsMeet2021GetSecureCodes(this);
+    // },
     handleRegister: function() {
       wx.redirectTo({
         url: '/pages/Registration/Registration'

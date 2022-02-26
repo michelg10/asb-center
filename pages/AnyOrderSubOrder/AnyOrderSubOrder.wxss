@@ -1,5 +1,6 @@
 /* pages/AnyOrderSubOrder/AnyOrderSubOrder.wxss */
 @import "/styles/listSelection.wxss";
+@import "../AnyOrderMainPage/ImageIconStyles.wxss";
 @import "../AnyOrderMainPage/imageStyles.wxss";
 @import "../AnyOrderMainPage/AnyOrderMainPage.wxss";
 #any-order-suborder-container {
