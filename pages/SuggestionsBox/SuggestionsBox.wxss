@@ -2,6 +2,7 @@
 @import "./SBBackgroundImageBackgroundStyle.wxss";
 @import "./SBCheckmarkBackgroundStyle.wxss";
 @import "./SBTitleBackgroundStyle.wxss";
+@import "./SBTitleChineseBackgroundStyle.wxss";
 
 #main-container {
     padding-top: 10px;
@@ -31,11 +32,19 @@
 }
 
 #sb-wehearyou {
-    width: 175px;
-    height: 22px;
     background-size: contain;
     background-repeat: no-repeat;
     margin-bottom: 14px;
+}
+
+.sb-wehearyouen {
+    width: 175px;
+    height: 22px;
+}
+
+.sb-wehearyouch {
+    width: 112px;
+    height: 27px;
 }
 
 #submissions-box-text {
