@@ -1,2 +1,32 @@
-<!--pages/SuggestionsBox/SuggestionsBox.wxml-->
-<text>pages/SuggestionsBox/SuggestionsBox.wxml</text>
+<view id="main-container" class="sb-background-image-background-style {{hasBeenSubmitted ? 'main-container-fullscreen' : ''}}">
+    <text class="big-title-text" id="sb-title">Suggestions Box</text>
+    <block wx:if="{{!hasBeenSubmitted}}">
+        <view class="sb-title-background-style" id="sb-wehearyou"></view>
+        <text id="submissions-box-text">The ASB is enhancing communication with the school administration to make sure people’s voices are heard, and we want to hear from you — the student body — what do you think needs changing? What do you want to see more of? How do you want to improve our school?
+
+You can leave anything you want to see changed within the school below or in our physical submission box at the XMT lobby. Furthermore, if there are any topics related specifically to mental health or student opinion you would like to see the school discuss and possibly hold lectures on, tell us!
+            </text>
+        <text id="submissions-box-text-disclaimer">Disclaimer: We cannot guarantee that all suggestions will be fulfilled - but we can guarantee that they will be heard by the administration.</text>
+        <view class="question">
+            <text class="question-label">Name (optional)</text>
+            <input class="question-input" value="{{name}}" bindinput="nameInputChanged" />
+        </view>
+        <view class="question">
+            <text class="question-label">Contact Information (optional)</text>
+            <input class="question-input" value="{{contactInformation}}" bindinput="contactInformationChanged" />
+        </view>
+        <view class="question">
+            <text class="question-label">Your Suggestion</text>
+            <textarea class="question-textarea" value="{{suggestion}}" maxlength="-1" bindinput="suggestionChanged" ></textarea>
+        </view>
+        <view id="submit-button-{{suggestion === '' ? 'inactive' : 'active'}}" class="submit-button" bindtap="submitButtonTapped">Submit</view>
+    </block>
+    <block wx:if="{{hasBeenSubmitted}}">
+        <view id="submission-complete-container">
+            <view class="sb-checkmark-background-style" id="submission-complete-checkmark"></view>
+            <text id="submission-complete-text">We’ve recieved your suggestion. Thank you for your submission!</text>
+        </view>
+        <view id="flex-layout-container"></view>
+    </block>
+</view>
+<view id="language-choose" bindtap="changeLanguage">{{language === 'en' ? "Eng" : "中"}}</view>

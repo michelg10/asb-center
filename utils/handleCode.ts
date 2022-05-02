@@ -1,4 +1,4 @@
-import { getSecureCodesReturnType } from "../pages/SportsMeet/SportsMeetFunctions";
+import { getSecureCodesReturnType } from "SportsMeetFunctions";
 import { get256ToBinaryMap, get64ToBinaryMap } from "./binaryMapType";
 import { getUnixTime } from "./util";
 import { verifySecureCode } from "./verifySecureCode";
@@ -117,6 +117,7 @@ export async function handleCode(obj: any, x: string) {
       let compactId = String.fromCharCode(...keyToValueMap.get("payload"))
       console.log(compactId);
       if (obj.data.userData.globalAdminName !== null) {
+        console.log("LAUNCH");
         // get the student ID
         let getUserIdCall = await wx.cloud.callFunction({
           name: "FindUserByCompactId",
@@ -136,6 +137,9 @@ export async function handleCode(obj: any, x: string) {
             res.eventChannel.emit('userId', (getUserIdResult as AnyObject).user);
           }
         });
+      } else {
+        reportCodeScanError(`You are not authorized to scan Personal Codes.`);
+        return;
       }
       // send to server to check 
     } else {

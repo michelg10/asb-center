@@ -128,8 +128,8 @@ Component({
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
-      // handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
-      // return;
+    //   handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
+    //   return;
       wx.scanCode({
         onlyFromCamera: true,
         success: (res) => {
@@ -215,7 +215,7 @@ Component({
       });
       let newServiceData=new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
-      // newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
+      newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
       // newServiceData.push(new DisplayRow("Order Lunch", "", true, "lunchOrdering", null));
       this.setData({
         servicesData: newServiceData

@@ -1,12 +1,13 @@
 {
-    "description": "Project configuration file",
+    "description": "Project configuration file, more information: https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
     "packOptions": {
         "ignore": [
             {
                 "value": ".eslintrc.js",
                 "type": "file"
             }
-        ]
+        ],
+        "include": []
     },
     "cloudfunctionRoot": "cloudfunctions/",
     "setting": {
@@ -47,36 +48,22 @@
         "showES6CompileOption": false,
         "useCompilerPlugins": [
             "typescript"
-        ]
+        ],
+        "useStaticServer": true
     },
     "compileType": "miniprogram",
     "libVersion": "2.19.4",
     "appid": "wxe14a8654494de3a8",
     "projectname": "ASB%20Center",
-    "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
-    "watchOptions": {
-        "ignore": []
-    },
-    "debugOptions": {
-        "hidedInDevtools": []
-    },
+    "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
     "scripts": {
         "beforeCompile": "npm run tsc",
         "beforePreview": "npm run tsc",
         "beforeUpload": "npm run tsc"
     },
-    "condition": {
-        "plugin": {
-            "list": []
-        },
-        "game": {
-            "list": []
-        },
-        "gamePlugin": {
-            "list": []
-        },
-        "miniprogram": {
-            "list": []
-        }
+    "condition": {},
+    "editorSetting": {
+        "tabIndent": "insertSpaces",
+        "tabSize": 4
     }
 }
