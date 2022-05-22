@@ -11,6 +11,7 @@ type ComponentDataInterface = {
     db: DB.Database,
     matchingIndexes: number[],
     searchString: string,
+    limitGradeTo: number[] | undefined,
 }
 
 Component({
@@ -46,6 +47,11 @@ Component({
                     studentData: data.studentData,
                 });
             });
+            eventChannel.on('limitGradeTo', (data: number[]) => {
+                this.setData({
+                    limitGradeTo: data,
+                });
+            })
         },
         doSearch: function(e: any) {
             if (this.data.studentData === undefined) {
@@ -55,6 +61,11 @@ Component({
             let matchingStudentDataIndexes=[];
             if (searchTokens.length!==0) {
                 for (let i=0;i<this.data.studentData.length;i++) {
+                    if (this.data.limitGradeTo !== undefined) {
+                        if (!this.data.limitGradeTo.includes(this.data.studentData[i].studentGrade)) {
+                            continue;
+                        }
+                    }
                     // check whether or not the user input matches this student data entry
                     // in order to match this user data entry, every single search token has to match any of the tokens from this student data entry
                     let currentTokens: string[]=[];

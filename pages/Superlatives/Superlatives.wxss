@@ -1,8 +1,9 @@
 #superlatives-introduction {
-    font-family: 'Telugu MN';
+    /* font-family: 'Telugu MN'; */
+    line-height: 20px;
 }
 .superlative-question  {
-    font-family: 'Telugu MN';
+    /* font-family: 'Telugu MN'; */
 }
 #main-container {
     margin-top: 10px;
@@ -23,16 +24,17 @@
     margin-bottom: 44px;
 }
 .superlative-question {
-    margin-bottom: 14px;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 .superlative-select-button {
     width: 187px;
     height: 40px;
     border-radius: 8px;
-    font-family: 'Telugu MN';
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: 600;
 }
 .superlative-select-button-toselect {
     background-color: #EAEAFC;

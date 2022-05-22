@@ -15,6 +15,7 @@ type QuestionResponse = {
 }
 
 type QuestionDisplayInformation = {
+    id: string,
     question: string,
     name: string | undefined
 };
@@ -62,7 +63,7 @@ Component({
             if (nameId === undefined) {
                 return undefined;
             }
-            if (this.data.studentMap === undefined) {
+            if (this.data.studentMap === undefined || this.data.studentMap.size === 0) {
                 return "";
             }
             let student = this.data.studentMap.get(nameId)!;
@@ -75,6 +76,7 @@ Component({
             let newDisplayInformation: QuestionDisplayInformation[] = [];
             this.data.superlativeQuestions.forEach(element => {
                 newDisplayInformation.push({
+                    id: element.id,
                     question: element.question,
                     name: this.getDisplayNameForQuestion(element.id),
                 });
@@ -82,6 +84,31 @@ Component({
             this.setData({
                 displayInformation: newDisplayInformation
             });
+        },
+        uploadData: function() {
+            wx.cloud.callFunction({
+                name: "SuperlativesSubmit",
+                data: {
+                    userResponses: this.data.userResponses,
+                }
+            });
+        },
+        selectStudent: function(x: any) {
+            console.log(x);
+            let forQuestion = x.currentTarget.dataset.question;
+            wx.navigateTo({
+                url: "/pages/StudentChoose/StudentChoose",
+                success: (res) => {
+                    res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
+                    res.eventChannel.emit("limitGradeTo", [12]);
+                    res.eventChannel.on("selectedStudent", (res) => {
+                        let student: Student = res;
+                        this.data.userResponses.set(forQuestion, student.id);
+                        this.uploadData();
+                        this.buildDisplayInformation();
+                    })
+                }
+            })
         },
         onLoad: function() {
             const eventChannel = this.getOpenerEventChannel();
@@ -98,7 +125,6 @@ Component({
                 this.data.db.collection("SuperlativesData").where({
                     correspondingOpenId: "{openid}"
                 }).get().then((res) => {
-                    console.log(res.data);
                     let userData: QuestionResponse[] = res.data[0].choices as any;
                     let userResponses = new Map<string, string>();
                     userData.forEach(element => {

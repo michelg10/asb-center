@@ -180,7 +180,7 @@ Component({
           }
         })
       }
-      if (eventClickedId === "Superlatives2022") {
+      if (eventClickedId === "Superlatives") {
         wx.navigateTo({
           url: '/pages/Superlatives/Superlatives',
           success: (res) => {
