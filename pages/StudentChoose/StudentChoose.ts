@@ -3,6 +3,7 @@
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
+import { fillCacheSingleton } from "../../utils/fillCacheSingleton";
 import { CacheSingleton } from "../MainMenu/MainMenu"
 
 type ComponentDataInterface = {
@@ -40,15 +41,7 @@ Component({
             this.data.matchingIndexes = [];
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.on('cacheSingleton', async (data: CacheSingleton) => {
-                if (data.studentData === undefined) {
-                    // fetch from server
-                    let studentData = await allCollectionsData(this.data.db, "studentData");
-                    let tmpStudentData=[];
-                    for (let i=0;i<studentData.data.length;i++) {
-                        tmpStudentData.push(new Student(studentData.data[i]._id as string, studentData.data[i].nickname, studentData.data[i].uniqueNickname, studentData.data[i].englishName, studentData.data[i].chineseName, studentData.data[i].grade, studentData.data[i].class, studentData.data[i].pseudoId));
-                    }
-                    data.studentData = tmpStudentData;
-                }
+                fillCacheSingleton(this.data.db, data);
                 this.setData({
                     studentData: data.studentData,
                 });

@@ -1,6 +1,6 @@
 // pages/MainMenu/MainMenu.js
 import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
-import {DisplayRow} from '../../classes/displayRow'
+import { DisplayRow } from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
 import { createQRCode, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
@@ -55,17 +55,17 @@ Component({
    * Component methods
    */
   methods: {
-    fetchServerData: async function() {
+    fetchServerData: async function () {
       this.data.db.collection("userData").where({
         userId: '{openid}'
       }).watch({
         onChange: async (snapshot) => {
           parseInt("User data updated")
           let userData = snapshot.docs;
-          if (snapshot.type==="init") {
+          if (snapshot.type === "init") {
             if (userData.length === 0) {
               // ask the server 
-              let shouldRegister=wx.cloud.callFunction({
+              let shouldRegister = wx.cloud.callFunction({
                 name: "checkNeedNewUser",
               });
               if (shouldRegister) {
@@ -76,14 +76,14 @@ Component({
               }
             }
           }
-          if (userData.length>0) {
-            let userObject: UserDataType = {id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null};
+          if (userData.length > 0) {
+            let userObject: UserDataType = { id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null };
             if (userData[0].studentId !== undefined) {
               let studentData = await this.data.db.collection("studentData").where({
-                _id: userData[0].studentId, 
+                _id: userData[0].studentId,
               }).get();
               if (studentData.data.length !== 0) {
-                let studentDataObject: StudentDataType={id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId}; 
+                let studentDataObject: StudentDataType = { id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId };
                 userObject.student = studentDataObject;
               }
             }
@@ -93,7 +93,7 @@ Component({
             this.data.db.collection("admins").where({
               userId: userObject.id,
             }).get().then((res) => {
-              if (res.data.length>0) {
+              if (res.data.length > 0) {
                 let newUserData = this.data.userData;
                 newUserData.globalAdminName = res.data[0].adminName;
                 this.setData({
@@ -102,18 +102,18 @@ Component({
               }
             });
           }
-        }, onError: function(err) {
+        }, onError: function (err) {
           console.error("user data watch closed due to", err);
         }
       });
-      let serverEventData: any[]=(await allCollectionsData(this.data.db, "event")).data;
+      let serverEventData: any[] = (await allCollectionsData(this.data.db, "event")).data;
 
       let newEventsDb = [];
-      for (let i=0;i<serverEventData.length;i++) {
+      for (let i = 0; i < serverEventData.length; i++) {
         let currentDataEntry = serverEventData[i];
         let currentDataEntryPreview: AnyPreviewType = null;
-        if (currentDataEntry.preview.type=="secureCodePreview") {
-          currentDataEntryPreview=new SecureCodePreview(currentDataEntry.preview.title, currentDataEntry.preview.caption.replace(/\\n/gi, '\n'));
+        if (currentDataEntry.preview.type == "secureCodePreview") {
+          currentDataEntryPreview = new SecureCodePreview(currentDataEntry.preview.title, currentDataEntry.preview.caption.replace(/\\n/gi, '\n'));
         }
         newEventsDb.push(new Event(currentDataEntry.id, currentDataEntry.name, currentDataEntryPreview, currentDataEntry.eventVisibleDate, currentDataEntry.displayEventBegin, currentDataEntry.displayEventEnd, currentDataEntry.accessibleEventBegin, currentDataEntry.accessibleEventEnd, currentDataEntry.menuEventBegin, currentDataEntry.menuEventEnd, currentDataEntry.grades, currentDataEntry.restrictAccess));
       }
@@ -121,15 +121,15 @@ Component({
         masterEventsData: newEventsDb,
       });
     },
-    scanButtonClick: function() {
+    scanButtonClick: function () {
       // wx.navigateTo({
       //   url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
       //   success: (res) => {
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
-    //   handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
-    //   return;
+      //   handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
+      //   return;
       wx.scanCode({
         onlyFromCamera: true,
         success: (res) => {
@@ -143,18 +143,18 @@ Component({
     // sportsMeet2021FetchSecureCodes: async function() { // thinned
     //   return await sportsMeet2021GetSecureCodes(this);
     // },
-    handleRegister: function() {
+    handleRegister: function () {
       wx.redirectTo({
         url: '/pages/Registration/Registration'
       });
     },
-    handleEventRowClick: function(x: any) {
-      let eventClickedId=x.currentTarget.dataset.id;
+    handleEventRowClick: function (x: any) {
+      let eventClickedId = x.currentTarget.dataset.id;
       let shouldJump = x.currentTarget.dataset.shouldjump;
       if (!shouldJump) {
         return;
       }
-      if (eventClickedId==="SportsMeet2021") {
+      if (eventClickedId === "SportsMeet2021") {
         wx.navigateTo({
           url: '/pages/SportsMeet/SportsMeet',
           success: (res) => {
@@ -169,7 +169,7 @@ Component({
           }
         });
       }
-      if (eventClickedId==="WhiteV2022") {
+      if (eventClickedId === "WhiteV2022") {
         wx.navigateTo({
           url: '/pages/AnyOrderMainPage/AnyOrderMainPage',
           success: (res) => {
@@ -180,7 +180,16 @@ Component({
           }
         })
       }
-      if (eventClickedId==="personalCode") {
+      if (eventClickedId === "Superlatives2022") {
+        wx.navigateTo({
+          url: '/pages/Superlatives/Superlatives',
+          success: (res) => {
+            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
+            res.eventChannel.emit('userId', this.data.userData.id);
+          }
+        })
+      }
+      if (eventClickedId === "personalCode") {
         wx.navigateTo({
           url: '/pages/PersonalCode/PersonalCode',
           success: (res) => {
@@ -188,7 +197,7 @@ Component({
           }
         })
       }
-      if (eventClickedId==="suggestionsBox") {
+      if (eventClickedId === "suggestionsBox") {
         wx.navigateTo({
           url: '/pages/SuggestionsBox/SuggestionsBox',
           success: (res) => {
@@ -197,23 +206,23 @@ Component({
         });
       }
     },
-    onLoad: function() {
+    onLoad: function () {
       wx.cloud.init();
       this.data.db = wx.cloud.database();
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
       this.data.viewVisible = true;
-      this.data.cacheSingleton = {studentData: undefined};
+      this.data.cacheSingleton = { studentData: undefined };
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);
         setTimeout(
           () => {
-            setInterval(() => {this.recomputeData(true)}, 500);
-         }, 500
+            setInterval(() => { this.recomputeData(true) }, 500);
+          }, 500
         );
       });
-      let newServiceData=new Array<DisplayRow>();
+      let newServiceData = new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
       newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
       // newServiceData.push(new DisplayRow("Order Lunch", "", true, "lunchOrdering", null));
@@ -223,19 +232,19 @@ Component({
       // preform cleanup operations
       setInterval(() => {
         this.data.previewLastGen = new Map();
-      }, 5*1000*60);
+      }, 5 * 1000 * 60);
     },
-    recomputeData: function(incremental: boolean) {
+    recomputeData: function (incremental: boolean) {
       console.log("Tick at time", getUnixTime());
-      if (this.data.userData===undefined) {
+      if (this.data.userData === undefined) {
         return;
       }
-      let newMyEventsData:Array<DisplayRow>=[];
-      let newCurrentEventsData:Array<DisplayRow>=[];
-      let newPastEventsData:Array<DisplayRow>=[];
-      let newPreviewGenerator:Array<PreviewGenerator>=[];
+      let newMyEventsData: Array<DisplayRow> = [];
+      let newCurrentEventsData: Array<DisplayRow> = [];
+      let newPastEventsData: Array<DisplayRow> = [];
+      let newPreviewGenerator: Array<PreviewGenerator> = [];
       // recompute the display data for events
-      for (let i=0;i<this.data.masterEventsData.length;i++) {
+      for (let i = 0; i < this.data.masterEventsData.length; i++) {
         const consideredEvent = this.data.masterEventsData[i];
         if (consideredEvent.grades !== null && this.data.userData.student !== null) {
           if (!(consideredEvent.grades.includes(this.data.userData.student.grade) || consideredEvent.grades[0] === -1 && this.data.userData.globalAdminName !== null)) {
@@ -245,24 +254,24 @@ Component({
         if (getUnixTime() < consideredEvent.eventVisibleDate) {
           continue;
         }
-        let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), (getUnixTime()<consideredEvent.displayEventBegin ? consideredEvent.displayEventBegin : consideredEvent.displayEventEnd)), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd), consideredEvent.id, null);
-        if (getUnixTime()<=consideredEvent.displayEventEnd) {
-          let userInfo=this.data.userData.info[`${consideredEvent.id}Data`];
-          if (userInfo !== undefined && userInfo.joined===true) {
+        let displayRow = new DisplayRow(consideredEvent.name, withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd) ? "now" : getTimeDifference(getUnixTime(), (getUnixTime() < consideredEvent.displayEventBegin ? consideredEvent.displayEventBegin : consideredEvent.displayEventEnd)), withinRange(getUnixTime(), consideredEvent.accessibleEventBegin, consideredEvent.accessibleEventEnd), consideredEvent.id, null);
+        if (getUnixTime() <= consideredEvent.displayEventEnd) {
+          let userInfo = this.data.userData.info[`${consideredEvent.id}Data`];
+          if (userInfo !== undefined && userInfo.joined === true) {
             if (withinRange(getUnixTime(), consideredEvent.menuEventBegin, consideredEvent.menuEventEnd)) {
               if (this.data.masterEventsData[i].preview instanceof SecureCodePreview) {
                 if (userInfo.secureCodeString !== undefined) {
                   let currentPreviewPort = `previewPort${i}`;
-                  newPreviewGenerator.push({eventId: consideredEvent.id,previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: {userCode: userInfo.secureCodeString}});
-  
-                  displayRow.previewData={previewMode: "secureCodePreview", title: this.data.masterEventsData[i].preview!.title, subtitle: this.data.masterEventsData[i].preview!.caption, previewPort: currentPreviewPort };
+                  newPreviewGenerator.push({ eventId: consideredEvent.id, previewMode: "secureCodePreview", previewPort: currentPreviewPort, previewData: { userCode: userInfo.secureCodeString } });
+
+                  displayRow.previewData = { previewMode: "secureCodePreview", title: this.data.masterEventsData[i].preview!.title, subtitle: this.data.masterEventsData[i].preview!.caption, previewPort: currentPreviewPort };
                 }
               }
             }
             newMyEventsData.push(displayRow);
           } else {
             if (consideredEvent.restrictAccess) {
-              displayRow.canJump=false;
+              displayRow.canJump = false;
             }
             newCurrentEventsData.push(displayRow);
           }
@@ -296,9 +305,9 @@ Component({
       }
       // recompute preview data
       if (this.data.viewVisible) {
-        for (let i=0;i<newPreviewGenerator.length;i++) {
-          if (newPreviewGenerator[i].previewMode==="secureCodePreview") {
-            let accessCodeContents=generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, newPreviewGenerator[i].eventId);
+        for (let i = 0; i < newPreviewGenerator.length; i++) {
+          if (newPreviewGenerator[i].previewMode === "secureCodePreview") {
+            let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, newPreviewGenerator[i].eventId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
               let myCreateQRCode = createQRCode.bind(this);
               myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');
@@ -308,26 +317,26 @@ Component({
         }
       }
       let date = new Date();
-      let newUpdateString=`${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
+      let newUpdateString = `${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
       this.setData({
         lastUpdateTime: newUpdateString,
       });
     },
-    onShow: function() {
+    onShow: function () {
       this.data.viewVisible = true;
     },
-    onHide: function() {
+    onHide: function () {
       this.data.viewVisible = false;
     },
-    displayRowDiff: function(a: Array<DisplayRow>, b: Array<DisplayRow>) {
-      if (a===undefined && b===undefined) {
+    displayRowDiff: function (a: Array<DisplayRow>, b: Array<DisplayRow>) {
+      if (a === undefined && b === undefined) {
         return false;
       }
-      if (a===undefined || b===undefined) {
+      if (a === undefined || b === undefined) {
         return true;
       }
       if (a.length !== b.length) return true;
-      for (let i=0;i<a.length;i++) {
+      for (let i = 0; i < a.length; i++) {
         if (a[i].canJump !== b[i].canJump || a[i].jumpTo !== b[i].jumpTo || a[i].timeLeft !== b[i].timeLeft || a[i].title !== b[i].title) {
           return true;
         }

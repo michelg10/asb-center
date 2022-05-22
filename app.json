@@ -10,7 +10,8 @@
     "pages/AnyOrderMainPage/AnyOrderMainPage",
     "pages/AnyOrderSuborder/AnyOrderSuborder",
     "pages/StudentChoose/StudentChoose",
-    "pages/StudentDetailForAdmin/StudentDetailForAdmin"
+    "pages/StudentDetailForAdmin/StudentDetailForAdmin",
+    "pages/Superlatives/Superlatives"
   ],
   "window": {
     "backgroundTextStyle": "light",

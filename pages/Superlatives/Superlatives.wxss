@@ -1,0 +1,44 @@
+#superlatives-introduction {
+    font-family: 'Telugu MN';
+}
+.superlative-question  {
+    font-family: 'Telugu MN';
+}
+#main-container {
+    margin-top: 10px;
+    margin-bottom: 80px;
+    margin-left: 16px;
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+}
+#superlatives-introduction {
+    margin-top: 18px;
+    margin-bottom: 35px;
+}
+.question {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 44px;
+}
+.superlative-question {
+    margin-bottom: 14px;
+}
+.superlative-select-button {
+    width: 187px;
+    height: 40px;
+    border-radius: 8px;
+    font-family: 'Telugu MN';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.superlative-select-button-toselect {
+    background-color: #EAEAFC;
+    color: #3C3C9C;
+}
+.superlative-select-button-selected {
+    background-color: #00004A;
+    color: #FFFFFF;
+}
