@@ -56,6 +56,9 @@ Component({
             });
         },
         getResponseForQuestion(id: string): string | undefined {
+            if (this.data.userResponses === undefined) {
+                return undefined;
+            }
             return this.data.userResponses.get(id);
         },
         getDisplayNameForQuestion(id: string): string | undefined {
@@ -86,10 +89,17 @@ Component({
             });
         },
         uploadData: function() {
+            let submittedData: QuestionResponse[] = [];
+            for (const [key, value] of this.data.userResponses.entries()) {
+                submittedData.push({
+                    question: key,
+                    response: value,
+                });
+            }
             wx.cloud.callFunction({
                 name: "SuperlativesSubmit",
                 data: {
-                    userResponses: this.data.userResponses,
+                    userResponses: submittedData,
                 }
             });
         },
@@ -125,11 +135,13 @@ Component({
                 this.data.db.collection("SuperlativesData").where({
                     correspondingOpenId: "{openid}"
                 }).get().then((res) => {
-                    let userData: QuestionResponse[] = res.data[0].choices as any;
                     let userResponses = new Map<string, string>();
-                    userData.forEach(element => {
-                        userResponses.set(element.question, element.response);
-                    });
+                    if (res.data.length>0) {
+                        let userData: QuestionResponse[] = res.data[0].choices as any;
+                        userData.forEach(element => {
+                            userResponses.set(element.question, element.response);
+                        });
+                    }
                     this.data.userResponses = userResponses;
                     this.buildDisplayInformation();
                 })
