@@ -29,6 +29,7 @@ type ComponentDataInterface = {
     studentMap: Map<string, Student>
     userId: string
     displayInformation: QuestionDisplayInformation[]
+    isActive: boolean
 }
 
 // store the responses with the questions so that they can be matched to each other
@@ -104,7 +105,9 @@ Component({
             });
         },
         selectStudent: function(x: any) {
-            console.log(x);
+            if (!this.data.isActive) {
+                return
+            }
             let forQuestion = x.currentTarget.dataset.question;
             wx.navigateTo({
                 url: "/pages/StudentChoose/StudentChoose",
@@ -154,6 +157,19 @@ Component({
             this.data.db.collection("SuperlativesInfo").doc("questions").get().then((res) => {
                 this.data.superlativeQuestions = res.data.value;
                 this.buildDisplayInformation();
+            });
+            this.data.db.collection("SuperlativesInfo").doc("limitTime").get().then((res) => {
+                let timeLimit: number = res.data.value;
+                if (timeLimit === -1) {
+                    this.data.isActive = true;
+                    return;
+                }
+                let currentTime = Date.now()/1000;
+                if (timeLimit<=currentTime) {
+                    this.data.isActive = false;
+                } else {
+                    this.data.isActive = true;
+                }
             });
         }
     }

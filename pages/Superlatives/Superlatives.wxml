@@ -2,10 +2,11 @@
     <text class="big-title-text">Superlatives</text>
     <text id="superlatives-introduction">{{eventDescription}}</text>
     <view id="questions-list">
+        <text wx:if="{{!isActive}}" id="superlatives-over">Superlatives submissions are over!</text>
         <block wx:for="{{displayInformation}}">
             <view class="question">
                 <text class="superlative-question">{{item.question}}</text>
-                <view bindtap="selectStudent" data-question="{{item.id}}" class="superlative-select-button superlative-select-button-{{item.name === undefined ? 'toselect' : 'selected'}}">{{item.name === undefined ? 'select seniors' : item.name}}</view>
+                <view bindtap="selectStudent" data-question="{{item.id}}" class="superlative-select-button superlative-select-button-{{item.name === undefined ? 'toselect' : 'selected'}}">{{item.name === undefined ? 'select senior' : item.name}}</view>
             </view>
         </block>
     </view>
