@@ -9,7 +9,7 @@
 }
 #main-container {
     margin-top: 10px;
-    margin-bottom: 80px;
+    padding-bottom: 80px;
     margin-left: 16px;
     margin-right: 16px;
     display: flex;
@@ -21,7 +21,7 @@
     align-items: center;
 }
 #superlatives-introduction {
-    margin-top: 18px;
+    margin-top: 219px;
     margin-bottom: 35px;
 }
 .question {
@@ -56,4 +56,13 @@
     font-weight: 700;
     text-align: center;
     margin-bottom: 19px;
+}
+.gradcaps-image {
+    width: 282px;
+    height: 228px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 56px;
 }
