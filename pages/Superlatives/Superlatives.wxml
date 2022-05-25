@@ -2,7 +2,7 @@
     <text class="big-title-text">Superlatives</text>
     <text id="superlatives-introduction">{{eventDescription}}</text>
     <view id="questions-list">
-        <text wx:if="{{!isActive}}" id="superlatives-over">Superlatives submissions are over!</text>
+        <text wx:if="{{isActive === false}}" id="superlatives-over">Superlatives submissions are over!</text>
         <block wx:for="{{displayInformation}}">
             <view class="question">
                 <text class="superlative-question">{{item.question}}</text>

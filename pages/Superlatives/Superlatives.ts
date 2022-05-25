@@ -1,5 +1,4 @@
 import { Student } from "../../classes/student";
-import allCollectionsData from "../../utils/allCollectionsData";
 import { fillCacheSingleton } from "../../utils/fillCacheSingleton";
 import { CacheSingleton } from "../MainMenu/MainMenu"
 
@@ -161,14 +160,20 @@ Component({
             this.data.db.collection("SuperlativesInfo").doc("limitTime").get().then((res) => {
                 let timeLimit: number = res.data.value;
                 if (timeLimit === -1) {
-                    this.data.isActive = true;
+                    this.setData({
+                        isActive: true,
+                    });
                     return;
                 }
                 let currentTime = Date.now()/1000;
                 if (timeLimit<=currentTime) {
-                    this.data.isActive = false;
+                    this.setData({
+                        isActive: false,
+                    });
                 } else {
-                    this.data.isActive = true;
+                    this.setData({
+                        isActive: true,
+                    });
                 }
             });
         }
