@@ -1,6 +1,7 @@
 #superlatives-introduction {
     /* font-family: 'Telugu MN'; */
     line-height: 20px;
+    z-index: 5;
 }
 .superlative-question  {
     /* font-family: 'Telugu MN'; */
@@ -30,6 +31,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 5;
 }
 #superlatives-introduction {
     margin-top: 219px;
@@ -80,7 +82,7 @@
     text-align: center;
     margin-bottom: 19px;
 }
-.gradcaps-image {
+#gradcaps-container {
     width: 282px;
     height: 228px;
     position: absolute;
@@ -88,4 +90,25 @@
     right: 0;
     margin: 0 auto;
     top: 56px;
+    z-index: 2;
+}
+.gradcaps-image {
+    position: absolute;
+    width: 282px;
+    height: 228px;
+    top: 0;
+    left: 0;
+}
+@media (prefers-color-scheme: dark) {
+    #gradcaps-image-light {
+        opacity: 0;
+    }
+}
+#gradcaps-image-dark {
+    opacity: 0;
+}
+@media (prefers-color-scheme: dark) {
+    #gradcaps-image-dark {
+        opacity: 1;
+    }
 }

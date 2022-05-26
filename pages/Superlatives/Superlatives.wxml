@@ -1,6 +1,9 @@
 <view id="main-container">
     <text class="big-title-text">Superlatives</text>
-    <image src="/pages/Superlatives/gradcaps.png" class="gradcaps-image" />
+    <view id="gradcaps-container">
+        <image src="/pages/Superlatives/gradcaps-dark.jpg" class="gradcaps-image" id="gradcaps-image-dark" />
+        <image src="/pages/Superlatives/gradcaps.jpg" class="gradcaps-image" id="gradcaps-image-light" />
+    </view>
     <text id="superlatives-introduction">{{eventDescription}}</text>
     <view id="questions-list">
         <text wx:if="{{isActive === false}}" id="superlatives-over">Superlatives submissions are over!</text>
