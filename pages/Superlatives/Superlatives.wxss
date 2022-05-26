@@ -21,6 +21,11 @@
 #main-container text {
     color: #080840;
 }
+@media (prefers-color-scheme: dark) {
+    #main-container text {
+        color: #EAEAFF;
+    }
+}
 #questions-list {
     display: flex;
     flex-direction: column;
@@ -53,9 +58,21 @@
     background-color: #EAEAFC;
     color: #3C3C9C;
 }
+@media (prefers-color-scheme: dark) {
+    .superlative-select-button-toselect {
+        background-color: #1D1D49;
+        color: #DFDFFF;
+    }
+}
 .superlative-select-button-selected {
     background-color: #00004A;
     color: #FFFFFF;
+}
+@media (prefers-color-scheme: dark) {
+    .superlative-select-button-selected {
+        background-color: #D9D9FF;
+        color: #01014E;
+    }
 }
 #superlatives-over {
     color: #D93030;

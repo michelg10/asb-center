@@ -4,8 +4,8 @@ view {
     --link: #007AFF;
     --secondary: #959599;
     --list-separator: #B7B7B7;
-    --list-search-box: #D9D9D9;
-    --warn: #D81717;
+    --list-search-box: #E4E3E9;
+    --warn: #FF3B30;
     --page-background: #F2F1F6;
     --primary: #000000;
     --anti-primary: #FFFFFF;
@@ -17,8 +17,8 @@ view {
         --link: #007AFF;
         --secondary: #6C6C6C;
         --list-separator: #6D6D6D;
-        --list-search-box: #D9D9D9;
-        --warn: #D81717;
+        --list-search-box: #1C1C1E;
+        --warn: #FF453A;
         --page-background: #000000;
         --primary: #FFFFFF;
         --anti-primary: #000000;

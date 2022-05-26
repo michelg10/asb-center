@@ -12,6 +12,8 @@
   position: absolute;
   top:0;
   bottom:0;
+  min-height: 100vh;
+  background-color: var(--page-background);
 }
 #registrationconfirm-top-container {
   padding: 0 37px;
