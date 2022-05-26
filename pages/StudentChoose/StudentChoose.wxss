@@ -1,46 +1,49 @@
 /* pages/StudentChoose/StudentChoose.wxss */
 #student-choose-container {
-    margin-top: 10px;
-    margin: 0 16px;
-    margin-bottom: 40px;
-}
-#student-choose-main-container {
-    margin-top: 14px;
-    border-radius: 8px;
-    background-color: #ECECEC;
+    padding-top: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 40px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--page-background);
 }
 #student-choose-search-container {
-    border-radius: 8px;
-    background-color: #E0E0E0;
-    height: 44px;
+    border-radius: 10px;
+    background-color: var(--list-search-box);
+    height: 36px;
     display: flex;
-    padding: 0 16px;
+    padding: 0 6px;
     align-items: center;
+    margin-top: 14px;
+    margin-bottom: 15px;
+}
+#student-list-container {
+    background-color: var(--subcontainer-background);
+    border-radius: 10px;
 }
 #search-image {
-    width: 24px;
-    height: 24px;
-    padding-right: 7px;
+    width: 20px;
+    height: 20px;
+    padding-right: 4px;
 }
 #student-search-input {
     font-size: 17px;
-    font-weight: 500;
+    font-weight: 400;
     padding:0;
     margin:0;
 }
 #student-search-input-placeholder {
-    color: #6C6C6C;
+    color:var(--secondary);
 }
 #student-list-container {
     height: 449px;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    padding-top: 11px;
 }
 .student-display-row {
-    padding: 0 16px;
-    padding-bottom: 11px;
+    padding: 6px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,7 +59,15 @@
     font-size: 13px;
     color: var(--secondary);
 }
+.student-select-container {
+    height: 22px;
+    width: 22px;
+    position: relative;
+}
 .student-select-button {
+    position: absolute;
+    top:0;
+    left:0;
     height: 22px;
     width: 22px;
 }
@@ -67,4 +78,13 @@
 .student-display-class {
     font-size: 17px;
     padding-right: 13px;
+}
+#student-select-button-dark {
+    opacity: 0;
+    z-index: 5;
+}
+@media (prefers-color-scheme: dark) {
+    #student-select-button-dark {
+        opacity: 1;
+    }
 }

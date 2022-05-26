@@ -32,6 +32,7 @@ Component({
     */
     methods: {
         selectStudent: function(x: any) {
+            console.log("select");
             let index = x.currentTarget.dataset.index;
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.emit("selectedStudent", this.data.studentData[index]);

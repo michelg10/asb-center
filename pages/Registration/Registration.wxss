@@ -18,7 +18,7 @@
 #registration-list-container {
   margin-bottom: 15px;
   background-color: var(--subcontainer-background);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 #registration-list-search-container {
   height: 36px;
@@ -27,7 +27,7 @@
   padding-right: 16px;
   display: flex;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 14px;
 }
 #registration-list-main-container {

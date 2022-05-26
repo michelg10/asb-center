@@ -1,7 +1,7 @@
 .student-list-container {
   margin-bottom: 22px;
   background-color: var(--subcontainer-background);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 .student-list-search-container {
   height: 44px;
@@ -9,7 +9,7 @@
   padding: 0 16px;
   display: flex;
   align-items: center;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 .student-list-main-container {
   display: flex;
