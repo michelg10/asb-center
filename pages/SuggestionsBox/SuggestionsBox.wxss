@@ -20,6 +20,17 @@
     position: absolute;
     min-height: 100%;
 }
+#main-container text {
+    color: #010E29;
+}
+
+#main-container textarea {
+    color: #010E29;
+}
+
+#main-container input {
+    color: #010E29;
+}
 
 .main-container-fullscreen {
     height: 100%;

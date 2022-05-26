@@ -13,11 +13,13 @@
     "pages/StudentDetailForAdmin/StudentDetailForAdmin",
     "pages/Superlatives/Superlatives"
   ],
+  "darkmode": true,
+  "themeLocation": "theme.json",
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "backgroundTextStyle": "@backgroundTextStyle",
+    "navigationBarBackgroundColor": "@navBackgroundColor",
     "navigationBarTitleText": "ASB Center",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "@navTextStyle"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

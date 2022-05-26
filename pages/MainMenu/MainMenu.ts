@@ -2,12 +2,13 @@
 import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
 import { DisplayRow } from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
-import { createQRCode, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
+import { createQRCode, lightBackgroundColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 // import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions'; // thinned
 import { handleCode } from '../../utils/handleCode';
 import { Student } from '../../classes/student';
+import { isDarkTheme } from '../../utils/isDarkTheme';
 interface SecureCodePreviewData {
   userCode: string;
 }
@@ -128,7 +129,7 @@ Component({
       //     res.eventChannel.emit('userId', "cd045e756163838214537bab72cf91b1");
       //   }
       // });
-      //   handleCode(this, "asC;1;type-userCode;payload-6-TUlDSEVM");
+      //   handleCode(this, "asC;1;type-userCode;dat-6-TUlDSEVM");
       //   return;
       wx.scanCode({
         onlyFromCamera: true,
@@ -310,7 +311,12 @@ Component({
             let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, newPreviewGenerator[i].eventId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
               let myCreateQRCode = createQRCode.bind(this);
-              myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'ECECEC');
+              let systemInfo = wx.getSystemInfoSync();
+              if (isDarkTheme()) {
+                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'FFFFFF', '000000');
+              } else {
+                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, '000000', lightBackgroundColor);
+              }
               this.data.previewLastGen.set(newPreviewGenerator[i].previewPort, accessCodeContents);
             }
           }

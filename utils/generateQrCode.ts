@@ -37,5 +37,5 @@ export function generateQrCode(type: string, event: string|null, payload: number
   for (let i=0;i<payloadBinaryData.length;i+=6) {
     base64EncodedPayload+=toBase64(payloadBinaryData.slice(i,i+6));
   }
-  return `asC;1;type-${type};${event === null ? "" : `event-${event};`}payload-${payload.length}-${base64EncodedPayload}`;
+  return `asC;1;type-${type};${event === null ? "" : `event-${event};`}dat-${payload.length}-${base64EncodedPayload}`;
 }

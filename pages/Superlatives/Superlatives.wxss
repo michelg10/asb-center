@@ -8,12 +8,18 @@
     line-height: 20px;
 }
 #main-container {
-    margin-top: 10px;
+    padding-top: 10px;
     padding-bottom: 80px;
-    margin-left: 16px;
-    margin-right: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--anti-primary);
+}
+#main-container text {
+    color: #080840;
 }
 #questions-list {
     display: flex;

@@ -1,4 +1,4 @@
-import { getSecureCodesReturnType } from "SportsMeetFunctions";
+import { getSecureCodesReturnType } from "./SportsMeetFunctions";
 import { get256ToBinaryMap, get64ToBinaryMap } from "./binaryMapType";
 import { getUnixTime } from "./util";
 import { verifySecureCode } from "./verifySecureCode";
@@ -54,16 +54,16 @@ export async function handleCode(obj: any, x: string) {
     keyToValueMap.set(portions[i].substr(0, portions[i].indexOf('-')), portions[i].substr(portions[i].indexOf('-')+1));
   }
   // process special key-value pairs
-  if (keyToValueMap.has('payload')) {
+  if (keyToValueMap.has('dat')) {
     // convert from base64
-    let payload:string = keyToValueMap.get('payload');
+    let payload:string = keyToValueMap.get('dat');
     if (payload.indexOf('-')===-1 || payload.indexOf('-')===payload.length-1) {
-      reportCodeScanError(`Code parse error: bad syntax for key "payload"`);
+      reportCodeScanError(`Code parse error: bad syntax for key "dat"`);
       return;
     }
     let length = Number.parseInt(payload.substr(0, payload.indexOf('-')));
     if (length === NaN || length < 0 || length > 1024) {
-      reportCodeScanError(`Code parse error: bad length ${payload.substr(0, payload.indexOf('-'))} for key "payload"`);
+      reportCodeScanError(`Code parse error: bad length ${payload.substr(0, payload.indexOf('-'))} for key "dat"`);
       return;
     }
     let base64ToBinaryMap = get64ToBinaryMap();
@@ -84,7 +84,7 @@ export async function handleCode(obj: any, x: string) {
       }
       payloadData.push(value);
     }
-    keyToValueMap.set("payload", payloadData);
+    keyToValueMap.set("dat", payloadData);
   }
   
   // handle the code
@@ -96,7 +96,7 @@ export async function handleCode(obj: any, x: string) {
         reportCodeScanError(`Your account is not authorized to scan Sports Carnival ID Codes.`);
         return;
       }
-      let secureCodeVerification = verifySecureCode(keyToValueMap.get("payload") as number[], currentTime, secureCodesList.data);
+      let secureCodeVerification = verifySecureCode(keyToValueMap.get("dat") as number[], currentTime, secureCodesList.data);
       if (secureCodeVerification === null) {
         reportCodeScanError(`This Sports Carnival ID Code is invalid.`);
         return;
@@ -114,7 +114,7 @@ export async function handleCode(obj: any, x: string) {
     }
   } else if (keyToValueMap.get("event") === undefined) {
     if (keyToValueMap.get("type") === "userCode") {
-      let compactId = String.fromCharCode(...keyToValueMap.get("payload"))
+      let compactId = String.fromCharCode(...keyToValueMap.get("dat"))
       console.log(compactId);
       if (obj.data.userData.globalAdminName !== null) {
         console.log("LAUNCH");

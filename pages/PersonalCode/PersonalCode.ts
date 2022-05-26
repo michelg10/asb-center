@@ -1,6 +1,7 @@
-import { createQRCode, UserDataType } from "../../utils/common";
+import { createQRCode, lightBackgroundColor, UserDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { generateQrCode } from "../../utils/generateQrCode";
+import { isDarkTheme } from "../../utils/isDarkTheme";
 import { extendNumberToLengthString } from "../../utils/util";
 
 // pages/PersonalCode/PersonalCode.ts
@@ -59,7 +60,11 @@ Component({
         let accessCodeContents=generateQrCode("userCode", null, qrCodeData);
         if (accessCodeContents !== this.data.codeLastGen) {
           let myCreateQRCode = createQRCode.bind(this);
-          myCreateQRCode("personalcodecanvas", accessCodeContents, 'FFFFFF');
+          if (isDarkTheme()) {
+            myCreateQRCode("personalcodecanvas", accessCodeContents, 'FFFFFF', '000000');
+          } else {
+            myCreateQRCode("personalcodecanvas", accessCodeContents, '000000', lightBackgroundColor);
+          }
           this.data.codeLastGen=accessCodeContents;
         }
         let date = new Date();

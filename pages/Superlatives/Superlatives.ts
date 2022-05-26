@@ -1,5 +1,8 @@
 import { Student } from "../../classes/student";
+import { darkBackgroundColor } from "../../utils/common";
 import { fillCacheSingleton } from "../../utils/fillCacheSingleton";
+import { isDarkTheme } from "../../utils/isDarkTheme";
+import { resetNavigationBarColor } from "../../utils/resetNavigationBarColor";
 import { CacheSingleton } from "../MainMenu/MainMenu"
 
 // pages/Superlatives/Superlatives.ts

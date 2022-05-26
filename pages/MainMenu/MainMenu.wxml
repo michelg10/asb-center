@@ -9,7 +9,10 @@
         <text class="event-title-text"> {{item.title}} </text>
         <view class="event-row-right">
           <text class="event-till-time-text"> {{item.timeLeft}} </text>
-          <image wx:if="{{item.canJump}}" src="../../icons/chevron-right.svg" class="event-row-chevron-image"></image>
+          <view wx:if="{{item.canJump}}" class="chevrons-container">
+            <image src="../../icons/chevron-right-dark.svg" class="event-row-chevron-image event-row-chevron-image-dark"></image>
+            <image src="../../icons/chevron-right.svg" class="event-row-chevron-image"></image>
+          </view>
         </view>
       </view>
       <view wx:if="{{item.previewData.previewMode==='secureCodePreview'}}" class="secure-code-preview-container">
@@ -42,6 +45,6 @@
     </view>
   </view>
   <view id="version-footer">
-    Version 2.2
+    Version 3.0
   </view>
 </view>

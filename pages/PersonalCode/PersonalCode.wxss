@@ -1,9 +1,13 @@
 /* pages/PersonalCode/PersonalCode.wxss */
 @import "/styles/secureCodePreview.wxss";
 #personal-code-container {
-    margin: 0 16px;
-    margin-top: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 20px;
     padding-bottom: 80px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--page-background);
 }
 #personal-code-heading-container {
     display: flex;
