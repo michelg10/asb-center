@@ -9,6 +9,7 @@ import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { handleCode } from '../../utils/handleCode';
 import { Student } from '../../classes/student';
 import { isDarkTheme } from '../../utils/isDarkTheme';
+import { CacheSingleton } from '../../classes/CacheSingleton';
 interface SecureCodePreviewData {
   userCode: string;
 }
@@ -17,9 +18,6 @@ export interface PreviewGenerator {
   previewMode: PreviewEnum;
   previewPort: string;
   previewData: SecureCodePreviewData;
-}
-export type CacheSingleton = {
-  studentData: Student[] | undefined,
 }
 interface componentDataInterface {
   masterEventsData: Array<Event>;
@@ -213,7 +211,7 @@ Component({
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
       this.data.viewVisible = true;
-      this.data.cacheSingleton = { studentData: undefined };
+      this.data.cacheSingleton = new CacheSingleton(this.data.db);
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);

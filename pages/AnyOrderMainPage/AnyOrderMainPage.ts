@@ -1,9 +1,9 @@
 // pages/AnyOrderMainPage/AnyOrderMainPage.ts
 
+import { CacheSingleton } from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
-import { CacheSingleton } from "../MainMenu/MainMenu";
 
 export type OrderObject = {
     _id: String,

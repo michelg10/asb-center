@@ -1,9 +1,6 @@
+import { CacheSingleton } from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import { darkBackgroundColor } from "../../utils/common";
-import { fillCacheSingleton } from "../../utils/fillCacheSingleton";
-import { isDarkTheme } from "../../utils/isDarkTheme";
-import { resetNavigationBarColor } from "../../utils/resetNavigationBarColor";
-import { CacheSingleton } from "../MainMenu/MainMenu"
 
 // pages/Superlatives/Superlatives.ts
 type SuperlativeQuestion = {
@@ -53,8 +50,9 @@ Component({
      * Component methods
      */
     methods: {
-        buildStudentMap: function() {
-            this.data.cacheSingleton.studentData!.forEach(element => {
+        buildStudentMap: async function() {
+            const studentData = await this.data.cacheSingleton.getStudentData();
+            studentData.forEach(element => {
                 this.data.studentMap.set(element.id, element);
             });
         },
@@ -131,7 +129,7 @@ Component({
             this.data.studentMap = new Map<string, Student>();
             eventChannel.on('cacheSingleton', async (data: any) => {
                 this.data.cacheSingleton = data;
-                await fillCacheSingleton(this.data.db, data);
+                await this.data.cacheSingleton.forceGetStudentData();
                 this.buildStudentMap();
                 this.buildDisplayInformation();
             });

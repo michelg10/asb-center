@@ -1,10 +1,9 @@
 // pages/StudentChoose/StudentChoose.ts
 
+import { CacheSingleton } from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
-import { fillCacheSingleton } from "../../utils/fillCacheSingleton";
-import { CacheSingleton } from "../MainMenu/MainMenu"
 
 type ComponentDataInterface = {
     studentData: Student[],
@@ -43,9 +42,8 @@ Component({
             this.data.matchingIndexes = [];
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.on('cacheSingleton', async (data: CacheSingleton) => {
-                fillCacheSingleton(this.data.db, data);
                 this.setData({
-                    studentData: data.studentData,
+                    studentData: await data.getStudentData(),
                 });
             });
             eventChannel.on('limitGradeTo', (data: number[]) => {
