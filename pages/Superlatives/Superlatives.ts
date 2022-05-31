@@ -1,5 +1,5 @@
 import { CacheSingleton } from "../../classes/CacheSingleton";
-import { Student } from "../../classes/student";
+import { Student } from "../../classes/Student";
 import { darkBackgroundColor } from "../../utils/common";
 
 // pages/Superlatives/Superlatives.ts

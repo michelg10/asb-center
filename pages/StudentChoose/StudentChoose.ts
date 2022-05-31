@@ -1,7 +1,7 @@
 // pages/StudentChoose/StudentChoose.ts
 
 import { CacheSingleton } from "../../classes/CacheSingleton";
-import { Student } from "../../classes/student";
+import { Student } from "../../classes/Student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
 

@@ -1,7 +1,7 @@
 // pages/AnyOrderMainPage/AnyOrderMainPage.ts
 
 import { CacheSingleton } from "../../classes/CacheSingleton";
-import { Student } from "../../classes/student";
+import { Student } from "../../classes/Student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
 

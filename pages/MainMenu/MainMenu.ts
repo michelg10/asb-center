@@ -1,13 +1,13 @@
 // pages/MainMenu/MainMenu.js
-import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
-import { DisplayRow } from '../../classes/displayRow'
+import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/Event'
+import { DisplayRow } from '../../classes/DisplayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
 import { createQRCode, lightBackgroundColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 // import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions'; // thinned
 import { handleCode } from '../../utils/handleCode';
-import { Student } from '../../classes/student';
+import { Student } from '../../classes/Student';
 import { isDarkTheme } from '../../utils/isDarkTheme';
 import { CacheSingleton } from '../../classes/CacheSingleton';
 interface SecureCodePreviewData {
@@ -187,6 +187,15 @@ Component({
             res.eventChannel.emit('userId', this.data.userData.id);
           }
         })
+      }
+      if (eventClickedId === "GuessTheBaby") {
+          wx.navigateTo({
+              url: "/pages/GuessTheBaby/GuessTheBaby",
+              success: (res) => {
+                  res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
+                  res.eventChannel.emit('userId', this.data.userData.id);
+              }
+          })
       }
       if (eventClickedId === "personalCode") {
         wx.navigateTo({

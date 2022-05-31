@@ -11,7 +11,8 @@
     "pages/AnyOrderSuborder/AnyOrderSuborder",
     "pages/StudentChoose/StudentChoose",
     "pages/StudentDetailForAdmin/StudentDetailForAdmin",
-    "pages/Superlatives/Superlatives"
+    "pages/Superlatives/Superlatives",
+    "pages/GuessTheBaby/GuessTheBaby"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",
