@@ -1,8 +1,9 @@
 import allCollectionsData from "../utils/allCollectionsData";
-import { Student } from "./student";
+import { Student } from "./Student";
 
 export class CacheSingleton {
     #studentData: Student[] | undefined
+    #imageUrls: string[] | undefined
     #db: DB.Database
     constructor(db: DB.Database) {
         this.#db = db;
@@ -23,5 +24,25 @@ export class CacheSingleton {
     async getStudentData(): Promise<Student[]> {
         await this.forceGetStudentData();
         return this.#studentData!;
+    }
+
+    async getTeacherImages(totalImages: number, rerenderCallback: () => any) {
+        if (this.#imageUrls !== undefined) {
+            rerenderCallback();
+            return;
+        }
+        this.#imageUrls = Array(totalImages);
+        for (let i=1;i<=totalImages;i++) {
+            wx.cloud.downloadFile({
+                fileID: `cloud://asb-center-7gixak2a33f2f3e5.6173-asb-center-7gixak2a33f2f3e5-1307575779/BabyPictures/${i}.jpg`
+            }).then((res) => {
+                this.#imageUrls![i-1] = res.tempFilePath;
+                rerenderCallback();
+            })
+        }
+    }
+
+    fetchImageUrls(): string[] {
+        return this.#imageUrls!;
     }
 }
