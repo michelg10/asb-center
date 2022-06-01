@@ -1,7 +1,7 @@
 <view id="main-container" catchtap="dismissDropdown">
     <text class="big-title-text">Guess the Baby</text>
     <text id="description-text">{{eventDescription}}</text>
-    <text id="submissions-over" wx:if="{{isActive === true}}">“Guess the Baby” submissions are over!</text>
+    <text id="submissions-over" wx:if="{{isActive === false}}">“Guess the Baby” submissions are over!</text>
     <view id="questions-container">
         <block wx:for="{{questionDisplayInformation}}">
             <view class="question-view">
