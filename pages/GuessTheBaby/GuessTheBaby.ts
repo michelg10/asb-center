@@ -107,9 +107,6 @@ Component({
             })
         },
         mergeServerData: function() {
-            console.log("MERGE");
-            console.log(this.data.response);
-            console.log(this.data.serverFetchedChoices);
             if (this.data.response === undefined || this.data.serverFetchedChoices === undefined) {
                 return;
             }
