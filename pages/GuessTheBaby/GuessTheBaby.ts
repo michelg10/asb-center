@@ -16,6 +16,7 @@ interface ComponentDataInterface {
     response: number[], // stores user responses
     teacherNames: string[],
     
+    currentActiveDropdown: number,
     userId: string,
     questionDisplayInformation: QuestionDisplayInformation[],
     isActive: boolean,
@@ -50,18 +51,47 @@ Component({
                 questionDisplayInformation: newQuestionDisplayInformation,
             });
         },
+        responseTapped: function(x: any) {
+            console.log("Response tapped");
+            let index = x.currentTarget.dataset.index;
+            this.setData({
+                currentActiveDropdown: index,
+            });
+        },
+        nameOptionTapped: function(x: any) {
+            console.log("Name option tapped");
+            let index = x.currentTarget.dataset.index;
+            let newData = this.data.response;
+            newData[this.data.currentActiveDropdown] = index;
+            this.setData({
+                currentActiveDropdown: -1,
+                response: newData,
+            });
+        },
+        dismissDropdown: function() {
+            console.log("Dismiss dropdown");
+            this.setData({
+                currentActiveDropdown: -1,
+            });
+        },
         fetchNames: function() {
-            this.data.teacherNames = Array<string>(this.data.babyQuestionCount);
             this.data.db.collection("BabyTeachersInfo").doc("teacherNames").get().then((res) => {
+                let teacherNames = Array<string>(this.data.babyQuestionCount);
                 let names = res.data.value;
                 for (let i=0;i<this.data.babyQuestionCount;i++) {
-                    this.data.teacherNames[i] = names[i];
+                    teacherNames[i] = names[i];
                 }
+                this.setData({
+                    teacherNames: teacherNames,
+                });
             })
         },
         onLoad: function() {
             const eventChannel = this.getOpenerEventChannel();
             this.data.db = wx.cloud.database();
+            this.setData({
+                currentActiveDropdown: -1,
+            });
             this.data.db.collection("BabyTeachersInfo").doc("description").get().then((res) => {
                 this.setData({
                     eventDescription: res.data.value,
@@ -84,7 +114,10 @@ Component({
                 // fetch count
                 let totalSize = await this.data.db.collection("BabyTeachersInfo").doc("size").get();
                 this.data.questionDisplayInformation = Array<QuestionDisplayInformation>(totalSize.data.value as number);
-                this.data.babyQuestionCount = totalSize.data.value;
+                this.data.response = Array<number>(totalSize.data.value as number);
+                this.setData({
+                    babyQuestionCount: totalSize.data.value,
+                });
                 for (let i=0;i<this.data.babyQuestionCount;i++) {
                     this.data.questionDisplayInformation[i] = {
                         id: i,

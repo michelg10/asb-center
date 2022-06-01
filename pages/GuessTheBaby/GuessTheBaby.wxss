@@ -6,7 +6,7 @@
     padding-bottom: 80px;
     min-height: 100vh;
     box-sizing: border-box;
-    background-color: var(--page-background);
+    background-color: var(--anti-primary);
 }
 #description-text {
     margin-top: 17px;
@@ -50,6 +50,7 @@
     justify-content: center;
     margin-bottom: 48px;
     font-weight: 600;
+    position: relative;
 }
 
 .response-display-empty {
@@ -70,5 +71,61 @@
     .response-display-answered {
         background-color: #D9D9FF;
         color: #01014E;
+    }
+}
+.response-display-dropdown {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 234px;
+    height: 280px;
+    overflow-y: scroll;
+    border-radius: 10px;
+    shadow: rgba(0,0,0,0.5) 0 0 4px;
+    z-index: 5;
+}
+.response-display-dropdown {
+    background-color: #EFEFFD;
+}
+@media (prefers-color-scheme: dark) {
+    .response-display-dropdown {
+        background-color: #040428;
+    }
+}
+.name-container {
+    height: 44px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.name-select-text {
+    padding: 0 10px;
+}
+.teacher-name-container-separator {
+    height: 0.5px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+.teacher-name-container-separator {
+    background-color: #6969A1;
+}
+@media (prefers-color-scheme: dark) {
+    .teacher-name-container-separator {
+        background-color: #6969A1;
+    }
+}
+.name-select-text {
+    font-weight: 600;
+}
+
+.name-select-text {
+    color: #000070;
+}
+@media (prefers-color-scheme: dark) {
+    .name-select-text {
+        color: #DFDFFF;
     }
 }

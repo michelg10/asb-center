@@ -1,4 +1,4 @@
-<view id="main-container">
+<view id="main-container" catchtap="dismissDropdown">
     <text class="big-title-text">Guess the Baby</text>
     <text id="description-text">{{eventDescription}}</text>
     <text id="submissions-over" wx:if="{{isActive === true}}">“Guess the Baby” submissions are over!</text>
@@ -7,7 +7,17 @@
             <view class="question-view">
                 <text class="question-number">{{index+1}}.</text>
                 <image class="question-image" src="{{item.imageDisplayUrl}}" />
-                <view class="response-display response-display-{{item.response === undefined ? 'empty' : 'answered'}}">{{item.response === undefined ? 'select teacher' : item.response}}</view>
+                <view class="response-display response-display-{{item.response === undefined ? 'empty' : 'answered'}}" catchtap="responseTapped" data-index="{{index}}">
+                    {{item.response === undefined ? 'select teacher' : item.response}}
+                    <view class="response-display-dropdown" wx:if="{{index === currentActiveDropdown}}">
+                        <block wx:for="{{teacherNames}}" wx:for-item="teacherItem" wx:for-index="teacherItemI">
+                            <view class="name-container" catchtap="nameOptionTapped" data-index="{{teacherItemI}}">
+                                <text class="name-select-text">{{teacherItem}}</text>
+                                <view class="teacher-name-container-separator" wx:if="{{teacherItemI !== babyQuestionCount-1}}"></view>
+                            </view>
+                        </block>
+                    </view>
+                </view>
             </view>
         </block>
     </view>
