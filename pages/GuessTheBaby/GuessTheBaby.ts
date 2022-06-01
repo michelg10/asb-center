@@ -62,6 +62,23 @@ Component({
         onLoad: function() {
             const eventChannel = this.getOpenerEventChannel();
             this.data.db = wx.cloud.database();
+            this.data.db.collection("BabyTeachersInfo").doc("description").get().then((res) => {
+                this.setData({
+                    eventDescription: res.data.value,
+                });
+            })
+            this.data.db.collection("BabyTeachersInfo").doc("limitTime").get().then((res) => {
+                let closingTime = res.data.data;
+                if (Date.now()/1000.0<=closingTime) {
+                    this.setData({
+                        isActive: true,
+                    });
+                } else {
+                    this.setData({
+                        isActive: false,
+                    });
+                }
+            })
             eventChannel.on('cacheSingleton', async (data: any) => {
                 this.data.cacheSingleton = data;
                 // fetch count

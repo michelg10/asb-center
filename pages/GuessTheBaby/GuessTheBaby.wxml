@@ -1,12 +1,14 @@
 <view id="main-container">
     <text class="big-title-text">Guess the Baby</text>
-    <text id="description-text">{{description}}</text>
-    <text id="submissions-over">“Guess the Baby” submissions are over!</text>
-    <block wx:for="{{questionDisplayInformation}}">
-        <view class="question-view">
-            <text class="question-number">{{index+1}}.</text>
-            <image class="question-image" src="{{item.imageDisplayUrl}}" />
-            <view class="response-display response-display-{{item.response === undefined ? 'empty' : 'answered'}}">{{item.response === undefined ? 'select teacher' : item.response}}</view>
-        </view>
-    </block>
+    <text id="description-text">{{eventDescription}}</text>
+    <text id="submissions-over" wx:if="{{isActive === true}}">“Guess the Baby” submissions are over!</text>
+    <view id="questions-container">
+        <block wx:for="{{questionDisplayInformation}}">
+            <view class="question-view">
+                <text class="question-number">{{index+1}}.</text>
+                <image class="question-image" src="{{item.imageDisplayUrl}}" />
+                <view class="response-display response-display-{{item.response === undefined ? 'empty' : 'answered'}}">{{item.response === undefined ? 'select teacher' : item.response}}</view>
+            </view>
+        </block>
+    </view>
 </view>
