@@ -1,7 +1,10 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+    env: 'asb-center-7gixak2a33f2f3e5',
+});
+
 let db = cloud.database();
 
 // 云函数入口函数
@@ -18,15 +21,6 @@ exports.main = async (event, context) => {
     };
   }
 
-  let getUserAdmin = await db.collection("admins").where({
-    userId: getUserId.data[0]._id,
-  }).get();
-  if (getUserId.data.length === 0) {
-    return {
-      status: "failure",
-      reason: "User is not authorized",
-    };
-  }
   let associatedAccountsNumber = await db.collection("userData").where({
     studentId: event.studentId,
   }).get();

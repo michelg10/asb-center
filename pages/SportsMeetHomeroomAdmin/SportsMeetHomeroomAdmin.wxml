@@ -1,0 +1,92 @@
+<!--pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin.wxml-->
+<view id="homeroom-admin-container">
+  <text class="big-title-text">Homeroom Points</text>
+  <view id="log-points-container">
+    <text id="log-points-heading" class="heading-text">Log Points</text>
+    <view class="select-container" id="log-points-select-container">
+      <view class="{{eventSelectorOpen ? 'main-select-container main-select-container-open' : 'main-select-container'}}" bindtap="mainSelectorClicked">
+        <text class="main-select-text">{{teamEvents[selectedEventIndex].name}}</text>
+        <image src="/icons/chevron-down.svg" class="select-chevron-down-image"></image>
+      </view>
+      <view class="select-options-container" wx:if="{{eventSelectorOpen}}">
+        <view class="select-option-scoll-container">
+          <block wx:for="{{teamEvents}}" wx:key="id">
+            <view wx:if="{{index!==0}}" class="select-option-separator"></view>
+            <view class="select-option-row" bindtap="handleActivityOptionClick" data-itemindex="{{index}}">
+              <text>{{item.name}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="log-points-data-row" id="points-data-row">
+      <text class="log-points-data-name">Points</text>
+      <input class="log-points-row-input" type="number" value="{{pointValue}}" bindinput="pointValueBind"/>
+    </view>
+    <view class="log-points-data-row" id="grade-data-row">
+      <text class="log-points-data-name">Grade</text>
+      <view class="inline-select-container" style="z-index: 4;">
+        <view class="{{gradeSelectorOpen ? 'inline-main-select-container main-select-container-open' : 'inline-main-select-container'}}" bindtap="gradeSelectorClicked">
+          <text class="inline-main-select-text">{{sportsMeetGrades[selectedGradeIndex]}}</text>
+          <image src="/icons/chevron-down.svg" class="inline-select-chevron-down-image"></image>
+        </view>
+        <view class="inline-select-options-container" wx:if="{{gradeSelectorOpen}}">
+          <view class="select-option-scoll-container">
+            <block wx:for="{{sportsMeetGrades}}" wx:key="*this">
+              <view wx:if="{{index!==0}}" class="select-option-separator"></view>
+              <view class="select-option-row-inline" bindtap="handleGradeOptionClick" data-itemindex="{{index}}">
+                <text>{{item}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="log-points-data-row">
+      <text class="log-points-data-name">Class</text>
+      <view class="inline-select-container" style="z-index: 3;">
+        <view class="{{classSelectorOpen ? 'inline-main-select-container main-select-container-open' : 'inline-main-select-container'}}" bindtap="classSelectorClicked">
+          <text class="inline-main-select-text">{{sportsMeetClassOptions[selectedGradeIndex][selectedClassIndex]}}</text>
+          <image src="/icons/chevron-down.svg" class="inline-select-chevron-down-image"></image>
+        </view>
+        <view class="inline-select-options-container" wx:if="{{classSelectorOpen}}">
+          <view class="select-option-scoll-container">
+            <block wx:for="{{sportsMeetClassOptions[selectedGradeIndex]}}" wx:key="*this">
+              <view wx:if="{{index!==0}}" class="select-option-separator"></view>
+              <view class="select-option-row-inline" bindtap="handleClassOptionClick" data-itemindex="{{index}}">
+                <text>{{item}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="button" bindtap="addHomeroomLog" id="add-activity-log-button">
+      <text class="button-text">Add Log</text>
+    </view>
+    <view wx:if="{{logAddFeedback!==undefined}}" class="button-feedback">
+      <text class="{{logAddFeedbackClass}}">{{logAddFeedback}}</text>
+    </view>
+  </view>
+  <view class="past-logs-container">
+    <view class="logs-heading-text-container"><text class="heading-text">Past Homeroom logs</text></view>
+    <view class="logs-delete-error" wx:if="{{pastLogDeletionError !== '' && pastLogDeletionError !== undefined}}"><text>{{pastLogDeletionError}}</text></view>
+    <view class="logs-list">
+      <block wx:for="{{logs}}" wx:key="_id">
+        <view wx:if="{{index!==0}}" class="log-separator"></view>
+        <view class="past-logs-block">
+            <view class="past-logs-block-left">
+              <text class="past-logs-block-event">{{item.grade}}-{{item.class}}</text>
+              <text class="past-logs-block-issue-person">{{item.pointValue}} pts ({{item.eventName}})</text>
+            </view>
+            <view class="past-logs-block-right">
+              <view class="log-block-delete-button" wx:if="{{adminStatus.canDeleteAll || item.issuerId === myId}}" data-itemindex="{{index}}" bindtap="deleteHomeroomLog">
+                <text>Delete</text>
+              </view>
+              <view class="log-block-information"><text>from {{item.issuerName}}</text></view>
+            </view>
+          </view>
+      </block>
+    </view>
+  </view>
+</view>

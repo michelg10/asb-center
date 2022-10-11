@@ -32,7 +32,7 @@ Component({
       if (this.data.isWorking) return;
       this.data.isWorking=true;
       wx.cloud.callFunction({
-        name: "SportsMeet2021ConfigureAdmin",
+        name: "SportsMeetConfigureAdmin",
         data: {
           userId: this.data.userId,
           isAdmin: this.data.adminEnabled,
@@ -83,7 +83,7 @@ Component({
       const eventChannel = this.getOpenerEventChannel();
       eventChannel.on('userId', async (data: string) => {
         this.data.userId = data;
-        let getAdminData = await this.data.db.collection('SportsMeet2021Admin').where({
+        let getAdminData = await this.data.db.collection('SportsMeetAdmin').where({
           adminId: data,
         }).get();
         if (getAdminData.data.length === 0) {

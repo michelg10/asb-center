@@ -2,10 +2,10 @@
 import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/Event'
 import { DisplayRow } from '../../classes/DisplayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
-import { createQRCode, lightBackgroundColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
+import { createQRCode, darkContainerColor, lightContainerColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
-// import { sportsMeet2021GetSecureCodes } from '../SportsMeet/SportsMeetFunctions'; // thinned
+import { sportsMeetGetSecureCodes } from '../../utils/SportsMeetFunctions';
 import { handleCode } from '../../utils/handleCode';
 import { Student } from '../../classes/Student';
 import { isDarkTheme } from '../../utils/isDarkTheme';
@@ -59,7 +59,7 @@ Component({
         userId: '{openid}'
       }).watch({
         onChange: async (snapshot) => {
-          parseInt("User data updated")
+          console.log("User data updated")
           let userData = snapshot.docs;
           if (snapshot.type === "init") {
             if (userData.length === 0) {
@@ -139,9 +139,9 @@ Component({
         }
       });
     },
-    // sportsMeet2021FetchSecureCodes: async function() { // thinned
-    //   return await sportsMeet2021GetSecureCodes(this);
-    // },
+    sportsMeetFetchSecureCodes: async function() {
+      return await sportsMeetGetSecureCodes(this);
+    },
     handleRegister: function () {
       wx.redirectTo({
         url: '/pages/Registration/Registration'
@@ -153,12 +153,12 @@ Component({
       if (!shouldJump) {
         return;
       }
-      if (eventClickedId === "SportsMeet2021") {
+      if (eventClickedId === "SportsMeet2022") {
         wx.navigateTo({
           url: '/pages/SportsMeet/SportsMeet',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', 'SportsMeet2021');
+            res.eventChannel.emit('eventId', 'SportsMeet2022');
             res.eventChannel.emit('eventInfo', this.data.masterEventsData.find((val) => {
               return val.id === eventClickedId;
             }));
@@ -315,14 +315,19 @@ Component({
       if (this.data.viewVisible) {
         for (let i = 0; i < newPreviewGenerator.length; i++) {
           if (newPreviewGenerator[i].previewMode === "secureCodePreview") {
-            let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, newPreviewGenerator[i].eventId);
+              let qrCodeId = "err";
+              switch (newPreviewGenerator[i].eventId) {
+                  case "SportsMeet2022":
+                      qrCodeId = "SM22";
+              }
+            let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, qrCodeId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
               let myCreateQRCode = createQRCode.bind(this);
               let systemInfo = wx.getSystemInfoSync();
               if (isDarkTheme()) {
-                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'FFFFFF', '000000');
+                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'FFFFFF', darkContainerColor);
               } else {
-                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, '000000', lightBackgroundColor);
+                myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, "000000", lightContainerColor);
               }
               this.data.previewLastGen.set(newPreviewGenerator[i].previewPort, accessCodeContents);
             }

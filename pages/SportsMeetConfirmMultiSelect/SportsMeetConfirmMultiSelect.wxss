@@ -1,0 +1,25 @@
+/* pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect.wxss */
+@import "/styles/studentContainer.wxss";
+@import "/styles/button.wxss";
+#confirm-multi-select-main-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+  margin-top: 10px;
+  padding-bottom: 80px;
+}
+#selection-confirmation-list {
+  margin-top: 12px;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+}
+#confirm-button {
+  margin-top: 21px;
+  background-color: #D2E3FA;
+}
+#confirm-button text {
+  color: #3180E9;
+}
+.student-select-container-block {
+  padding: 4px 0;
+}

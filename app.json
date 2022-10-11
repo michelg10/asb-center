@@ -12,7 +12,15 @@
     "pages/StudentChoose/StudentChoose",
     "pages/StudentDetailForAdmin/StudentDetailForAdmin",
     "pages/Superlatives/Superlatives",
-    "pages/GuessTheBaby/GuessTheBaby"
+    "pages/GuessTheBaby/GuessTheBaby",
+    "pages/SportsMeet/SportsMeet",
+    "pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
+    "pages/SportsMeetConfirmMultiSelect/SportsMeetConfirmMultiSelect",
+    "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin",
+    "pages/SportsMeetLeaderboards/SportsMeetLeaderboards",
+    "pages/SportsMeetMultiAddPoints/SportsMeetMultiAddPoints",
+    "pages/SportsMeetMultiSelect/SportsMeetMultiSelect",
+    "pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",

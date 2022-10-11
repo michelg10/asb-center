@@ -1,7 +1,10 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+    env: 'asb-center-7gixak2a33f2f3e5',
+});
+
 let db = cloud.database();
 // 云函数入口函数
 exports.main = async (event, context) => {
@@ -16,8 +19,8 @@ exports.main = async (event, context) => {
     };
   }
   let callerId = getAccountIdForUser.data[0]._id;
-  let adminCheckResult = await db.collection("admins").where({
-    "userId": callerId
+  let adminCheckResult = await db.collection("SportsMeetAdmin").where({
+    adminId: callerId
   }).get();
   if (adminCheckResult.data.length===0) {
     return {

@@ -88,10 +88,10 @@ export async function handleCode(obj: any, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="SportsMeet2021") {
+  if (keyToValueMap.get("event")==="SM22") {
     if (keyToValueMap.get("type")==="secureCode") {
       let currentTime = getUnixTime();
-      let secureCodesList:getSecureCodesReturnType = (await obj.sportsMeet2021FetchSecureCodes());
+      let secureCodesList:getSecureCodesReturnType = (await obj.sportsMeetFetchSecureCodes());
       if (secureCodesList.status === "forbidden") {
         reportCodeScanError(`Your account is not authorized to scan Sports Carnival ID Codes.`);
         return;
@@ -103,7 +103,7 @@ export async function handleCode(obj: any, x: string) {
       }
       // navigate to the persona detail page
       wx.navigateTo({
-        url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
+        url: '/pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail',
         success: (res) => {
           res.eventChannel.emit('userId', secureCodeVerification);
         }

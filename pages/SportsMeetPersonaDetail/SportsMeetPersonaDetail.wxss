@@ -1,0 +1,73 @@
+/* pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail.wxss */
+@import "/styles/options-container.wxss";
+@import "/styles/button.wxss";
+@import "/styles/SportsMeetLogs.wxss";
+#persona-detail-id-text {
+  color: var(--secondary);
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#persona-detail-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+  padding-top: 10px;
+  padding-bottom: 80px;
+}
+#persona-detail-gradeclass-text {
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+#activity-select-container {
+  margin-top: 18px;
+  margin-bottom: 23px;
+}
+#add-activity-log-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#add-activity-log-button text {
+  color: #3180E9;
+}
+.activity-log-row-title {
+  font-weight: 500;
+}
+#log-activity-container {
+  margin-bottom: 39px;
+}
+#exchange-container-subheading-text {
+  font-size: 17px;
+  color: var(--secondary);
+  font-weight: 500;
+}
+#exchange-select-container {
+  margin-top: 25px;
+  margin-bottom: 17px;
+}
+#purchase-button-can-buy {
+  background-color: #D1F8D9;
+}
+#purchase-button-can-buy text {
+  color: #09A00E;
+}
+#purchase-button-cannot-buy {
+  background-color: #E2E8E3;
+}
+#purchase-button-cannot-buy text {
+  color: #9CAD9C;
+}
+#exchange-container {
+  margin-bottom: 39px;
+}
+#modify-admin-status-container {
+  padding: 12px 16px;
+  border-radius: 9px;
+  background-color: var(--subcontainer-background);
+  margin-bottom: 22px;
+}
+#modify-admin-status-container text {
+  color: var(--link);
+  font-size: 17px;
+  font-weight: 500;
+}
