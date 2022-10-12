@@ -35,12 +35,13 @@
   align-items: center;
 }
 #leaderboard-pinned-count {
-  color: #FFDDFD;
+  color: #D3D3D3;
   font-weight: 600;
 }
 .main-leaderboards-container {
-  background-color: rgba(157, 104, 220, 0.66);
   border-radius: 8px;
+  opacity: 0.79;
+  background: #4D4D4D;
 }
 .leaderboard-row-container {
   display: flex; 
@@ -84,7 +85,7 @@
   text-align: end;
 }
 .leaderboard-secondary {
-  color: #FFC9FA;
+  color: #CFCFCF;
 }
 #ranked-container {
   display: flex;
@@ -102,7 +103,8 @@
   display: flex;
   padding: 10px 16px;
   align-items: center;
-  background-color: rgba(210, 114, 193, 0.84);
+  opacity: 0.84;
+  background: #272727;
   border-radius: 8px;
 }
 #leaderboard-search-icon {
@@ -131,5 +133,5 @@
 .leaderboard-separator {
   margin-left: 18px;
   padding-top: 1px;
-  background-color: #8A4A8A;
+  background-color: #4A4A4A;
 }
