@@ -15,7 +15,7 @@
   </view>
   <view id="personal-code-code-container">
     <view class="secure-code-preview-container">
-        <canvas class="secure-code-canvas" canvas-id="personalcodecanvas"></canvas>
+        <canvas type="2d" class="secure-code-canvas" id="personalcodecanvas"></canvas>
         <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nYour Personal Code and Compact ID uniquely identify your account.'}}</text>
     </view>
   </view>

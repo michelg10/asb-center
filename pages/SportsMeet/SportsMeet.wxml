@@ -61,7 +61,7 @@
   </view>
   <view id="sports-meet-code-container">
     <text class="heading-text" id="sports-meet-code-heading">{{eventInfo.preview.title}}</text>
-    <canvas class="secure-code-canvas" canvas-id="SportsMeetInnerPreviewPort"></canvas>
+    <canvas type="2d" class="secure-code-canvas" id="SportsMeetInnerPreviewPort"></canvas>
     <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\n'+eventInfo.preview.caption}}</text>
   </view>
   <view id="sports-meet-leaderboard-container">

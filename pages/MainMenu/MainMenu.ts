@@ -323,7 +323,6 @@ Component({
             let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, qrCodeId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
               let myCreateQRCode = createQRCode.bind(this);
-              let systemInfo = wx.getSystemInfoSync();
               if (isDarkTheme()) {
                 myCreateQRCode(newPreviewGenerator[i].previewPort, accessCodeContents, 'FFFFFF', darkContainerColor);
               } else {
