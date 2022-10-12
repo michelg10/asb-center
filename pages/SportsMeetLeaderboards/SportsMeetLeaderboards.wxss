@@ -133,5 +133,6 @@
 .leaderboard-separator {
   margin-left: 18px;
   padding-top: 1px;
-  background-color: #4A4A4A;
+  background-color: #757575;
+  z-index:5;
 }
