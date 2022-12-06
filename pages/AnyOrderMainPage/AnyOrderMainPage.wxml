@@ -12,8 +12,8 @@
                 <text wx:if="{{order.orderStatus === 'acc'}}">Verified Order</text>
             </view>
             <view id="order-status-subtitle">
-                <text wx:if="{{order.orderStatus === 'unsub'}}">Create your order below and submit your order</text>
-                <text wx:if="{{order.orderStatus === 'sub'}}">Verify your order with an ASB member or cancel your submission</text>
+                <text wx:if="{{order.orderStatus === 'unsub'}}">Create your order below. Once you're done, submit your order.</text>
+                <text wx:if="{{order.orderStatus === 'sub'}}">Verify your order with an ASB member at XMT Floor 1 or cancel your submission</text>
                 <text wx:if="{{order.orderStatus === 'acc'}}">Thanks for your order! We’ll deliver this to you on delivery day. You can view your order below.</text>
             </view>
             <view wx:if="{{order.orderStatus === 'sub'}}" id="AnyOrderMainPageCancelButton" class="any-order-action-button" bindtap="cancelButtonPressed">

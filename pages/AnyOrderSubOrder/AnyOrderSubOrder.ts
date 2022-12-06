@@ -124,6 +124,7 @@ Component({
                 url: "/pages/StudentChoose/StudentChoose",
                 success: (res) => {
                     res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
+                    res.eventChannel.emit("limitGradeTo", [11,12]);
                     res.eventChannel.on("selectedStudent", (res) => {
                         let student: Student = res;
                         let newSuborder = this.data.suborder;
