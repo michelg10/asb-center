@@ -7,6 +7,7 @@ interface ComponentDataInterface {
     db: DB.Database,
     anyOrderOrder: Order|undefined,
     anyOrderName: string,
+    orderExtraNotes: string,
     updateOrderCallBusy: boolean,
 };
 type PublicUserData = {
@@ -67,6 +68,7 @@ Component({
             this.setData({
                 anyOrderOrder: newOrder,
             });
+            this.updateOrderNotes(this.data.anyOrderOrder as Order);
             this.data.updateOrderCallBusy=false;
         },
         anyOrderAcceptTapped: function() {
@@ -138,8 +140,30 @@ Component({
                     this.setData({
                         anyOrderOrder: res as any,
                     });
+                    this.updateOrderNotes(this.data.anyOrderOrder as Order);
                 });
             })
+        },
+        updateOrderNotes: function(order: Order) {
+            // for extra notes asb members need to know about the order, such as the number of letters
+            let orderNotes = "";
+            if (true) {
+                // count letters
+                let letterCount = 0;
+                for (let i=0;i<order.subordersList.length;i++) {
+                    let suborder = order.subordersList[i];
+                    for (let j=0;j<suborder.objects.length;j++) {
+                        let suborderObject = suborder.objects[j];
+                        if (suborderObject.objectId === "letter") {
+                            letterCount += suborderObject.quantity.valueOf();
+                        }
+                    }
+                }
+                orderNotes = `${letterCount} letter${letterCount === 1 ? '' : 's'}`;
+            }
+            this.setData({
+                orderExtraNotes: orderNotes,
+            });
         }
     }
 })

@@ -7,7 +7,7 @@
         <text class="heading-text">{{anyOrderName}}</text>
         <text id="any-order-submission" class="submission-{{anyOrderOrder.orderStatus}}">Status: {{(anyOrderOrder.orderStatus === 'unsub' ? 'No submission' : (anyOrderOrder.orderStatus === 'sub' ? 'Submitted' : 'Accepted'))}}</text>
         <view class="any-order-inner-container" wx:if="{{anyOrderOrder.orderStatus !== 'unsub'}}">
-            <text id="any-order-point-requirement">Submitted order requires {{anyOrderOrder.computedTotalCost}} points</text>
+            <text id="any-order-point-requirement">Submitted order requires {{anyOrderOrder.computedTotalCost}} points ({{orderExtraNotes}})</text>
             <view id="any-order-accept-button" wx:if="{{anyOrderOrder.orderStatus === 'sub'}}" class="any-order-button" bindtap="anyOrderAcceptTapped">
                 <text>Accept</text>
             </view>
