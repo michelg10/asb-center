@@ -168,13 +168,13 @@ Component({
           }
         });
       }
-      if (eventClickedId === "WhiteV2022") {
+      if (eventClickedId === "ChristmasSale2022") {
         wx.navigateTo({
           url: '/pages/AnyOrderMainPage/AnyOrderMainPage',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', "WhiteV2022");
-            res.eventChannel.emit('eventName', "White Valentines");
+            res.eventChannel.emit('eventId', "ChristmasSale2022");
+            res.eventChannel.emit('eventName', "Elfin Express");
             res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
           }
         })

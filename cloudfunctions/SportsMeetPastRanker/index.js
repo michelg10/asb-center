@@ -7,6 +7,8 @@ cloud.init({
 
 let db = cloud.database();
 
+// required trigger "0 */5 * * * * *" have been disabled for cost reasons
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   console.log("Autorank routine - rank regular leaderboards");

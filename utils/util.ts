@@ -29,7 +29,10 @@ export function getTimeDifference(fromTs: number, toTs: number) {
   }
   diff/=365;
   if (diff>1) {
-    rturn+=`${Math.floor(diff)}yrs`;
+    rturn+=`${Math.floor(diff)}yr`;
+    if (diff>=2) {
+        rturn += 's';
+    }
   }
   if (diffPositive) {
     rturn+=' ago';

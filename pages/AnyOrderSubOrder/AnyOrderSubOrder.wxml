@@ -5,12 +5,18 @@
     <view class="list-selection" id="recipient-selection">
         <view class="list-selection-row" bindtap="setRecipient" data-id="student">
             <text>Student</text>
-            <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{suborder.recipientType === 'student'}}"></image>
+            <view class="list-selection-check-container" wx:if="{{suborder.recipientType === 'student'}}">
+                <image class="list-selection-check" src="/icons/checkmark.svg"></image>
+                <image class="list-selection-check dark-image-icon" src="/icons/checkmark-dark.svg"></image>
+            </view>
         </view>
         <view class="list-selection-row-separator"></view>
         <view class="list-selection-row" bindtap="setRecipient" data-id="teacher">
             <text>Teacher</text>
-            <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{suborder.recipientType === 'teacher'}}"></image>
+            <view class="list-selection-check-container" wx:if="{{suborder.recipientType === 'teacher'}}">
+                <image class="list-selection-check" src="/icons/checkmark.svg"></image>
+                <image class="list-selection-check dark-image-icon" src="/icons/checkmark-dark.svg"></image>
+            </view>
         </view>
     </view>
     <view id="select-specific-person-view">
@@ -35,9 +41,19 @@
         <view class="suborder-objects-container-bottom">
             <text class="suborder-objects-quantity-text">Quantity</text>
             <view class="quantity-nudge-container">
-                <image src="/icons/minus{{item.quantity === 0 ? '-disabled' : ''}}.svg" class="quantity-nudge-icon" bindtap="nudgeChangeTapped" data-change="{{-1}}" data-index="{{index}}"></image>
+                <view class="quantity-nudge-button-container{{item.quantity === 0 ? ' quantity-nudge-button-disabled-container' : ''}}" bindtap="nudgeChangeTapped" data-change="{{-1}}" data-index="{{index}}">
+                    <view id="quantity-minus-nudge-icon-container">
+                        <image src="/icons/mono-minus{{item.quantity === 0 ? '-disabled' : ''}}.svg" class="quantity-minus-nudge-icon-image" />
+                        <image src="/icons/mono-minus{{item.quantity === 0 ? '-disabled' : ''}}-dark.svg" class="quantity-minus-nudge-icon-image dark-image-icon" />
+                    </view>
+                </view>
                 <text class="quantity-display">{{item.quantity}}</text>
-                <image src="/icons/add.svg" class="quantity-nudge-icon" bindtap="nudgeChangeTapped" data-change="{{1}}" data-index="{{index}}"></image>
+                <view class="quantity-nudge-button-container" bindtap="nudgeChangeTapped" data-change="{{1}}" data-index="{{index}}">
+                    <view id="quantity-plus-nudge-icon-container">
+                        <image src="/icons/mono-plus.svg" class="quantity-plus-nudge-icon-image" />
+                        <image src="/icons/mono-plus-dark.svg" class="quantity-plus-nudge-icon-image dark-image-icon" />
+                    </view>
+                </view>
             </view>
         </view>
     </view>
@@ -46,10 +62,10 @@
         <text class="suborder-headerfooter-text">{{suborder.computedTotalCost}}pts</text>
     </view>
     <view id="add-suborder-warn" wx:if="{{warningText !== null}}">
-        <text>{{warningText}}</text>
+        <text id="add-suborder-warn-text">{{warningText}}</text>
     </view>
-    <view class="add-order-button" id="add-order-button-{{warningText === null ? '' : 'disabled'}}" bindtap="addOrEditOrderTapped">
-        <image src="/icons/add-icon{{warningText === null ? '' : '-disabled'}}.svg" id="add-icon-image"></image>
+    <view class="add-order-button any-order-action-button" id="add-order-button-{{warningText === null ? '' : 'disabled'}}" bindtap="addOrEditOrderTapped">
+        <image src="/icons/add-icon.svg" class="add-order-image{{warningText === null ? '' : '-disabled'}}" id="add-icon-image"></image>
         <text class="add-order-text" id="add-order-text{{warningText === null ? '' : '-disabled'}}">{{suborderIndex === null ? "Add Order" : "Edit Order"}}</text>
     </view>
 </view>

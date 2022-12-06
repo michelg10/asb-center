@@ -10,7 +10,7 @@ let db = cloud.database();
 // 云函数入口函数
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
-    if (event.orderEvent !== "WhiteV2022") {
+    if (event.orderEvent !== "ChristmasSale2022") {
         return {
             error: "Order event doesn't exist",
             data: {},

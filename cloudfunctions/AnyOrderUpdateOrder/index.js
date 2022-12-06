@@ -10,7 +10,7 @@ let db = cloud.database();
 // 云函数入口函数
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
-    if (event.orderEvent !== "WhiteV2022") {
+    if (event.orderEvent !== "ChristmasSale2022") {
         return {
             error: "Order event doesn't exist",
         }
@@ -50,55 +50,50 @@ exports.main = async (event, context) => {
     }
 
     let idToObjectMap = new Map();
-    idToObjectMap.set("succulent", {
-        _id: "succulent",
-        cost: 5,
-        name: "Succulent",
+    idToObjectMap.set("marshmallows", {
+        _id: "marshmallows",
+        cost: 4,
+        name: "Marshmallows (4x)",
     });
-    idToObjectMap.set("redrosesingle", {
-        _id: "redrosesingle",
-        cost: 8,
-        name: "Red Rose",
+    idToObjectMap.set("candycanes", {
+        _id: "candycanes",
+        cost: 4,
+        name: "Candy Canes (2x)",
     });
-    idToObjectMap.set("whiterosesingle", {
-        _id: "whiterosesingle",
-        cost: 8,
-        name: "White Rose",
+    idToObjectMap.set("chocolates", {
+        _id: "chocolates",
+        cost: 7,
+        name: "Chocolates (2x)",
     });
-    idToObjectMap.set("sunsetrosesingle", {
-        _id: "sunsetrosesingle",
-        cost: 8,
-        name: "Sunset Rose",
-    });
-    idToObjectMap.set("sunflowersingle", {
-        _id: "sunflowersingle",
+    idToObjectMap.set("gingerbreadcookies", {
+        _id: "gingerbreadcookies",
         cost: 10,
-        name: "Sunflower",
+        name: "Gingerbread Cookies (2x)",
     });
-    idToObjectMap.set("daisybouquet", {
-        _id: "daisybouquet",
-        cost: 35,
-        name: "Daisies Bouquet",
+    idToObjectMap.set("teddybear", {
+        _id: "teddybear",
+        cost: 15,
+        name: "Teddy Bear",
     });
-    idToObjectMap.set("redrosebouquet", {
-        _id: "redrosebouquet",
-        cost: 65,
-        name: "Red Rose Bouquet",
+    idToObjectMap.set("candle", {
+        _id: "candle",
+        cost: 20,
+        name: "Candle",
     });
-    idToObjectMap.set("whiterosebouquet", {
-        _id: "whiterosebouquet",
-        cost: 65,
-        name: "White Rose Bouquet",
+    idToObjectMap.set("giftbox", {
+        _id: "giftbox",
+        cost: 45,
+        name: "Gift Box",
     });
-    idToObjectMap.set("sunflowerbouquet", {
-        _id: "sunflowerbouquet",
-        cost: 70,
-        name: "Sunflower Bouquet",
+    idToObjectMap.set("lovegiftbox", {
+        _id: "lovegiftbox",
+        cost: 45,
+        name: "Couples' Gift Bag",
     });
-    idToObjectMap.set("redrosebigbouquet", {
-        _id: "redrosebigbouquet",
-        cost: 520,
-        name: "99 Red Rose Bouquet",
+    idToObjectMap.set("letter", {
+        _id: "letter",
+        cost: 5,
+        name: "Letter",
     });
     // manually set this! this is to accelerate the cloud function. 
     // recompute everything that the user has computed and then update the order

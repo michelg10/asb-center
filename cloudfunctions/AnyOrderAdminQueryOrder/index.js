@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     let callingUserOpenID = wxContext.OPENID;
 
-    if (event.orderEvent !== "WhiteV2022") {
+    if (event.orderEvent !== "ChristmasSale2022") {
         return {
             status: "error",
             reason: "Order event not open"

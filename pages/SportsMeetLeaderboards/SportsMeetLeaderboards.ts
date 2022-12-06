@@ -102,7 +102,6 @@ Component({
         let newNewData:any[] = [];
         for (let i=0;i<newData.length;i++) {
           if (newData[i][this.data.pointProperty] !== 0 || this.data.pins?.indexOf(newData[i]._id) !== -1) {
-            console.log("hi");
             newNewData.push({
               ...newData[i],
               actualIndex: i,

@@ -16,8 +16,8 @@
                 <text wx:if="{{order.orderStatus === 'sub'}}">Verify your order with an ASB member or cancel your submission</text>
                 <text wx:if="{{order.orderStatus === 'acc'}}">Thanks for your order! We’ll deliver this to you on delivery day. You can view your order below.</text>
             </view>
-            <view wx:if="{{order.orderStatus === 'sub'}}" id="AnyOrderMainPageCancelButton" bindtap="cancelButtonPressed">
-                <image id="AnyOrderMainPageCancelButtonIcon" src="/icons/redx.svg"></image>
+            <view wx:if="{{order.orderStatus === 'sub'}}" id="AnyOrderMainPageCancelButton" class="any-order-action-button" bindtap="cancelButtonPressed">
+                <image id="AnyOrderMainPageCancelButtonIcon" src="/icons/xmark.svg"></image>
                 <text id="AnyOrderMainPageCancelButtonText">Cancel</text>
             </view>
         </view>
@@ -26,12 +26,18 @@
             <view class="list-selection" id="anonymity-selection">
                 <view class="list-selection-row" bindtap="setAnonymity" data-id="anonymous">
                     <text>Anonymous</text>
-                    <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{order.orderFrom === null}}"></image>
+                    <view class="list-selection-check-container" wx:if="{{order.orderFrom === null}}">
+                        <image class="list-selection-check" src="/icons/checkmark.svg"></image>
+                        <image class="list-selection-check dark-image-icon" src="/icons/checkmark-dark.svg"></image>
+                    </view>
                 </view>
                 <view class="list-selection-row-separator"></view>
                 <view class="list-selection-row" bindtap="setAnonymity" data-id="named">
                     <text>Named</text>
-                    <image class="list-selection-check" src="/icons/checkmark.svg" wx:if="{{order.orderFrom !== null && order.orderFrom !== undefined}}"></image>
+                    <view class="list-selection-check-container" wx:if="{{order.orderFrom !== null && order.orderFrom !== undefined}}">
+                        <image class="list-selection-check" src="/icons/checkmark.svg"></image>
+                        <image class="list-selection-check dark-image-icon" src="/icons/checkmark-dark.svg"></image>
+                    </view>
                 </view>
             </view>
             <block wx:if="{{order.orderFrom !== null && order.orderFrom !== undefined}}">
@@ -44,7 +50,7 @@
                     <input class="anonymity-input" type="text" value="{{order.orderFrom.class}}" bindinput="classBind" disabled="{{order.orderStatus !== 'unsub'}}"/>
                 </view>
                 <view id="information-input-info">
-                    <text>This does not have to be your real name or class.</text>
+                    <text id="information-input-info-text">This does not have to be your real name or class.</text>
                 </view>
             </block>
         </view>
@@ -77,15 +83,17 @@
                     <block wx:if="{{order.orderStatus === 'unsub'}}">
                         <view class="suborder-container-separator"></view>
                         <view class="edit-options-container" bindtap="editOrderTapped" data-index="{{index}}">
-                            <view class="edit-options-icon-container">
-                                <image src="/icons/editPencil.svg" id="edit-options-edit-icon"></image>
+                            <view class="edit-options-edit-icon-container">
+                                <image src="/icons/edit-pencil.svg" class="edit-options-edit-icon"></image>
+                                <image src="/icons/edit-pencil-dark.svg" class="edit-options-edit-icon dark-image-icon"></image>
                             </view>
                             <text class="edit-options-text" id="edit-options-edit-text">Edit Order</text>
                         </view>
                         <view class="edit-options-separator"></view>
                         <view class="edit-options-container" bindtap="deleteOrderTapped" data-index="{{index}}">
-                            <view class="edit-options-icon-container">
-                                <image src="/icons/trash.svg" id="edit-options-delete-icon"></image>
+                            <view class="edit-options-delete-icon-container">
+                                <image src="/icons/trash.svg" class="edit-options-delete-icon"></image>
+                                <image src="/icons/trash-dark.svg" class="edit-options-delete-icon dark-image-icon"></image>
                             </view>
                             <text class="edit-options-text" id="edit-options-delete-text">Delete Order</text>
                         </view>
@@ -93,7 +101,7 @@
                 </view>
             </view>
         </block>
-        <view class="add-order-button" wx:if="{{order.orderStatus === 'unsub'}}" bindtap="newOrderTapped">
+        <view class="add-order-button any-order-action-button" wx:if="{{order.orderStatus === 'unsub'}}" bindtap="newOrderTapped">
             <image src="/icons/add-icon.svg" id="add-icon-image"></image>
             <text class="add-order-text">Add Order</text>
         </view>
@@ -101,7 +109,7 @@
             <text class="suborder-headerfooter-title">TOTAL</text>
             <text class="suborder-headerfooter-text">{{order.computedTotalCost}}pts</text>
         </view>
-        <view id="submit-order-button" bindtap="submitButtonClicked" wx:if="{{order.orderStatus === 'unsub' && order.subordersList.length>0}}">
+        <view id="submit-order-button" class="any-order-action-button" bindtap="submitButtonClicked" wx:if="{{order.orderStatus === 'unsub' && order.subordersList.length>0}}">
             <image src="/icons/submit.svg" id="submit-icon-image"></image>
             <text id="submit-order-text">Submit</text>
         </view>

@@ -196,7 +196,7 @@ Component({
         }
         let convertToDisplayTime = (a: number, b: number) => {
           let timePostfix = (a>=12 ? "PM" : "AM");
-          let actualA = a-12;
+          let actualA = (a >= 13 ? a-12 : a);
           return `${actualA}:${extendNumberToLengthString(b, 2)}${timePostfix}`;
         }
         if (includeEntry) {

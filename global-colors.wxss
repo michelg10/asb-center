@@ -2,10 +2,13 @@ view {
     --button-background-color: #FFFFFF;
     --subcontainer-background: #FFFFFF;
     --link: #007AFF;
+    --blue: #007AFF;
     --secondary: #959599;
     --list-separator: #B7B7B7;
     --list-search-box: #E4E3E9;
     --warn: #FF3B30;
+    --red: #FF3B30;
+    --green: #34C759;
     --page-background: #F2F1F6;
     --primary: #000000;
     --anti-primary: #FFFFFF;
@@ -14,11 +17,14 @@ view {
     view {
         --button-background-color: #1C1C1E;
         --subcontainer-background: #1C1C1E;
-        --link: #007AFF;
+        --link: #0A84FF;
+        --blue: #0A84FF;
         --secondary: #6C6C6C;
         --list-separator: #6D6D6D;
         --list-search-box: #1C1C1E;
         --warn: #FF453A;
+        --red: #FF453A;
+        --green: #30D158;
         --page-background: #000000;
         --primary: #FFFFFF;
         --anti-primary: #000000;

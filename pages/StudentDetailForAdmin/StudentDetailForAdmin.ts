@@ -70,10 +70,10 @@ Component({
             this.data.updateOrderCallBusy=false;
         },
         anyOrderAcceptTapped: function() {
-            this.anyOrderUpdate("WhiteV2022", (this.data.anyOrderOrder as any)._id, "acc");
+            this.anyOrderUpdate("ChristmasSale2022", (this.data.anyOrderOrder as any)._id, "acc");
         },
         anyOrderCancelTapped: function() {
-            this.anyOrderUpdate("WhiteV2022", (this.data.anyOrderOrder as any)._id, "sub");
+            this.anyOrderUpdate("ChristmasSale2022", (this.data.anyOrderOrder as any)._id, "sub");
         },
         fetchUserStudentName: function(studentId: string) {
             // takes in studentId for the studentId
@@ -114,7 +114,7 @@ Component({
         },
         onLoad: function() {
             this.setData({
-                anyOrderName: "White Valentines",
+                anyOrderName: "Elfin Express",
             });
             this.data.db = wx.cloud.database();
             this.data.updateOrderCallBusy = false;
@@ -134,7 +134,7 @@ Component({
                         });
                     }
                 })
-                this.fetchAnyOrderStatus("WhiteV2022", userData._id).then((res) => {
+                this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
                     this.setData({
                         anyOrderOrder: res as any,
                     });

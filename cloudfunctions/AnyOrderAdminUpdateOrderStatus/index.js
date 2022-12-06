@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
     // there will also be a orderSnapshot if the new status is sub or acc, reporting the order as is when it was updated
 
 
-    if (event.orderEvent !== "WhiteV2022") {
+    if (event.orderEvent !== "ChristmasSale2022") {
         return {
             status: "error",
             reason: "Order event not open"

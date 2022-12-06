@@ -2,12 +2,5 @@
     "permissions": {
       "openapi": [
       ]
-    },
-    "triggers": [
-      {
-        "name": "pastRankerTrigger",
-        "type": "timer",
-        "config": "0 */5 * * * * *"
-      }
-    ]
+    }
   }

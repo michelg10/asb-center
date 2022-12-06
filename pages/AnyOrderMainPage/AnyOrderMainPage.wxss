@@ -3,12 +3,15 @@
 @import "ImageIconStyles.wxss";
 @import "/styles/listSelection.wxss";
 #AnyOrderMainPageContainer {
-    margin-top: 10px;
+    padding-top: 10px;
     padding-bottom: 80px;
-    margin-left: 16px;
-    margin-right: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
     display: flex;
     flex-direction: column;
+    background-color: var(--page-background);
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 #AnyOrderMainPageErrorMessage {
     margin-top: 51px;
@@ -38,24 +41,18 @@
     color: var(--secondary)
 }
 #AnyOrderMainPageCancelButtonIcon {
-    width: 38px;
-    height: 38px;
-    padding: 3px;
+    width: 21px;
+    height: 20px;
+    margin-right: 4px;
 }
 #AnyOrderMainPageCancelButton {
     margin-top: 28px;
-    height: 44px;
-    background-color: #FFE6E6;
-    display: flex;
-    align-items: center;
-    border-radius: 22px;
+    background-color: var(--red);
 }
 #AnyOrderMainPageCancelButtonText {
     font-size: 17px;
     font-weight: 500;
-    color: #D81717;
-    padding-left: 16px;
-    padding-right: 35px;
+    color: white;
 }
 #anonymity-selection {
     margin-bottom: 21px;
@@ -72,7 +69,7 @@
 .anonymity-input {
     height: 42px;
     padding: 11px;
-    background-color: #ECECEC;
+    background-color: var(--subcontainer-background);
     font-size: 17px;
     width: 198px;
     box-sizing: border-box;
@@ -80,17 +77,20 @@
 }
 #information-input-info {
     padding: 0 45px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+#information-input-info-text {
     text-align: center;
     font-size: 15px;
     line-height: 18px;
     color: var(--secondary);
-    margin-bottom: 18px;
 }
 #anonymity-container {
     margin-bottom: 18px;
 }
 #order-number-display {
-    color: #6C6C6C;
+    color: var(--secondary);
     font-size: 17px;
     font-weight: 500;
     padding-bottom: 10px;
@@ -104,7 +104,7 @@
 }
 .suborder-container {
     border-radius: 8px;
-    background-color: #ECECEC;
+    background-color: var(--subcontainer-background);
     margin-bottom: 22px;
 }
 .suborder-headerfooter {
@@ -162,8 +162,18 @@
     font-size: 17px;
     font-weight: 500;
 }
-.edit-options-icon-container {
-    width: 29px;
+.edit-options-edit-icon-container {
+    width: 18px;
+    height:20px;
+    position: relative;
+    margin-right: 10px;
+    margin-left: 1px;
+}
+.edit-options-delete-icon-container {
+    width: 19px;
+    height:22px;
+    position: relative;
+    margin-right: 10px;
 }
 .edit-options-separator {
     margin-left: 44px;
@@ -172,41 +182,47 @@
     width: calc(100%-44px);
 }
 #edit-options-edit-text {
-    color: #366AEF;
+    color: var(--blue);
 }
 #edit-options-delete-text {
-    color: #D81717;
+    color: var(--warn);
 }
-#edit-options-edit-icon {
-    width: 14px;
-    height: 14px;
-    margin-left: 3px;
-}
-#edit-options-delete-icon {
+.edit-options-edit-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 18px;
-    height: 18px;
-    margin-left: 1px;
+    height: 20px;
+}
+.edit-options-delete-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 19px;
+    height: 22px;
 }
 #add-icon-image {
-    width: 38px;
-    height: 38px;
-    padding: 3px;
+    width: 22px;
+    height: 20px;
+    margin-right: 4px;
 }
-.add-order-button {
+.any-order-action-button {
     height: 44px;
     border-radius: 22px;
     width: 164px;
-    background-color: #E3E4FF;
-    margin: 0 auto;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+.add-order-button {
+    background-color: var(--blue);
+    margin: 0 auto;
     margin-bottom: 22px;
 }
 .add-order-text {
-    margin-left: 14px;
     font-size: 17px;
     font-weight: 500;
-    color: #366AEF;
+    color: white;
 }
 #total-cost-display {
     margin-bottom: 22px;
@@ -216,22 +232,25 @@
     justify-content: space-between;
 }
 #submit-icon-image {
-    width: 24px;
-    height: 24px;
-    margin-left: 13px;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
 }
 #submit-order-button {
-    height: 44px;
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
     margin: 0 auto;
-    background-color: #D1F8D9;
+    background-color: var(--green);
 }
 #submit-order-text {
     font-size: 17px;
     font-weight: 500;
-    color: #09A00E;
-    margin-left: 29px;
-    margin-right: 44px;
+    color: white;
+}
+.dark-image-icon {
+    z-index: 5;
+    opacity: 0;
+}
+@media (prefers-color-scheme: dark) {
+    .dark-image-icon {
+        opacity: 1;
+    }
 }

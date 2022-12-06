@@ -7,6 +7,13 @@ cloud.init({
 
 db = cloud.database();
 
+
+/*
+Required trigger 
+ "0 0 * * * * *"
+have been disabled for cost reasons
+*/
+
 // 云函数入口函数
 exports.main = async (event, context) => {
     console.log("Running mandatory join routine");
