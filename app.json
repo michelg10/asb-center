@@ -8,7 +8,7 @@
     "pages/PersonalCode/PersonalCode",
     "pages/SuggestionsBox/SuggestionsBox",
     "pages/AnyOrderMainPage/AnyOrderMainPage",
-    "pages/AnyOrderSuborder/AnyOrderSuborder",
+    "pages/AnyOrderSubOrder/AnyOrderSubOrder",
     "pages/StudentChoose/StudentChoose",
     "pages/StudentDetailForAdmin/StudentDetailForAdmin",
     "pages/Superlatives/Superlatives",
