@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 
 cloud.init({
-    env: 'asb-center-7gixak2a33f2f3e5',
+    env: 'asc-5gg4yr483fce21b4'
 });
 
 let db = cloud.database();
@@ -13,16 +13,19 @@ exports.main = async (event, context) => {
   let getAccountIdForUser = await(db.collection("userData")).where({
     userId: wxContext.OPENID,
   }).get();
-  if (getAccountIdForUser.data.length===0) {
+  if (getAccountIdForUser.data.length === 0) {
     return {
       error: "forbidden",
     };
   }
   let callerId = getAccountIdForUser.data[0]._id;
-  let adminCheckResult = await db.collection("SportsMeetAdmin").where({
+  let sportsMeetAdminCheckResult = await db.collection("SportsMeetAdmin").where({
     adminId: callerId
   }).get();
-  if (adminCheckResult.data.length===0) {
+  let adminCheckResult = await db.collection("admins").where({
+    userId: callerId
+  }).get();
+  if (adminCheckResult.data.length === 0 && sportsMeetAdminCheckResult === 0) {
     return {
       error: "forbidden",
     };

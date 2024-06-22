@@ -1,13 +1,13 @@
 // pages/MainMenu/MainMenu.js
-import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/Event'
-import { DisplayRow } from '../../classes/DisplayRow'
+import { AnyPreviewType, Event, SecureCodePreview } from '../../classes/event'
+import { DisplayRow } from '../../classes/displayRow'
 import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString } from '../../utils/util';
 import { createQRCode, darkContainerColor, lightContainerColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { sportsMeetGetSecureCodes } from '../../utils/SportsMeetFunctions';
 import { handleCode } from '../../utils/handleCode';
-import { Student } from '../../classes/Student';
+import { Student } from '../../classes/student';
 import { isDarkTheme } from '../../utils/isDarkTheme';
 import { CacheSingleton } from '../../classes/CacheSingleton';
 interface SecureCodePreviewData {
@@ -55,8 +55,9 @@ Component({
    */
   methods: {
     fetchServerData: async function () {
+      let userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
       this.data.db.collection("userData").where({
-        userId: '{openid}'
+        userId: userOpenId
       }).watch({
         onChange: async (snapshot) => {
           console.log("User data updated")
@@ -64,15 +65,18 @@ Component({
           if (snapshot.type === "init") {
             if (userData.length === 0) {
               // ask the server 
-              let shouldRegister = wx.cloud.callFunction({
+              wx.cloud.callFunction({
                 name: "checkNeedNewUser",
-              });
-              if (shouldRegister) {
-                wx.redirectTo({
-                  url: '/pages/Registration/Registration'
-                })
-                return;
-              }
+              }).then((res) => {
+                console.log(res);
+                let shouldRegister = (res.result as any).response;
+                if (shouldRegister) {
+                  wx.redirectTo({
+                    url: '/pages/Registration/Registration'
+                  })
+                  return;
+                }
+              })
             }
           }
           if (userData.length > 0) {
@@ -202,6 +206,7 @@ Component({
           url: '/pages/PersonalCode/PersonalCode',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
           }
         })
       }

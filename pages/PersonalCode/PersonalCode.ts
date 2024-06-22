@@ -1,3 +1,5 @@
+import { CacheSingleton } from "../../classes/CacheSingleton";
+import { Student } from "../../classes/student";
 import { createQRCode, lightBackgroundColor, UserDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
 import { generateQrCode } from "../../utils/generateQrCode";
@@ -12,6 +14,7 @@ interface componentDataInterface {
   db: DB.Database,
   viewVisible: boolean,
   codeLastGen: string,
+  cacheSingleton: CacheSingleton
 }
 Component({
   /**
@@ -41,15 +44,21 @@ Component({
         this.data.db.collection("admins").where({
           userId:this.data.userData.id,
         }).get().then((res) => {
-          console.log(res);
-          
+          if (res.data.length > 0) {
+            this.setData({
+              isAdmin: true
+            });
+          };
         })
         setTimeout(
           () => {
             this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
           }, 500
         );
-      })
+      });
+      eventChannel.on('cacheSingleton', (data: CacheSingleton) => {
+        this.data.cacheSingleton = data;
+      });
     },
     recomputeCode: function() {
       if (this.data.viewVisible) {
@@ -82,6 +91,35 @@ Component({
     },
     onUnload: function() {
       clearInterval(this.data.recomputeCaller);
+    },
+    adminButtonTapped: function() {
+      wx.navigateTo({
+        url: "/pages/StudentChoose/StudentChoose",
+        success: (res) => {
+          res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
+          res.eventChannel.emit("limitGradeTo", [9, 10, 11, 12]);
+          res.eventChannel.on("selectedStudent", async (selectedStudent: Student) => {
+            let userData = ((await wx.cloud.callFunction({
+              name: "fetchUserInformation",
+              data: {
+                userId: selectedStudent.pseudoId,
+              }
+            })).result as any).data;
+            let publicUserData = {
+              _id: userData._id,
+              compactId: userData.compactId,
+              studentId: userData.studentId,
+              userId: userData.userId,
+            };
+            wx.navigateTo({
+              url: '/pages/StudentDetailForAdmin/StudentDetailForAdmin',
+              success: (res) => {
+                res.eventChannel.emit('userId', publicUserData);
+              }
+            });
+          })
+        }
+      });
     }
   }
 })
