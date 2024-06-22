@@ -1,4 +1,4 @@
-import { Student } from "../../classes/Student";
+import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
 

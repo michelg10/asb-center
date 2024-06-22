@@ -1,4 +1,4 @@
-import { Event } from "../../classes/Event";
+import { Event } from "../../classes/event";
 
 // pages/SuggestionsBox/SuggestionsBox.ts
 type ComponentDataInterface = {

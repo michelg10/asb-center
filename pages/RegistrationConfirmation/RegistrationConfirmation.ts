@@ -1,4 +1,4 @@
-import { Student } from "../../classes/Student";
+import { Student } from "../../classes/student";
 
 // pages/RegistrationConfirmation.ts
 interface componentDataInterface {

@@ -2,7 +2,7 @@
 const cloud = require('wx-server-sdk')
 
 cloud.init({
-    env: 'asb-center-7gixak2a33f2f3e5',
+    env: 'asc-5gg4yr483fce21b4'
 });
 
 const db = cloud.database();
@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   try {
     let result = await db.collection("userData").where({
-      userId: wxContext.openid,
+      userId: wxContext.OPENID,
     }).get();
     if (result.data.length === 0) {
       return {

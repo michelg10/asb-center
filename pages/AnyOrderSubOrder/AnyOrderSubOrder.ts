@@ -1,7 +1,7 @@
 // pages/AnyOrderSubOrder/AnyOrderSubOrder.ts
 
 import { CacheSingleton } from "../../classes/CacheSingleton";
-import { Student } from "../../classes/Student";
+import { Student } from "../../classes/student";
 import { ObjectAndQuantity, OrderObject, Suborder } from "../AnyOrderMainPage/AnyOrderMainPage"
 
 type ComponentDataInterface = {
