@@ -18,6 +18,7 @@ interface ComponentDataInterface {
     
     currentActiveDropdown: number,
     userId: string,
+    userOpenId: string | undefined,
     questionDisplayInformation: QuestionDisplayInformation[],
     isActive: boolean,
     serverFetchedChoices: number[],
@@ -144,8 +145,11 @@ Component({
             })
             eventChannel.on("userId", (data: any) => {
                 this.data.userId = data;
+                this.data.cacheSingleton.fetchUserOpenId().then((res) => {
+                  this.data.userOpenId = res;
+                });
                 this.data.db.collection("BabyTeachersData").where({
-                    correspondingOpenId: "{openid}"
+                    correspondingOpenId: "userOpenId"
                 }).get().then((res) => {
                     if (res.data.length === 1) {
                         this.data.serverFetchedChoices = res.data[0].choices;

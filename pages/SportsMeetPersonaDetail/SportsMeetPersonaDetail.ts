@@ -1,3 +1,4 @@
+import { CacheSingleton } from "../../classes/CacheSingleton";
 import allCollectionsData from "../../utils/allCollectionsData";
 
 export type SMEventType = {
@@ -80,16 +81,16 @@ interface componentDataInterface {
   purchaseWatcher: DB.RealtimeListener,
   logs: LogType[],
   purchaseLogs: PurchaseLogType[],
-  otherAccountLogs: LogType[]|null,
+  otherAccountLogs: LogType[] | null,
   stampValue: number,
   pointValue: number,
   isWaiting: boolean,
   logAddFeedback: string,
   logAddFeedbackClass: string,
   totalStamps: number,
-  totalOtherAccountStamps: number|null,
+  totalOtherAccountStamps: number | null,
   usedStamps: number,
-  usedOtherAccountStamps: number|null,
+  usedOtherAccountStamps: number | null,
   selectedPurchaseItemIndex: number,
   purchaseSelectorOpen: boolean,
   purchaseButtonClass: string,
@@ -98,7 +99,9 @@ interface componentDataInterface {
   pastLogDeletionError: string,
   exchangeLogDeletionError: string,
   userBalanceString: string,
-  otherAccounts: number|null,
+  otherAccounts: number | null,
+  cacheSingleton: CacheSingleton,
+  userOpenId: string | undefined,
 }
 
 Component({
@@ -369,8 +372,11 @@ Component({
         usedOtherAccountStamps: null,
       });
       this.data.db = wx.cloud.database();
+      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
+        this.data.userOpenId = res;
+      });
       this.data.db.collection("userData").where({
-        "userId": '{openid}',
+        "userId": this.data.userOpenId,
       }).get().then((res) => {
         if (res.data.length === 0) {
           // this error literally makes no sense but just in case i do something dumb
@@ -573,8 +579,11 @@ Component({
         });
         this.updateCanAfford();
       });
+      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
+        this.data.userOpenId = res;
+      });
       this.data.db.collection("userData").where({
-        userId: '{openid}',
+        userId: this.data.userOpenId,
       }).get().then((res) => {
         this.data.db.collection("SportsMeetAdmin").where({
           adminId: res.data[0]._id,

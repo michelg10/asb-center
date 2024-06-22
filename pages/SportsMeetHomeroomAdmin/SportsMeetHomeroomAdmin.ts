@@ -1,3 +1,4 @@
+import { CacheSingleton } from "../../classes/CacheSingleton";
 import allCollectionsData from "../../utils/allCollectionsData";
 
 // pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin.ts
@@ -31,6 +32,8 @@ type componentDataInterface = {
   logs: HomeroomLogType[],
   pastLogDeletionError: string,
   adminStatus: AdminStatusType,
+  cacheSingleton: CacheSingleton,
+  userOpenId: string | undefined
 }
 type HomeroomLogType = {
   _id: string,
@@ -67,8 +70,11 @@ Component({
         pointValue: 0,
       });
       this.data.db = wx.cloud.database();
+      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
+        this.data.userOpenId = res;
+      });
       this.data.db.collection("userData").where({
-        "userId": '{openid}',
+        "userId": this.data.userOpenId,
       }).get().then((res) => {
         if (res.data.length === 0) {
           // this error literally makes no sense but just in case i do something dumb

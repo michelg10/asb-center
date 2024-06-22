@@ -1,5 +1,5 @@
 import { CacheSingleton } from "../../classes/CacheSingleton";
-import { Student } from "../../classes/Student";
+import { Student } from "../../classes/student";
 import { darkBackgroundColor } from "../../utils/common";
 
 // pages/Superlatives/Superlatives.ts
@@ -27,6 +27,7 @@ type ComponentDataInterface = {
     userResponses: Map<string,string>
     studentMap: Map<string, Student>
     userId: string
+    userOpenId: string | undefined
     displayInformation: QuestionDisplayInformation[]
     isActive: boolean
 }
@@ -135,8 +136,11 @@ Component({
             });
             eventChannel.on('userId', (data: any) => {
                 this.data.userId = data;
+                this.data.cacheSingleton.fetchUserOpenId().then((res) => {
+                  this.data.userOpenId = res;
+                });
                 this.data.db.collection("SuperlativesData").where({
-                    correspondingOpenId: "{openid}"
+                    correspondingOpenId: this.data.userOpenId
                 }).get().then((res) => {
                     let userResponses = new Map<string, string>();
                     if (res.data.length>0) {

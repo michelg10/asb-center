@@ -1,10 +1,11 @@
 import allCollectionsData from "../utils/allCollectionsData";
-import { Student } from "./Student";
+import { Student } from "./student";
 
 export class CacheSingleton {
     #studentData: Student[] | undefined
     #imageUrls: string[] | undefined
     #db: DB.Database
+    #userOpenId: string | undefined
     constructor(db: DB.Database) {
         this.#db = db;
         this.#studentData = undefined
@@ -44,5 +45,20 @@ export class CacheSingleton {
 
     fetchImageUrls(): string[] {
         return this.#imageUrls!;
+    }
+
+    async fetchUserOpenId() {
+      if (this.#userOpenId !== undefined) {
+        return;
+      }
+      let res: string = ((await wx.cloud.callFunction({
+        name: "getUserOpenId",
+      })).result as any).openid;
+      this.#userOpenId = res;
+      return this.#userOpenId;
+    }
+  
+    getOpenId(): string | undefined {
+      return this.#userOpenId;
     }
 }
