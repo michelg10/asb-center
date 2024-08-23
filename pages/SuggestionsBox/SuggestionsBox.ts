@@ -9,7 +9,7 @@ type ComponentDataInterface = {
     suggestion: string,
     language: string,
     allowSubmission: boolean,
-}
+};
 
 Component({
     /**

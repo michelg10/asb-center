@@ -1,6 +1,6 @@
 // pages/AnyOrderMainPage/AnyOrderMainPage.ts
 
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
@@ -20,17 +20,17 @@ type ComponentDataInterface = {
     orderHasDelta: boolean,
     orderObjects: OrderObject[],
     cacheSingleton: CacheSingleton,
-}
+};
 type StudentOrderInfo = {
     name: String,
     class: String,
-}
+};
 export type ObjectAndQuantity = {
     objectId: String,
     computedObjectName: String,
     computedSingleObjectCost: Number,
     quantity: Number,
-}
+};
 export type Suborder = {
     recipientType: "student" | "teacher",
     studentRecipientId: String | null,
@@ -38,14 +38,14 @@ export type Suborder = {
     teacherRecipientName: String,
     objects: ObjectAndQuantity[],
     computedTotalCost: Number
-}
+};
 export type Order = {
     orderUser: String,
     orderFrom: StudentOrderInfo | null,
     subordersList: Suborder[],
     orderStatus: "unsub" | "sub" | "acc",
     computedTotalCost: Number,
-}
+};
 
 Component({
     /**
@@ -137,7 +137,6 @@ Component({
                         suborder: {...this.data.order.subordersList[index]},
                         suborderIndex: index,
                         orderObjects: this.data.orderObjects,
-                        cacheSingleton: this.data.cacheSingleton,
                     });
                 }
             });
@@ -162,7 +161,6 @@ Component({
                         suborder: newSuborder,
                         suborderIndex: null,
                         orderObjects: this.data.orderObjects,
-                        cacheSingleton: this.data.cacheSingleton,
                     });
                 }
             });
@@ -275,6 +273,7 @@ Component({
                 });
             }
         }, onLoad: function() {
+            this.data.cacheSingleton = CacheSingleton.getInstance();
             this.data.db = wx.cloud.database();
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.on('userData', (data: UserDataType) => {
@@ -286,9 +285,6 @@ Component({
                 this.setData({
                     eventName: data,
                 });
-            });
-            eventChannel.on('cacheSingleton', (data: CacheSingleton) => {
-                this.data.cacheSingleton = data;
             });
             eventChannel.on('eventId', async (data: String) => {
                 this.setData({

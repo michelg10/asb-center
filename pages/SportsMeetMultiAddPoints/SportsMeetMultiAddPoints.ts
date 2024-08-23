@@ -1,4 +1,4 @@
-import { Student } from "../../classes/student"
+import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 
 // pages/SportsMeet2021MultiAddPoints/SportsMeet2021MultiAddPoints.ts
@@ -8,7 +8,7 @@ type SMEventType = {
   id: string,
   name: string,
   rankLeaderboard: boolean,
-}
+};
 type componentDataInterface = {
   db: DB.Database,
   studentData: Student[],
@@ -18,7 +18,7 @@ type componentDataInterface = {
   stampValue: number,
   pointValue: number,
   isWaiting: boolean
-}
+};
 Component({
   /**
    * Component properties

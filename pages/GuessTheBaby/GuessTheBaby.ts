@@ -1,4 +1,4 @@
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 
 // pages/GuessTheBaby/GuessTheBaby.ts
 
@@ -120,7 +120,9 @@ Component({
             this.data.response = newData;
             this.buildDisplayInformation();
         },
-        onLoad: function() {
+        onLoad: async function() {
+            this.data.cacheSingleton = CacheSingleton.getInstance();
+            this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
             const eventChannel = this.getOpenerEventChannel();
             this.data.db = wx.cloud.database();
             this.setData({
@@ -143,11 +145,8 @@ Component({
                     });
                 }
             })
-            eventChannel.on("userId", (data: any) => {
+            eventChannel.on("userId", (data: any) =>{
                 this.data.userId = data;
-                this.data.cacheSingleton.fetchUserOpenId().then((res) => {
-                  this.data.userOpenId = res;
-                });
                 this.data.db.collection("BabyTeachersData").where({
                     correspondingOpenId: "userOpenId"
                 }).get().then((res) => {
@@ -157,28 +156,25 @@ Component({
                     }
                 })
             })
-            eventChannel.on('cacheSingleton', async (data: any) => {
-                this.data.cacheSingleton = data;
-                // fetch count
-                let totalSize = await this.data.db.collection("BabyTeachersInfo").doc("size").get();
-                this.data.questionDisplayInformation = Array<QuestionDisplayInformation>(totalSize.data.value as number);
-                this.data.response = Array<number>(totalSize.data.value as number);
-                this.mergeServerData();
-                this.setData({
-                    babyQuestionCount: totalSize.data.value,
-                });
-                for (let i=0;i<this.data.babyQuestionCount;i++) {
-                    this.data.questionDisplayInformation[i] = {
-                        id: i,
-                        imageDisplayUrl: "",
-                        response: undefined
-                    };
-                }
-                this.fetchNames();
+            // fetch count
+            let totalSize = await this.data.db.collection("BabyTeachersInfo").doc("size").get();
+            this.data.questionDisplayInformation = Array<QuestionDisplayInformation>(totalSize.data.value as number);
+            this.data.response = Array<number>(totalSize.data.value as number);
+            this.mergeServerData();
+            this.setData({
+                babyQuestionCount: totalSize.data.value,
+            });
+            for (let i=0;i<this.data.babyQuestionCount;i++) {
+                this.data.questionDisplayInformation[i] = {
+                    id: i,
+                    imageDisplayUrl: "",
+                    response: undefined
+                };
+            }
+            this.fetchNames();
+            this.buildDisplayInformation();
+            this.data.cacheSingleton.getTeacherImages(this.data.babyQuestionCount, () => {
                 this.buildDisplayInformation();
-                this.data.cacheSingleton.getTeacherImages(this.data.babyQuestionCount, () => {
-                    this.buildDisplayInformation();
-                })
             })
         }
     }

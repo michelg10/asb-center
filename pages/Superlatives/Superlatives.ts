@@ -1,4 +1,4 @@
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import { darkBackgroundColor } from "../../utils/common";
 
@@ -6,12 +6,12 @@ import { darkBackgroundColor } from "../../utils/common";
 type SuperlativeQuestion = {
     id: string,
     question: string
-}
+};
 
 type QuestionResponse = {
     question: string,
     response: string
-}
+};
 
 type QuestionDisplayInformation = {
     id: string,
@@ -30,7 +30,7 @@ type ComponentDataInterface = {
     userOpenId: string | undefined
     displayInformation: QuestionDisplayInformation[]
     isActive: boolean
-}
+};
 
 // store the responses with the questions so that they can be matched to each other
 
@@ -113,7 +113,6 @@ Component({
             wx.navigateTo({
                 url: "/pages/StudentChoose/StudentChoose",
                 success: (res) => {
-                    res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
                     res.eventChannel.emit("limitGradeTo", [12]);
                     res.eventChannel.on("selectedStudent", (res) => {
                         let student: Student = res;
@@ -125,20 +124,17 @@ Component({
             })
         },
         onLoad: function() {
+            this.data.cacheSingleton = CacheSingleton.getInstance();
             const eventChannel = this.getOpenerEventChannel();
             this.data.db = wx.cloud.database();
             this.data.studentMap = new Map<string, Student>();
-            eventChannel.on('cacheSingleton', async (data: any) => {
-                this.data.cacheSingleton = data;
-                await this.data.cacheSingleton.forceGetStudentData();
+            this.data.cacheSingleton.forceGetStudentData().then((_) => {
                 this.buildStudentMap();
                 this.buildDisplayInformation();
             });
-            eventChannel.on('userId', (data: any) => {
+            eventChannel.on('userId', async (data: any) => {
                 this.data.userId = data;
-                this.data.cacheSingleton.fetchUserOpenId().then((res) => {
-                  this.data.userOpenId = res;
-                });
+                this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
                 this.data.db.collection("SuperlativesData").where({
                     correspondingOpenId: this.data.userOpenId
                 }).get().then((res) => {

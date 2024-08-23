@@ -7,7 +7,8 @@ type componentDataInterface = {
   userSelect: boolean[],
   matchingIndexes: number[],
   totalSelected: number,
-}
+};
+
 Component({
   /**
    * Component properties

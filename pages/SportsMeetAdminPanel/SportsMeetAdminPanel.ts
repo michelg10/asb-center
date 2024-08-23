@@ -18,7 +18,7 @@ type componentDataInterface = {
   indivGradesLogs: LogType[][],
   indivGradesPurchaseLogs: PurchaseLogType[][],
   isWaiting: boolean,
-}
+};
 Component({
   /**
    * Component properties

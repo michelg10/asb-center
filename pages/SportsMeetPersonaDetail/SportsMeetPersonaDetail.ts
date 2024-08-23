@@ -1,4 +1,4 @@
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import allCollectionsData from "../../utils/allCollectionsData";
 
 export type SMEventType = {
@@ -359,6 +359,7 @@ Component({
       })
     },
     onLoad: async function() {
+      this.data.cacheSingleton = CacheSingleton.getInstance();
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
         mainSelectContainerClass: "main-select-container",
@@ -367,14 +368,13 @@ Component({
         pointValue: 0,
         purchaseSelectContainerClass: "main-select-container",
         purchaseSelectorOpen: false,
+        logs: [],
         otherAccountLogs: null,
         totalOtherAccountStamps: null,
         usedOtherAccountStamps: null,
       });
       this.data.db = wx.cloud.database();
-      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
-        this.data.userOpenId = res;
-      });
+      this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
       this.data.db.collection("userData").where({
         "userId": this.data.userOpenId,
       }).get().then((res) => {
@@ -578,9 +578,6 @@ Component({
           selectedPurchaseItemIndex: 0,
         });
         this.updateCanAfford();
-      });
-      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
-        this.data.userOpenId = res;
       });
       this.data.db.collection("userData").where({
         userId: this.data.userOpenId,

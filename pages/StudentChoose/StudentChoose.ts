@@ -1,8 +1,7 @@
 // pages/StudentChoose/StudentChoose.ts
 
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
-import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
 
 type ComponentDataInterface = {
@@ -11,7 +10,8 @@ type ComponentDataInterface = {
     matchingIndexes: number[],
     searchString: string,
     limitGradeTo: number[] | undefined,
-}
+    cacheSingleton: CacheSingleton,
+};
 
 Component({
     /**
@@ -37,14 +37,13 @@ Component({
             eventChannel.emit("selectedStudent", this.data.studentData[index]);
             wx.navigateBack();
         },
-        onLoad: function() {
+        onLoad: async function() {
+            this.data.cacheSingleton = CacheSingleton.getInstance();
             this.data.db = wx.cloud.database();
             this.data.matchingIndexes = [];
             const eventChannel = this.getOpenerEventChannel();
-            eventChannel.on('cacheSingleton', async (data: CacheSingleton) => {
-                this.setData({
-                    studentData: await data.getStudentData(),
-                });
+            this.setData({
+                studentData: await this.data.cacheSingleton.getStudentData(),
             });
             eventChannel.on('limitGradeTo', (data: number[]) => {
                 this.setData({

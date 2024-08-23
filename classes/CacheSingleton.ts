@@ -1,14 +1,27 @@
 import allCollectionsData from "../utils/allCollectionsData";
 import { Student } from "./student";
+let instance: CacheSingleton | null = null;
 
-export class CacheSingleton {
+class CacheSingleton {
     #studentData: Student[] | undefined
     #imageUrls: string[] | undefined
-    #db: DB.Database
+    #db!: DB.Database
     #userOpenId: string | undefined
-    constructor(db: DB.Database) {
+    private constructor(db: DB.Database) {
         this.#db = db;
-        this.#studentData = undefined
+        this.#studentData = undefined;
+    }
+    static initialize(db: DB.Database): CacheSingleton {
+        if (instance === null) {
+          instance = new CacheSingleton(db);
+        }
+        return instance!;
+    }
+    static getInstance(): CacheSingleton {
+        if (instance === null) {
+          throw new Error("CacheSingleton not initialized");
+        }
+        return instance!;
     }
 
     async forceGetStudentData() {
@@ -47,9 +60,9 @@ export class CacheSingleton {
         return this.#imageUrls!;
     }
 
-    async fetchUserOpenId() {
+    async fetchUserOpenId(): Promise<string> {
       if (this.#userOpenId !== undefined) {
-        return;
+        return this.#userOpenId;
       }
       let res: string = ((await wx.cloud.callFunction({
         name: "getUserOpenId",
@@ -57,8 +70,6 @@ export class CacheSingleton {
       this.#userOpenId = res;
       return this.#userOpenId;
     }
-  
-    getOpenId(): string | undefined {
-      return this.#userOpenId;
-    }
 }
+
+export default CacheSingleton;

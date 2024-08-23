@@ -1,4 +1,4 @@
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
 import { createQRCode, lightBackgroundColor, UserDataType } from "../../utils/common";
 import { generatePreviewCode } from "../../utils/generatePreviewCode";
@@ -34,6 +34,7 @@ Component({
   */
   methods: {
     onLoad: function() {
+      this.data.cacheSingleton = CacheSingleton.getInstance();
       this.data.db = wx.cloud.database();
       this.data.viewVisible = true;
       const eventChannel = this.getOpenerEventChannel();
@@ -55,9 +56,6 @@ Component({
             this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
           }, 500
         );
-      });
-      eventChannel.on('cacheSingleton', (data: CacheSingleton) => {
-        this.data.cacheSingleton = data;
       });
     },
     recomputeCode: function() {
@@ -96,7 +94,6 @@ Component({
       wx.navigateTo({
         url: "/pages/StudentChoose/StudentChoose",
         success: (res) => {
-          res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
           res.eventChannel.emit("limitGradeTo", [9, 10, 11, 12]);
           res.eventChannel.on("selectedStudent", async (selectedStudent: Student) => {
             let userData = ((await wx.cloud.callFunction({

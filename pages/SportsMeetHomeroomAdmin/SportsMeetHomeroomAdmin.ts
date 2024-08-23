@@ -1,4 +1,4 @@
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import allCollectionsData from "../../utils/allCollectionsData";
 
 // pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin.ts
@@ -34,7 +34,7 @@ type componentDataInterface = {
   adminStatus: AdminStatusType,
   cacheSingleton: CacheSingleton,
   userOpenId: string | undefined
-}
+};
 type HomeroomLogType = {
   _id: string,
   class: number,
@@ -42,7 +42,7 @@ type HomeroomLogType = {
   grade: number,
   issuerId: string,
   pointValue: number,
-}
+};
 Component({
   /**
    * Component properties
@@ -63,16 +63,15 @@ Component({
     onUnload: function() {
       this.data.logWatcher.close();
     },
-    onLoad: function() {
+    onLoad: async function() {
+      this.data.cacheSingleton = CacheSingleton.getInstance();
       this.setData({
         sportsMeetGrades: [9,10,11,12],
         selectedGradeIndex: 0,
         pointValue: 0,
       });
       this.data.db = wx.cloud.database();
-      this.data.cacheSingleton.fetchUserOpenId().then((res) => {
-        this.data.userOpenId = res;
-      });
+      this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
       this.data.db.collection("userData").where({
         "userId": this.data.userOpenId,
       }).get().then((res) => {

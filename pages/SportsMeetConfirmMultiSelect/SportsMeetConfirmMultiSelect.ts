@@ -3,7 +3,7 @@ import { Student } from "../../classes/student";
 // pages/SportsMeet2021ConfirmMultiSelect/SportsMeet2021ConfirmMultiSelect.ts
 type componentDataInterface = {
   studentData: Student[],
-}
+};
 Component({
   /**
    * Component properties

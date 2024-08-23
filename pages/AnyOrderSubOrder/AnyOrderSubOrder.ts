@@ -1,8 +1,8 @@
 // pages/AnyOrderSubOrder/AnyOrderSubOrder.ts
 
-import { CacheSingleton } from "../../classes/CacheSingleton";
+import CacheSingleton from "../../classes/CacheSingleton";
 import { Student } from "../../classes/student";
-import { ObjectAndQuantity, OrderObject, Suborder } from "../AnyOrderMainPage/AnyOrderMainPage"
+import { ObjectAndQuantity, OrderObject, Suborder } from "../AnyOrderMainPage/AnyOrderMainPage";
 
 type ComponentDataInterface = {
     eventId: String,
@@ -12,7 +12,7 @@ type ComponentDataInterface = {
     cacheSingleton: CacheSingleton,
     suborderTotalItems: Number;
     warningText: string|null,
-}
+};
 
 Component({
     /**
@@ -123,7 +123,6 @@ Component({
             wx.navigateTo({
                 url: "/pages/StudentChoose/StudentChoose",
                 success: (res) => {
-                    res.eventChannel.emit("cacheSingleton", this.data.cacheSingleton);
                     res.eventChannel.emit("limitGradeTo", [11,12]);
                     res.eventChannel.on("selectedStudent", (res) => {
                         let student: Student = res;
