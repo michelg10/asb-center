@@ -161,7 +161,59 @@ exports.main = async (event, context) => {
                                 batchPushMap.get(`SportsMeetLeaderboardProcessed${userDataInformation[j].student.grade}`).push(leaderboardObj);
                             }
                             updatedStudentsMap.set(userDataInformation[j]._id, j);
-                        }
+                        } else if (eventCollectionInformation[i].id === "SportsMeet2024") {
+                          let secureCodeString = "";
+                          while (true) {
+                              secureCodeString = "";
+                              for (let k = 0; k < 10; k++) {
+                                  secureCodeString += randomCharacters.charAt(Math.floor(Math.random() * randomCharacters.length));
+                              }
+                              let checkIfSecureCodeStringDuplicate = await db.collection("userData").where({
+                                  info: {
+                                      SportsMeet2024Data: {
+                                          secureCodeString: secureCodeString,
+                                      },
+                                  },
+                              }).get();
+                              if (checkIfSecureCodeStringDuplicate.data.length === 0) {
+                                  break;
+                              }
+                          }
+                          userDataInformation[j].info[`${eventCollectionInformation[i].id}Data`] = {
+                              joined: true,
+                              secureCodeString: secureCodeString,
+                          };
+
+                          // add the new user into the computed leaderboard
+                          let leaderboardObj = {
+                              studentId: userDataInformation[j]._id,
+                              studentNickname: userDataInformation[j].student.uniqueNickname,
+                          };
+                          if (cacheObj.SportsMeetEvents === undefined) {
+                              let result = await cloud.callFunction({
+                                  name: "fetchAllCollections",
+                                  data: {
+                                      collectionName: "SportsMeetEvents",
+                                  },
+                              });
+                              result = result.result.data;
+                              cacheObj.SportsMeetEvents = result;
+                          }
+                          let result = cacheObj.SportsMeetEvents;
+                          for (let k = 0; k < result.length; k++) {
+                              if (result[k].rankLeaderboard) {
+                                  leaderboardObj[`studentPointScore${result[k].id}`] = 0;
+                                  leaderboardObj[`studentLastRank${result[k].id}`] = -1;
+                                  leaderboardObj[`studentSoonLastRank${result[k].id}`] = -1;
+                              }
+                          }
+                          if (!batchPushMap.has(`SportsMeetLeaderboardProcessed${userDataInformation[j].student.grade}`)) {
+                              batchPushMap.set(`SportsMeetLeaderboardProcessed${userDataInformation[j].student.grade}`, [leaderboardObj]);
+                          } else {
+                              batchPushMap.get(`SportsMeetLeaderboardProcessed${userDataInformation[j].student.grade}`).push(leaderboardObj);
+                          }
+                          updatedStudentsMap.set(userDataInformation[j]._id, j);
+                      }
                     }
                 }
             }

@@ -9,7 +9,7 @@ function mapBase16ToNumber(x: string) {
   return x.charCodeAt(0)-48;
 }
 export function generatePreviewCode(codeType: "secureCode"|"userCode", secureCodeString: string, eventName: string|null) {
-  let previewTimePeriod=Math.floor(getUnixTime()/1);
+  let previewTimePeriod=Math.floor(getUnixTime()/7);
   let accessCodeContents=secureCodeString+previewTimePeriod.toString();
   accessCodeContents=sha256(accessCodeContents)!;
   let base256Data:number[]=[];

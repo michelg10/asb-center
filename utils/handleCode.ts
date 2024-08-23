@@ -88,7 +88,7 @@ export async function handleCode(obj: any, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="SM22") {
+  if (keyToValueMap.get("event")==="SM24") {
     if (keyToValueMap.get("type")==="secureCode") {
       let currentTime = getUnixTime();
       let secureCodesList:getSecureCodesReturnType = (await obj.sportsMeetFetchSecureCodes());

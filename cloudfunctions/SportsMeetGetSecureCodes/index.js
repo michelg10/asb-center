@@ -35,7 +35,7 @@ exports.main = async (event, context) => {
       collectionName: "userData",
       whereClause: {
         info: {
-          SportsMeet2022Data: {
+          SportsMeet2024Data: {
             joined: true,
           }
         }
@@ -46,7 +46,7 @@ exports.main = async (event, context) => {
   for (let i=0;i<dbResult.result.data.length;i++) {
     rturn.push({
       id: dbResult.result.data[i]._id,
-      code: dbResult.result.data[i].info.SportsMeet2022Data.secureCodeString,
+      code: dbResult.result.data[i].info.SportsMeet2024Data.secureCodeString,
     });
   }
   return {

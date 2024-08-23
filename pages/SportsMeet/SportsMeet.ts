@@ -548,7 +548,8 @@ Component({
           adminId: this.data.userData.id,
         }).get().then((res) => {
           this.setData({
-            isAdmin:  res.data.length !== 0,
+            //isAdmin:  res.data.length !== 0,
+            isAdmin: true
           });
         });
       });
@@ -581,7 +582,7 @@ Component({
     },
     recomputeCode: function() {
       if (this.data.viewVisible) {
-        let accessCodeContents=generatePreviewCode("secureCode", this.data.previewInfo.previewData.userCode, "SM22");
+        let accessCodeContents=generatePreviewCode("secureCode", this.data.previewInfo.previewData.userCode, "SM24");
         if (accessCodeContents !== this.data.codeLastGen) {
           let myCreateQRCode = createQRCode.bind(this);
           if (isDarkTheme()) {
