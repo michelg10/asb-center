@@ -1,0 +1,15 @@
+<!--pages/SportsMeetStationMode/SportsMeetStationMode.wxml-->
+<view id="station-mode-main-container">
+  <text class="big-title-text">Station Mode</text>
+  <view id="station-mode-subheading">
+    <text>Station mode is designed for laptop users with physical QR code scanners. Admins using phones should use the scan button on the </text>
+    <text class="link-text" bindtap="mainPageClicked">main page. </text>
+    <text>Configure your physical QR code scanner to return a newline after scanned data, and ensure your IME is set to English mode.</text>
+  </view>
+  <view class="student-list-search-container">
+    <input class="student-search-textfield" placeholder="Scan Code..." placeholder-class="student-search-textfield-placeholder" bindconfirm="confirmClicked" value="{{ inputCodeData }}"/>
+  </view>
+  <!--view class="button" bindtap="confirmClicked" id="confirm-button">
+    <text class="button-text">Confirm</text>
+  </view-->
+</view>

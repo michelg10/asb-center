@@ -27,6 +27,6 @@ export function createQRCode(canvasId: string, data: string, primaryColor: strin
             text: data,
         })
         const end = Date.now();
-        console.log(`Execution time: ${end - start} ms`);
+        //console.log(`Execution time: ${end - start} ms`);
     })
 }

@@ -27,7 +27,7 @@
 <view id="main-menu-container">
   <view id="main-menu-top-container">
     <text class="big-title-text">ASB Center</text>
-    <view id="main-menu-top-scan-button-container" bindtap="scanButtonClick">
+    <view id="main-menu-top-scan-button-container" bindtap="scanButtonClick" bindlongpress="stationModeClick">
       <image src="../../icons/scan.svg" id="main-menu-top-scan-button-image"></image>
     </view>
   </view>
@@ -45,6 +45,6 @@
     </view>
   </view>
   <view id="version-footer">
-    Version 3.5.1
+    Version 3.6.0
   </view>
 </view>

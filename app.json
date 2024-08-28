@@ -20,7 +20,8 @@
     "pages/SportsMeetLeaderboards/SportsMeetLeaderboards",
     "pages/SportsMeetMultiAddPoints/SportsMeetMultiAddPoints",
     "pages/SportsMeetMultiSelect/SportsMeetMultiSelect",
-    "pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail"
+    "pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail",
+    "pages/StationMode/StationMode"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",

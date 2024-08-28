@@ -1,0 +1,35 @@
+/* pages/SportsMeetStationMode/SportsMeetStationMode.wxss */
+@import "/styles/studentContainer.wxss";
+@import "/styles/button.wxss";
+@import "/styles/options-container.wxss";
+@import "/styles/SportsMeetLogs.wxss";
+#station-mode-main-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+  margin-top: 10px;
+}
+
+#station-mode-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+#confirm-button {
+  margin-top: 21px;
+  background-color: #D2E3FA;
+}
+
+#confirm-button text {
+  color: #3180E9;
+}
+
+.link-text{
+  color: #3180E9;
+}
+
+.big-title-text{
+  margin-bottom: 10px;
+}

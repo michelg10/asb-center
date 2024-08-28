@@ -7,9 +7,8 @@ import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
 import { sportsMeetGetSecureCodes } from '../../utils/SportsMeetFunctions';
 import { handleCode } from '../../utils/handleCode';
-import { Student } from '../../classes/student';
 import { isDarkTheme } from '../../utils/isDarkTheme';
-import { CacheSingleton } from '../../classes/CacheSingleton';
+import CacheSingleton from '../../classes/CacheSingleton';
 interface SecureCodePreviewData {
   userCode: string;
 }
@@ -143,6 +142,15 @@ Component({
         }
       });
     },
+    stationModeClick: function() {
+      wx.navigateTo({
+        url: "/pages/StationMode/StationMode",
+        /*success: (res) => {
+          res.eventChannel.emit('userData', this.data.userData);
+          res.eventChannel.emit('sportsMeetFetchSecureCodes', this.sportsMeetFetchSecureCodes());
+        }*/
+      });
+    },
     sportsMeetFetchSecureCodes: async function() {
       return await sportsMeetGetSecureCodes(this);
     },
@@ -157,12 +165,13 @@ Component({
       if (!shouldJump) {
         return;
       }
-      if (eventClickedId === "SportsMeet2022") {
+      if (eventClickedId === "SportsMeet2024") {
+        console.log("SM2024 Clicked");
         wx.navigateTo({
           url: '/pages/SportsMeet/SportsMeet',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', 'SportsMeet2022');
+            res.eventChannel.emit('eventId', 'SportsMeet2024');
             res.eventChannel.emit('eventInfo', this.data.masterEventsData.find((val) => {
               return val.id === eventClickedId;
             }));
@@ -179,7 +188,6 @@ Component({
             res.eventChannel.emit('userData', this.data.userData);
             res.eventChannel.emit('eventId', "ChristmasSale2022");
             res.eventChannel.emit('eventName', "Elfin Express");
-            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
           }
         })
       }
@@ -187,7 +195,6 @@ Component({
         wx.navigateTo({
           url: '/pages/Superlatives/Superlatives',
           success: (res) => {
-            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
             res.eventChannel.emit('userId', this.data.userData.id);
           }
         })
@@ -196,7 +203,6 @@ Component({
           wx.navigateTo({
               url: "/pages/GuessTheBaby/GuessTheBaby",
               success: (res) => {
-                  res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
                   res.eventChannel.emit('userId', this.data.userData.id);
               }
           })
@@ -206,7 +212,6 @@ Component({
           url: '/pages/PersonalCode/PersonalCode',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('cacheSingleton', this.data.cacheSingleton);
           }
         })
       }
@@ -225,7 +230,7 @@ Component({
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
       this.data.viewVisible = true;
-      this.data.cacheSingleton = new CacheSingleton(this.data.db);
+      this.data.cacheSingleton = CacheSingleton.initialize(this.data.db);
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);
@@ -246,9 +251,18 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5 * 1000 * 60);
+      const eventChannel = this.getOpenerEventChannel();
+      if(typeof eventChannel.on === 'function') {
+        wx.navigateBack({
+          delta: 1
+        });
+        eventChannel.on('stationModeData', (data: string) => {
+          handleCode(this, data);
+        });
+      }
     },
     recomputeData: function (incremental: boolean) {
-      console.log("Tick at time", getUnixTime());
+      //console.log("Tick at time", getUnixTime());
       if (this.data.userData === undefined) {
         return;
       }
@@ -322,8 +336,8 @@ Component({
           if (newPreviewGenerator[i].previewMode === "secureCodePreview") {
               let qrCodeId = "err";
               switch (newPreviewGenerator[i].eventId) {
-                  case "SportsMeet2022":
-                      qrCodeId = "SM22";
+                  case "SportsMeet2024":
+                      qrCodeId = "SM24";
               }
             let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, qrCodeId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
