@@ -548,8 +548,8 @@ Component({
           adminId: this.data.userData.id,
         }).get().then((res) => {
           this.setData({
-            //isAdmin:  res.data.length !== 0,
-            isAdmin: true
+            isAdmin:  res.data.length !== 0,
+            //isAdmin: true
           });
         });
       });
