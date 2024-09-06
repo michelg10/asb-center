@@ -14,10 +14,19 @@
             <input class="question-input" value="{{contactInformation}}" bindinput="contactInformationChanged" />
         </view>
         <view class="question">
+            <text class="question-label">{{language === 'ch' ? '你的年级' : 'Your Grade'}}</text>
+            <picker class="question-input" mode="selector" range="{{gradeOptions}}" value="{{grade}}" bindchange="gradeChanged">
+              <view class="question-select">
+                {{gradeOptions[grade]}}
+                <image src="../../icons/chevron-down.svg" class="selectorIcon"></image>
+              </view>
+            </picker>
+        </view>
+        <view class="question">
             <text class="question-label">{{language === 'ch' ? '你的建议' : 'Your Suggestion'}}</text>
             <textarea class="question-textarea" value="{{suggestion}}" maxlength="-1" bindinput="suggestionChanged" ></textarea>
         </view>
-        <view id="submit-button-{{suggestion === '' ? 'inactive' : 'active'}}" class="submit-button" bindtap="submitButtonTapped">{{language === 'ch' ? '提交' : 'Submit'}}</view>
+        <view id="submit-button-{{suggestion === '' || grade == 0 ? 'inactive' : 'active'}}" class="submit-button" bindtap="submitButtonTapped">{{language === 'ch' ? '提交' : 'Submit'}}</view>
     </block>
     <block wx:if="{{hasBeenSubmitted}}">
         <view id="submission-complete-container">

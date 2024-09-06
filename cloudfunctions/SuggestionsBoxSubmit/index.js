@@ -13,6 +13,7 @@ exports.main = async (event, context) => {
             timestamp: Date.now(),
             name: event.name,
             contactInformation: event.contactInformation,
+            grade: event.grade,
             suggestion: event.suggestion,
         }
     });
