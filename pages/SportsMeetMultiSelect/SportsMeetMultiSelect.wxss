@@ -24,3 +24,18 @@
   height: 19px;
   width: 19px;
 }
+.admin-panel-full-width-button-container {
+  margin-top: 12px;
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.admin-panel-full-width-button-container text {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--link);
+}
