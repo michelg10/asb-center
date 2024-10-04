@@ -38,3 +38,8 @@ text, input {
   height: 20px;
   width: 17px;
 }
+@media (prefers-color-scheme: dark) {
+  .admin-image {
+    filter: invert();
+  }
+}

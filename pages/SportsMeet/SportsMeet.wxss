@@ -220,3 +220,6 @@
   width: 100%;
   grid-column-gap: 8px;
 }
+.fillContainer{
+  height: 15vh;
+}
