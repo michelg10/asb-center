@@ -1,3 +1,4 @@
+import { gNumber } from "../../classes/gNumber";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
@@ -9,6 +10,8 @@ type componentDataInterface = {
   myId: string,
   db: DB.Database,
   studentData: Student[],
+  gNumber: gNumber[],
+  studentListSearch: string,
   matchingIndexes: number[],
   multiselectEnabled: boolean,
   pastLogDeletionError: string,
@@ -18,6 +21,8 @@ type componentDataInterface = {
   indivGradesLogs: LogType[][],
   indivGradesPurchaseLogs: PurchaseLogType[][],
   isWaiting: boolean,
+  showSearch: boolean,
+  showScan: boolean,
 };
 Component({
   /**
@@ -108,6 +113,17 @@ Component({
         this.setData({
           studentData: tmpStudentData,
           multiselectEnabled: true,
+        });
+      });
+      allCollectionsData(this.data.db, "gNumbers").then((res) => {
+        let tmpGNumbers=[];
+        for (let i=0;i<res.data.length;i++) {
+          tmpGNumbers.push(new gNumber(res.data[i]._id as string, res.data[i].gnumber, res.data[i].studentId));
+        }
+        this.setData({
+          gNumber: tmpGNumbers,
+          showScan: true,
+          showSearch: false,
         });
       });
       const eventChannel = this.getOpenerEventChannel();
@@ -209,13 +225,18 @@ Component({
         url: '/pages/SportsMeetMultiSelect/SportsMeetMultiSelect',
         success: (res) => {
           res.eventChannel.emit('studentData', this.data.studentData);
+          res.eventChannel.emit('gNumber', this.data.gNumber);
         }
       });
     },
     homeroomPointsTap: function() {
-      wx.navigateTo({
+      wx.showToast({
+        title: "Function Disabled",
+        icon: "error"
+      })
+      /*wx.navigateTo({
         url: "/pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin"
-      });
+      });*/
     },
     handlePersonChoose: function(e: any) {
       let chosenId=e.currentTarget.dataset.chosenid;
@@ -225,6 +246,9 @@ Component({
           res.eventChannel.emit('userId', this.data.studentData[chosenId].pseudoId);
         }
       });
+      this.setData({
+        showSearch: false,
+      })
     },
     handleSearchBoxChange: function(e: any) {
       if (this.data.studentData === undefined) {
@@ -242,6 +266,7 @@ Component({
           currentTokens.push.apply(currentTokens, (cutStringToSearchTokens(this.data.studentData[i].chineseName)));
           currentTokens.push.apply(currentTokens, (cutStringToSearchTokens(this.data.studentData[i].studentClass.toString())));
           currentTokens.push.apply(currentTokens, (cutStringToSearchTokens(this.data.studentData[i].studentGrade.toString())));
+          //currentTokens.push.apply(currentTokens, (cutStringToSearchTokens(this.data.gNumber[i].gnumber)));
           let match = true;
           for (let j=0;j<searchTokens.length;j++) {
             let thisTokenMatch = false;
@@ -271,6 +296,84 @@ Component({
       this.setData({
         matchingIndexes: matchingStudentDataIndexes,
       });
+    },
+    handleSearchBoxScan: function(){
+      wx.scanCode({
+        onlyFromCamera: true,
+        success: (res) => {
+          this.setData({
+            studentListSearch: res.result,
+          });
+          //this.handleSearchBoxChange(this.data.studentListSearch);
+          if (this.data.studentData === undefined) {
+            return;
+          }
+          let searchTokens = cutStringToSearchTokens(this.data.studentListSearch);
+          let matchingStudentDataIndexes=[];
+          if (searchTokens.length!==0) {
+            for (let i=0;i<this.data.studentData.length;i++) {
+              // check whether or not the user input matches this student data entry
+              // in order to match this user data entry, every single search token has to match any of the tokens from this student data entry
+              let currentTokens: string[]=[];
+              currentTokens.push.apply(currentTokens, (cutStringToSearchTokens(this.data.gNumber[i].gnumber)));
+              let match = true;
+              for (let j=0;j<searchTokens.length;j++) {
+                let thisTokenMatch = false;
+                // does this search token match any of the entry tokens?
+                for (let k=0;k<currentTokens.length;k++) {
+                  if (searchTokens[j].length<=currentTokens[k].length) {
+                    if (currentTokens[k].substr(0,searchTokens[j].length)===searchTokens[j]) {
+                      thisTokenMatch=true;
+                      break;
+                    }
+                  }
+                }
+                if (!thisTokenMatch) {
+                  match=false;
+                  break;
+                }
+              }
+              if (match) {
+                matchingStudentDataIndexes.push(i);
+              }
+            }
+          }
+          const limitItems=50;
+          if (matchingStudentDataIndexes.length>limitItems) {
+            matchingStudentDataIndexes=matchingStudentDataIndexes.slice(0, limitItems);
+          }
+          if (matchingStudentDataIndexes.length === 0){
+            this.setData({
+              matchingIndexes: matchingStudentDataIndexes,
+              showSearch: true,
+            });
+            wx.showModal({
+              title: "Code Scan Failure",
+              content: "This student ID code is invalid. Search and select the participant's name.",
+              confirmText: "Dismiss",
+              showCancel: false
+            })
+          }
+          else{
+            let chosenId=matchingStudentDataIndexes[0];
+            wx.navigateTo({
+              url: '/pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail',
+              success: (res) => {
+                res.eventChannel.emit('userId', this.data.studentData[chosenId].pseudoId);
+              }
+            });
+            this.setData({
+              showSearch: false,
+              matchingIndexes: matchingStudentDataIndexes,
+            });
+          }
+        },
+        fail: () => {
+          this.setData({
+            showSearch: true,
+          })
+        }
+      })
     }
   }
 })

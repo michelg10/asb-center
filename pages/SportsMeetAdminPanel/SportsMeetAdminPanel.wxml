@@ -5,7 +5,13 @@
     <text>Homeroom points...</text>
   </view>
   <view id="search-pseudo-accounts-header"><text class="heading-text">Search Pseudo-Accounts</text></view>
-  <view id="search-pseudo-accounts-subheading"><text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account.</text></view>
+  <view id="search-pseudo-accounts-subheading">
+    <text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account. To begin, scan the participant's student ID or search and select their name.</text>
+  </view>
+  <view class="admin-panel-full-width-button-container" bindtap="handleSearchBoxScan">
+    <text>Scan student ID...</text>
+    <image src="../../icons/scan.svg" class="student-scan-image"></image>
+  </view>
   <view class="student-list-container">
     <view class="student-list-search-container">
       <image src="../../icons/search.svg" class="student-search-image"></image>  

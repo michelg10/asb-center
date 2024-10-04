@@ -30,12 +30,24 @@ Component({
       });
     },
     confirmClicked: function() {
-      wx.navigateTo({
-        url: "/pages/SportsMeetMultiAddPoints/SportsMeetMultiAddPoints",
-        success: (res) => {
-          res.eventChannel.emit('studentData', this.data.studentData);
-        }
-      })
+      if (this.data.studentData.length === 1){
+        console.log("Only 1 Person Selected in Multi-Select Mode");
+        console.log("Directing to PersonaDetail Page");
+        wx.navigateTo({
+          url: '/pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail',
+          success: (res) => {
+            res.eventChannel.emit('userId', this.data.studentData[0].pseudoId);
+          }
+        });
+      }
+      else{
+        wx.navigateTo({
+          url: "/pages/SportsMeetMultiAddPoints/SportsMeetMultiAddPoints",
+          success: (res) => {
+            res.eventChannel.emit('studentData', this.data.studentData);
+          }
+        })
+      }
     }
   }
 })

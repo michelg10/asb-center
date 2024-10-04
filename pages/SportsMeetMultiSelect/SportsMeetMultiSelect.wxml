@@ -2,6 +2,10 @@
 <view id="multi-select-main-container">
   <text class="big-title-text">Select Multiple</text>
   <text class="big-title-sub-text" id="">{{totalSelected}} student{{totalSelected === 1 ? '' : 's'}} selected</text>
+  <view class="admin-panel-full-width-button-container" bindtap="handleSearchBoxScan">
+    <text>Scan Student ID...</text>
+    <image src="../../icons/scan.svg" class="student-scan-image"></image>
+  </view>
   <view class="student-list-container" id="multi-select-student-list-container">
     <view class="student-list-search-container">
       <image src="../../icons/search.svg" class="student-search-image"></image>  
