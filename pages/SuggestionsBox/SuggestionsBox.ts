@@ -35,7 +35,7 @@ Component({
                 name: "",
                 contactInformation: "",
                 grade: 0,
-                gradeOptions: ['Please Select 请选择...', '9','10','11','12'],
+                gradeOptions: ['Please Select 请选择...','11','12'],
                 suggestion: "",
                 language: "en",
                 allowSubmission: true,
