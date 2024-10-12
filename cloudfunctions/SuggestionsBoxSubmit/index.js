@@ -11,6 +11,7 @@ exports.main = async (event, context) => {
     db.collection("SuggestionsBox").add({
         data: {
             timestamp: Date.now(),
+            userData: event.userData,
             name: event.name,
             contactInformation: event.contactInformation,
             grade: event.grade,

@@ -1,6 +1,9 @@
+import { UserDataType } from "../../utils/common";
+
 // pages/SuggestionsBox/SuggestionsBox.ts
 type ComponentDataInterface = {
     db: DB.Database,
+    userData: UserDataType,
     hasBeenSubmitted: boolean,
     name: string,
     contactInformation: string,
@@ -40,6 +43,12 @@ Component({
                 language: "en",
                 allowSubmission: true,
             });
+            const eventChannel = this.getOpenerEventChannel();
+            eventChannel.on('userData', (data: UserDataType) => {
+              this.setData({
+                userData: data,
+              });
+            })
         },
         nameInputChanged: function(x: any) {
             this.setData({
@@ -96,6 +105,7 @@ Component({
                 await wx.cloud.callFunction({
                     name: "SuggestionsBoxSubmit",
                     data: {
+                        userData: this.data.userData,
                         name: this.data.name,
                         contactInformation: this.data.contactInformation,
                         grade: this.data.gradeOptions[this.data.grade],
