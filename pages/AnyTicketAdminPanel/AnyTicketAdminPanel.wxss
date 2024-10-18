@@ -1,0 +1,68 @@
+/* pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxss */
+@import "/styles/button.wxss";
+#any-ticket-admin-panel-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-bottom: 80px;
+  margin: 0 16px;
+  margin-bottom: 50px;
+}
+#any-ticket-detail-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+#ticketid-text {
+  margin-top: 10px;
+  font-weight: bold;
+}
+.status-Lost {
+  color: #D81717;
+}
+.status-Issued {
+  color: #E3C019;
+}
+.status-Available {
+  color: #36B909;
+}
+#any-ticket-check-ticket-option {
+  padding: 12px 16px;
+  border-radius: 9px;
+  background-color: var(--subcontainer-background);
+  margin-bottom: 5px;
+}
+#any-ticket-check-ticket-option text {
+  color: var(--link);
+  font-size: 17px;
+  font-weight: 500;
+}
+#ticket-option-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.option-toggle {
+  width: 24px;
+  height: 24px;
+}
+.option-text {
+  font-weight: 500;
+}
+#save-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#save-button text {
+  color: #3180E9;
+}
+#add-save-button {
+  margin-bottom: 10px;
+}

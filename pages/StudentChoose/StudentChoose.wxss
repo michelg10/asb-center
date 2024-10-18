@@ -1,4 +1,5 @@
 /* pages/StudentChoose/StudentChoose.wxss */
+@import "/styles/studentContainer.wxss";
 #student-choose-container {
     padding-top: 10px;
     padding-left: 16px;
@@ -87,4 +88,27 @@
     #student-select-button-dark {
         opacity: 1;
     }
+}
+#search-pseudo-accounts-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+.admin-panel-full-width-button-container {
+  margin-top: 12px;
+  width: 100%;
+  background-color: var(--subcontainer-background);
+  height: 44px;
+  border-radius: 9px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin-bottom: 22px;
+}
+.admin-panel-full-width-button-container text {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--link);
 }

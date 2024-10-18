@@ -1,0 +1,34 @@
+<view id="configure-admin-master-container">
+  <text class="big-title-text">Configure Admin</text>
+  <view id="configure-admin-container">
+    <view class="admin-configure-row" bindtap="adminTap">
+      <text class="admin-configure-title">Admin</text>
+      <image class="admin-configure-toggle" src="/icons/selector{{adminEnabled ? '-selected' : ''}}.svg">
+      </image>
+    </view>
+    <view id="configure-already-admin-container" wx:if="{{adminEnabled}}">
+      <view class="admin-configure-row" bindtap="ticketTap">
+        <text class="admin-configure-title">Issue tickets</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{canIssueTicket ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view class="admin-configure-row" bindtap="assignNewAdminTap">
+        <text class="admin-configure-title">Assign new admins</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{canAddAdmin ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view class="admin-configure-row">
+        <text class="admin-configure-title">Name</text>
+        <input type="text" bindinput="adminNameInputUpdate" id="admin-name-input" value="{{name}}"></input>
+      </view>
+    </view>
+  </view>
+  <view class="button" id="add-configure-button">
+    <view class="button" bindtap="addConfigure" id="configure-button">
+      <text class="button-text">Configure</text>
+    </view>
+  </view>
+  <view wx:if="{{modFeedback!==undefined}}" class="button-feedback">
+    <text class="{{modFeedbackClass}}">{{modFeedback}}</text>
+  </view>
+</view>

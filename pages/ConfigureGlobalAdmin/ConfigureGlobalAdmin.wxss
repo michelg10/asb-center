@@ -1,0 +1,47 @@
+@import "/styles/button.wxss";
+.admin-configure-toggle {
+  width: 24px;
+  height: 24px;
+}
+#configure-admin-container {
+  margin-top: 23px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+#configure-admin-master-container {
+  margin: 0 16px;
+  margin-top: 10px;
+  padding-bottom: 80px;
+}
+.admin-configure-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.admin-configure-title {
+  font-weight: 500;
+}
+#admin-name-input {
+  width: 110px;
+  height: 37px;
+  font-size: 17px;
+  background-color: #ECECEC;
+  border-radius: 8px;
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+#configure-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#configure-button text {
+  color: #3180E9;
+}
+#add-configure-button {
+  margin-bottom: 10px;
+}

@@ -216,12 +216,23 @@ Component({
         })
       }
       if (eventClickedId === "suggestionsBox") {
-        wx.navigateTo({
-          url: '/pages/SuggestionsBox/SuggestionsBox',
-          success: (res) => {
-            res.eventChannel.emit('userData', this.data.userData);
-          }
-        });
+        console.log(this.data.userData.student?.grade);
+        if(this.data.userData.student?.grade === 9 || this.data.userData.student?.grade === 10){
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, this suggestions box is for G11-12 only! Please contact the G9-10 ASB for access to the G9-10 suggestions box.",
+            showCancel: false,
+            confirmText: "Dismiss",
+          })
+        }
+        else{
+          wx.navigateTo({
+            url: '/pages/SuggestionsBox/SuggestionsBox',
+            success: (res) => {
+              res.eventChannel.emit('userData', this.data.userData);
+            }
+          });
+        }
       }
     },
     onLoad: function () {

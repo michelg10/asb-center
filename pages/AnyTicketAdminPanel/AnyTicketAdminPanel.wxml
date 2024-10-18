@@ -1,0 +1,48 @@
+<view id="any-ticket-admin-panel-container">
+  <view id="any-ticket-detail-container">
+    <text class="big-title-text">Admin</text>
+    <text id="ticketid-text">Ticket ID: {{ticketId}}</text>
+    <text id="ticketid-text" class="status-{{ticketStatus}}">Status: {{ticketStatus}}</text>
+    <text id="ticketid-text" class="status-{{holderStatusClass}}" wx:if="{{ticketStatus==='Issued'}}">Entry Status: {{holderStatus}}</text>
+    <text id="ticketid-text" wx:if="{{ticketStatus!=='Available'}}">Ticket Issued to {{holderName}} from Class {{holderGrade}}-{{holderClass}}</text>
+  </view>
+  <text class="heading-text" wx:if="{{ticketStatus!=='Available' || adminStatus.canIssueTicket===true}}">Ticket Operations</text>
+  <text class="heading-text" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===false}}">No available operations for this ticket</text>
+  <view id="ticket-option-subheading" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===true}}">
+    <text>Issue tickets by tapping the button below and scanning the participant's personal code. To issue tickets by searching pseudo-accounts, use the admin panel.</text>
+  </view>
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===true}}" bindtap="onIssueTicket">
+    <text>Issue Ticket...</text>
+  </view>
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued'}}" bindtap="onMarkTicket">
+    <text>Use Ticket</text>
+  </view>
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued' && adminStatus.canIssueTicket===true}}" bindtap="onRevokeTicket">
+    <text>Revoke Ticket</text>
+  </view>
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued'}}" bindtap="onLostTicket">
+    <text>Mark as Lost Ticket</text>
+  </view>
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Lost'}}" bindtap="onRecoverTicket">
+    <text>Undo Lost Ticket Status</text>
+  </view>
+  <view wx:if="{{ticketStatus!=='Available'}}">
+    <view class="heading-text">Select Dinner Option</view>
+    <text class="status-{{dinnerSelectionClass}}">Option: {{dinnerSelection}}</text>
+    <view class="option-row" bindtap="cheeseTap">
+      <text class="option-text">McDonald's Cheese Burger</text>
+      <image class="option-toggle" src="/icons/selector{{cheese ? '-selected' : ''}}.svg">
+      </image>
+    </view>
+    <view class="option-row" bindtap="fishTap">
+      <text class="option-text">McDonald's Filet O' Fish Burger</text>
+      <image class="option-toggle" src="/icons/selector{{fish ? '-selected' : ''}}.svg">
+      </image>
+    </view>
+    <view class="button" id="add-save-button">
+      <view class="button" bindtap="onSaveDinner" id="save-button">
+        <text class="button-text">Save</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,10 +1,16 @@
 /* pages/StudentDetailForAdmin/StudentDetailForAdmin.wxss */
+@import "/styles/button.wxss";
 #StudentDetailForAdminMainView {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 80px;
     margin: 0 16px;
     margin-bottom: 50px;
 }
 #StudentDetailForAdminMainViewHeader {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
 }
 .any-order-container {
     display: flex;
@@ -58,4 +64,48 @@
 #any-order-cancel-button {
     color: #D81717;
     background-color: #FFE6E6;
+}
+#persona-detail-id-text {
+  color: var(--secondary);
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+#persona-detail-gradeclass-text {
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+#full-width-option-container {
+  padding: 12px 16px;
+  border-radius: 9px;
+  background-color: var(--subcontainer-background);
+  margin-bottom: 5px;
+}
+#full-width-option-container text {
+  color: var(--link);
+  font-size: 17px;
+  font-weight: 500;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.option-toggle {
+  width: 24px;
+  height: 24px;
+}
+.option-text {
+  font-weight: 500;
+}
+#save-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#save-button text {
+  color: #3180E9;
+}
+#add-save-button {
+  margin-bottom: 10px;
 }

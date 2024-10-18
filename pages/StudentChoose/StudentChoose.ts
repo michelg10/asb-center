@@ -35,7 +35,7 @@ Component({
             let index = x.currentTarget.dataset.index;
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.emit("selectedStudent", this.data.studentData[index]);
-            wx.navigateBack();
+            //wx.navigateBack();
         },
         onLoad: async function() {
             this.data.cacheSingleton = CacheSingleton.getInstance();

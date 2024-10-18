@@ -1,19 +1,45 @@
+import CacheSingleton from "../../classes/CacheSingleton";
+import { handleAnyTicketCode } from '../../utils/handleAnyTicketCode';
 import { Order } from "../AnyOrderMainPage/AnyOrderMainPage";
 
 // pages/StudentDetailForAdmin/StudentDetailForAdmin.ts
 interface ComponentDataInterface {
     publicUserData: PublicUserData,
     computedUserName: string,
+    dinnerSelectionClass: string,
+    dinnerSelection: string,
+    cheese: boolean | false,
+    fish: boolean | false,
+    displayAnyTicket: boolean,
+    accountIsPseudo: boolean,
+    otherAccounts: number,
+    accessingUserId: string,
+    userOpenId: string,
+    studentGrade: number,
+    studentClass: number,
+    adminStatus: AdminStatusType,
+    cacheSingleton: CacheSingleton,
     db: DB.Database,
     anyOrderOrder: Order|undefined,
     anyOrderName: string,
     updateOrderCallBusy: boolean,
+    anyTicketName: string,
+    anyTicketStatusClass: string,
+    anyTicketStatus: string,
+    anyTicketId: string,
 };
 type PublicUserData = {
     _id: string,
     compactId: string,
     studentId: string,
     userId: string,
+};
+type AdminStatusType = {
+  wxId: string,
+  userId: string,
+  canIssueTicket: boolean,
+  canAddAdmin: boolean,
+  adminName: string,
 };
 Component({
     /**
@@ -85,7 +111,9 @@ Component({
                     return undefined;
                 }
                 let studentName: string = res.data[0].uniqueNickname;
-                return studentName;
+                let studentGrade: number = res.data[0].grade;
+                let studentClass: number = res.data[0].class;
+                return [studentName, studentGrade, studentClass];
             })
         },
         fetchAnyOrderStatus: function(event: string, studentId: string) {
@@ -112,9 +140,182 @@ Component({
                 return orderObject;
             });
         },
-        onLoad: function() {
+        onUpdateStatus: async function() {
+          let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+            userId: this.data.publicUserData.studentId,
+          }).get();
+          let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+            userId: this.data.publicUserData.studentId.concat("LOST"),
+          }).get();
+          if (checkAnyTicketStatus.data.length === 0){
+            this.setData({
+              anyTicketStatus: "No",
+              anyTicketStatusClass: "sub"
+            })
+          }
+          else{
+            if (checkLostTicketStatus.data.length === 0){
+              this.setData({
+                anyTicketStatus: checkAnyTicketStatus.data[0].status,
+                anyTicketStatusClass: "acc",
+                anyTicketId: checkAnyTicketStatus.data[0].ticketId
+              })
+            }
+            else{
+              this.setData({
+                anyTicketStatus: "Lost",
+                anyTicketStatusClass: "unsub",
+                anyTicketId: checkAnyTicketStatus.data[0].ticketId
+              })
+            }
+          }
+        },
+        onUpdateDinner: async function(){
+          let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
+            userId: this.data.publicUserData.studentId,
+          }).get();
+          if (checkDinnerStatus.data.length === 0){
+            this.setData({
+              dinnerSelection: "Not Selected",
+              dinnerSelectionClass: "unsub",
+            })
+          }
+          else {
+            this.setData({
+              dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+              dinnerSelectionClass: "acc",
+            })
+          }
+        },
+        onOperateTicket: function() {
+          wx.navigateTo({
+            url: '/pages/AnyTicketAdminPanel/AnyTicketAdminPanel',
+            success: (res) => {
+              res.eventChannel.emit('ticketId', this.data.anyTicketId);
+            }
+          });
+        },
+        onIssueTicket: function() {
+          wx.scanCode({
+            onlyFromCamera: true,
+            success: async (res) => {
+              let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
+              if (parseCodeData!=="invalid"){
+                if(parseCodeData[0]==="ticketCode"){
+                  await wx.cloud.callFunction({
+                    name: "AnyTicketIssueTicket",
+                    data: {
+                      type: "issue",
+                      ticketId: parseCodeData[1],
+                      issuerId: this.data.adminStatus.userId,
+                      issuerName: this.data.adminStatus.adminName,
+                      studentName: this.data.computedUserName,
+                      userId: this.data.publicUserData.studentId
+                    }
+                  })
+                  this.onUpdateStatus();
+                  this.onUpdateDinner();
+                }
+                else {
+                  wx.showModal({
+                    title: "Code Scan Failure",
+                    content: "Please scan Ticket Code, not Personal Code.",
+                    showCancel: false,
+                    confirmText: "Dismiss"
+                  })
+                }
+              }
+            },
+          })
+        },
+        cheeseTap: function(){
+          this.setData({
+            cheese: true,
+            fish: false,
+          });
+        },
+        fishTap: function(){
+          this.setData({
+            fish: true,
+            cheese: false
+          });
+        },
+        onSaveDinner: async function(){
+          if (this.data.dinnerSelection==="Not Selected"){
+            if (this.data.cheese===true){
+              await wx.cloud.callFunction({
+                name: "AnyTicketSetStudentData",
+                data: {
+                  type: "dinner",
+                  userId: this.data.publicUserData.studentId,
+                  dinnerOption: "Cheese"
+                }
+              })
+              this.onUpdateDinner();
+            }
+            else if (this.data.fish===true){
+              await wx.cloud.callFunction({
+                name: "AnyTicketSetStudentData",
+                data: {
+                  type: "dinner",
+                  userId: this.data.publicUserData.studentId,
+                  dinnerOption: "Fish"
+                }
+              })
+              this.onUpdateDinner();
+            }
+            else{
+              wx.showModal({
+                title: "Invalid Selection",
+                content: "Please select a dinner option.",
+                showCancel: false,
+                confirmText: "Dismiss"
+              })
+            }
+          }
+          else{
+            if (this.data.cheese===true){
+              await wx.cloud.callFunction({
+                name: "AnyTicketSetStudentData",
+                data: {
+                  type: "dinnerModify",
+                  userId: this.data.publicUserData.studentId,
+                  dinnerOption: "Cheese"
+                }
+              })
+              this.onUpdateDinner();
+            }
+            else if (this.data.fish===true){
+              await wx.cloud.callFunction({
+                name: "AnyTicketSetStudentData",
+                data: {
+                  type: "dinnerModify",
+                  userId: this.data.publicUserData.studentId,
+                  dinnerOption: "Fish"
+                }
+              })
+              this.onUpdateDinner();
+            }
+            else {
+              wx.showModal({
+                title: "Invalid Selection",
+                content: "Please select a dinner option.",
+                showCancel: false,
+                confirmText: "Dismiss"
+              })
+            }
+          }
+        },
+        onShow: function(){
+          if (this.data.publicUserData.studentId!==undefined){
+            this.onUpdateStatus();
+            this.onUpdateDinner();
+          }
+        },
+        onLoad: async function() {
             this.setData({
                 anyOrderName: "Elfin Express",
+                anyTicketName: "Blackout"
             });
             this.data.db = wx.cloud.database();
             this.data.updateOrderCallBusy = false;
@@ -125,21 +326,139 @@ Component({
                     publicUserData: userData,
                     computedUserName: userData.compactId,
                 });
-
                 // get the student name to put on the title instead of an ID and fetch orders for White V
+                if (userData.studentId!==undefined) {
+                  this.setData({
+                    displayAnyTicket: true
+                  })
+                  let determineAccount = await this.data.db.collection("studentData").where({
+                    _id: userData.studentId,
+                  }).get();
+                  if (determineAccount.data[0].pseudoId===userData._id){
+                    let accountsNumber = await wx.cloud.callFunction({
+                      name: "associatedAccountsNumber",
+                      data: {
+                        studentId: userData.studentId,
+                      }
+                    });
+                    this.setData({
+                      accountIsPseudo: true,
+                      otherAccounts: (accountsNumber.result as any).result-1,
+                    })
+                  }
                 this.fetchUserStudentName(userData.studentId).then((res) => {
                     if (res !== undefined) {
                         this.setData({
-                            computedUserName: res as string,
+                            computedUserName: res[0] as string,
+                            studentGrade: res[1] as number,
+                            studentClass: res[2] as number
                         });
                     }
-                })
-                this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
+                });
+                this.data.cacheSingleton = CacheSingleton.getInstance();
+                this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
+                // now fetch admin status
+                let accessingUserId = await this.data.db.collection("userData").where({
+                  userId: this.data.userOpenId,
+                }).get();
+                if (accessingUserId.data.length === 0) {
+                  // this error literally makes no sense but just in case i do something dumb
+                  console.log("Current user not registered!");
+                  wx.navigateBack();
+                  return;
+                }
+                this.setData({
+                  accessingUserId: accessingUserId.data[0]._id as string,
+                });
+                let checkAdmin = await this.data.db.collection("admins").where({
+                  userId: this.data.accessingUserId,
+                }).get();
+                if (checkAdmin.data.length === 0) {
+                  console.log("Current user is not admin!");
+                  wx.navigateBack();
+                  return;
+                }
+                this.setData({
+                  adminStatus: {
+                    wxId: checkAdmin.data[0]._id as string,
+                    userId: checkAdmin.data[0].userId,
+                    canIssueTicket: checkAdmin.data[0].canIssueTicket,
+                    canAddAdmin: checkAdmin.data[0].canAddAdmin,
+                    adminName: checkAdmin.data[0].adminName,
+                  }
+                  });
+                let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                  userId: userData.studentId,
+                }).get();
+                if (checkAnyTicketStatus.data.length === 0){
+                  this.setData({
+                    anyTicketStatus: "No",
+                    anyTicketStatusClass: "sub"
+                  })
+                }
+                else{
+                  let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
+                    userId: userData.studentId,
+                  }).get();
+                  let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                    userId: userData.studentId.concat("LOST"),
+                  }).get();
+                  if (checkLostTicketStatus.data.length === 0){
+                    if (checkDinnerStatus.data.length === 0){
+                      this.setData({
+                        dinnerSelection: "Not Selected",
+                        dinnerSelectionClass: "unsub",
+                        anyTicketStatus: "Issued",
+                        anyTicketStatusClass: "acc",
+                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                      })
+                    }
+                    else {
+                      this.setData({
+                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+                        dinnerSelectionClass: "acc",
+                        anyTicketStatus: "Issued",
+                        anyTicketStatusClass: "acc",
+                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                      })
+                    }
+                  }
+                  else{
+                    if (checkDinnerStatus.data.length === 0){
+                      this.setData({
+                        dinnerSelection: "Not Selected",
+                        dinnerSelectionClass: "unsub",
+                        anyTicketStatus: "Lost",
+                        anyTicketStatusClass: "unsub",
+                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                      })
+                    }
+                    else {
+                      this.setData({
+                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+                        dinnerSelectionClass: "acc",
+                        anyTicketStatus: "Lost",
+                        anyTicketStatusClass: "unsub",
+                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                      })
+                    }
+                  }
+                /*this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
                     this.setData({
                         anyOrderOrder: res as any,
                     });
-                });
+                });*/
+                }
+              }
             })
+        },
+        configureAdminClick: function() {
+          wx.navigateTo({
+            url: '/pages/ConfigureGlobalAdmin/ConfigureGlobalAdmin',
+            success: (res) => {
+              res.eventChannel.emit('userId', this.data.publicUserData._id);
+            }
+          })
         }
     }
 })

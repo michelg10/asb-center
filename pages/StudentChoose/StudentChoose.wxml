@@ -1,6 +1,10 @@
 <!--pages/StudentChoose/StudentChoose.wxml-->
 <view id="student-choose-container">
-    <text class="big-title-text">Select student</text>
+    <text class="big-title-text">Admin</text>
+    <view id="search-pseudo-accounts-header"><text class="heading-text">Search Pseudo-Accounts</text></view>
+    <view id="search-pseudo-accounts-subheading">
+        <text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account. To begin, search and select the participant's name.</text>
+    </view>
     <view id="student-choose-search-container">
         <image src="/icons/search.svg" id="search-image"></image>
         <input type="text" id="student-search-input" bindinput="doSearch" placeholder="Search" placeholder-class="student-search-input-placeholder"/>
