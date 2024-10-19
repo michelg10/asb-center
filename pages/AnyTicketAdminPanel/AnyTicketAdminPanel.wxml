@@ -8,25 +8,26 @@
   </view>
   <text class="heading-text" wx:if="{{ticketStatus!=='Available' || adminStatus.canIssueTicket===true}}">Ticket Operations</text>
   <text class="heading-text" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===false}}">No available operations for this ticket</text>
+  <text class="heading-text" wx:if="{{ticketStatus==='Issued' && holderStatus===true}}">No available operations for this ticket</text>
   <view id="ticket-option-subheading" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===true}}">
     <text>Issue tickets by tapping the button below and scanning the participant's personal code. To issue tickets by searching pseudo-accounts, use the admin panel.</text>
   </view>
-  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===true}}" bindtap="onIssueTicket">
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Available' && adminStatus.canIssueTicket===true}}" bindtap="onIssueTicket" bindlongpress="onIssueTicketStation">
     <text>Issue Ticket...</text>
   </view>
-  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued'}}" bindtap="onMarkTicket">
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued' && holderStatus===false}}" bindtap="onMarkTicket">
     <text>Use Ticket</text>
   </view>
-  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued' && adminStatus.canIssueTicket===true}}" bindtap="onRevokeTicket">
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued' && adminStatus.canIssueTicket===true && holderStatus===false}}" bindtap="onRevokeTicket">
     <text>Revoke Ticket</text>
   </view>
-  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued'}}" bindtap="onLostTicket">
+  <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Issued' && holderStatus===false}}" bindtap="onLostTicket">
     <text>Mark as Lost Ticket</text>
   </view>
   <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Lost'}}" bindtap="onRecoverTicket">
     <text>Undo Lost Ticket Status</text>
   </view>
-  <view wx:if="{{ticketStatus!=='Available'}}">
+  <view wx:if="{{ticketStatus==='Issued'}}">
     <view class="heading-text">Select Dinner Option</view>
     <text class="status-{{dinnerSelectionClass}}">Option: {{dinnerSelection}}</text>
     <view class="option-row" bindtap="cheeseTap">

@@ -1,0 +1,47 @@
+<view id="any-ticket-master-container">
+  <view id="any-ticket-heading-container">
+    <text class="big-title-text">{{eventName}}</text>
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindlongpress="adminStationMode">
+      <image src="/icons/bolt.svg" class="admin-image"></image>
+    </view>
+  </view>
+    <block wx:if="{{errorMessage !== undefined}}">
+        <text id="AnyOrderMainPageErrorMessage">{{errorMessage}}</text>
+    </block>
+    <block wx:else>
+      <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
+        <view id="any-ticket-ticket" class="ticket-background"></view>
+        <text class="subheading-text">Purchased Event Ticket</text>
+        <text class="sub-text">Please present your physical event ticket for entry to the Zombiefestation.</text>
+        <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
+          <view id="event-option" bindtap="consentFormTap">
+            <text>Submit Consent Form</text>
+            <view id="event-option-restrict-label" wx:if="{{!allowConsent}}">Restricted</view><view id="event-option-restrict-label" wx:if="{{consentDone}}">Submitted</view>
+            <view id="event-option-icon" class="consent-icon"></view>
+          </view>
+          <view id="event-option" bindtap="mealOptionTap">
+            <text>Browse Meal Options</text>
+            <view id="event-option-restrict-label" wx:if="{{!allowMeal}}">Restricted</view>
+            <view id="event-option-icon" class="meal-icon"></view>
+          </view>
+        </view>
+        <view id="any-ticket-event-option-row" wx:if="{{allowLateOptions}}">
+          <view id="event-option" bindtap="hauntedHouseTap">
+            <text>Haunted House Sign-Up</text>
+            <view id="event-option-restrict-label" wx:if="{{!allowHouse}}">Restricted</view>
+            <view id="event-option-icon" class="house-icon"></view>
+          </view>
+          <view id="event-option" bindtap="musicRequestTap">
+            <text>Send Music Requests</text>
+            <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
+            <view id="event-option-icon" class="music-icon"></view>
+          </view>
+        </view>
+      </view>
+      <view id="any-ticket-display-container" wx:else>
+        <view id="any-ticket-no-ticket" class="ticket-background"></view>
+        <text class="subheading-text">No Event Ticket</text>
+        <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to the Zombiefestation.</text>
+      </view>
+    </block>
+</view>

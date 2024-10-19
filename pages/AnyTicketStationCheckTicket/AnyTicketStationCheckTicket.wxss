@@ -1,0 +1,68 @@
+/* pages/AnyTicketCheckTicket/AnyTicketCheckTicket.wxss */
+@import "../AnyTicketCheckTicket/imageStyles.wxss";
+@import "../../global-colors.wxss";
+@import "../MainMenu/MainMenu.wxss";
+@import "/styles/button.wxss";
+@import "/styles/studentContainer.wxss";
+#any-ticket-master-container{
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--page-background);
+}
+.heading-text{
+  margin-top: 15px;
+}
+@media (prefers-color-scheme: dark) {
+  .ticket-scan-image {
+      filter: invert();
+  }
+}
+#ticket-option-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+#response-icon{
+  width: 199px;
+  height: 200px;
+  margin-left: 20vw;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.status-Lost {
+  color: #D81717;
+}
+.status-entry-true {
+  color: #D81717;
+}
+.status-entry-false {
+  color: #36B909;
+}
+.status-Available {
+  color: #E3C019;
+}
+.status-Issued {
+  color: #36B909;
+}
+#clear-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#clear-button text {
+  color: #3180E9;
+}
+#add-clear-button {
+  margin-bottom: 10px;
+}
+.link-text{
+  color: #3180E9;
+}

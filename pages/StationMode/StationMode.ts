@@ -1,10 +1,12 @@
-/*import { handleCode } from '../../utils/handleCode';
-import { UserDataType } from '../../utils/common';*/
+import { handleCode } from '../../utils/handleCode';
 
 interface componentDataInterface {
   /*userData: UserDataType,
   sportsMeetFetchSecureCodes: Function,*/
   inputCodeData: '',
+  userData: {
+    globalAdminName: string | undefined,
+  }
 };
 
 Component({
@@ -24,6 +26,14 @@ Component({
    * Component methods
    */
   methods: {
+    onLoad: function() {
+      const eventChannel = this.getOpenerEventChannel();
+      eventChannel.on('data', (data: string) => {
+        this.setData({
+          userData: {globalAdminName: data}
+        })
+      });
+    },
     onShow: function() {
       /*
       const eventChannel = this.getOpenerEventChannel();
@@ -56,14 +66,14 @@ Component({
         inputCodeData: x.detail.value,
       });
       if (this.data.inputCodeData !== '') {
-        wx.navigateTo({
+        /*wx.navigateTo({
           url: "/pages/MainMenu/MainMenu",
           success: (res) => {
             res.eventChannel.emit('stationModeData', this.data.inputCodeData);
           }
-        });
+        });*/
+        handleCode(this, this.data.inputCodeData);
       }
-      //handleCode(this, this.data.inputCodeData);
     }
   }
 })

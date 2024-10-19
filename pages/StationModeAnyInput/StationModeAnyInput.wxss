@@ -1,8 +1,6 @@
 /* pages/SportsMeetStationMode/SportsMeetStationMode.wxss */
 @import "/styles/studentContainer.wxss";
-@import "/styles/button.wxss";
-@import "/styles/options-container.wxss";
-@import "/styles/SportsMeetLogs.wxss";
+
 #station-mode-main-container {
   display: flex;
   flex-direction: column;
@@ -22,10 +20,6 @@
 #confirm-button {
   margin-top: 21px;
   background-color: #D2E3FA;
-}
-
-#confirm-button text {
-  color: #3180E9;
 }
 
 .link-text{

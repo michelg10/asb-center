@@ -148,26 +148,30 @@ Component({
             userId: this.data.publicUserData.studentId.concat("LOST"),
           }).get();
           if (checkAnyTicketStatus.data.length === 0){
-            this.setData({
-              anyTicketStatus: "No",
-              anyTicketStatusClass: "sub"
-            })
-          }
-          else{
+            //No active ticket
             if (checkLostTicketStatus.data.length === 0){
+              //No lost ticket
               this.setData({
-                anyTicketStatus: checkAnyTicketStatus.data[0].status,
-                anyTicketStatusClass: "acc",
-                anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                anyTicketStatus: "No",
+                anyTicketStatusClass: "sub"
               })
             }
-            else{
+            else {
+              //Found lost ticket
               this.setData({
                 anyTicketStatus: "Lost",
                 anyTicketStatusClass: "unsub",
-                anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                anyTicketId: checkLostTicketStatus.data[0].ticketId
               })
             }
+          }
+          else{
+            //Active ticket
+            this.setData({
+              anyTicketStatus: checkAnyTicketStatus.data[0].status,
+              anyTicketStatusClass: "acc",
+              anyTicketId: checkAnyTicketStatus.data[0].ticketId
+            })
           }
         },
         onUpdateDinner: async function(){
@@ -202,19 +206,33 @@ Component({
               let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
               if (parseCodeData!=="invalid"){
                 if(parseCodeData[0]==="ticketCode"){
-                  await wx.cloud.callFunction({
-                    name: "AnyTicketIssueTicket",
-                    data: {
-                      type: "issue",
-                      ticketId: parseCodeData[1],
-                      issuerId: this.data.adminStatus.userId,
-                      issuerName: this.data.adminStatus.adminName,
-                      studentName: this.data.computedUserName,
-                      userId: this.data.publicUserData.studentId
-                    }
-                  })
-                  this.onUpdateStatus();
-                  this.onUpdateDinner();
+                  //Valid code format, check if already issued
+                  let checkTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                    ticketId: parseCodeData[1],
+                  }).get();
+                  if(checkTicketStatus.data[0].status==="Available"){
+                    await wx.cloud.callFunction({
+                      name: "AnyTicketIssueTicket",
+                      data: {
+                        type: "issue",
+                        ticketId: parseCodeData[1],
+                        issuerId: this.data.adminStatus.userId,
+                        issuerName: this.data.adminStatus.adminName,
+                        studentName: this.data.computedUserName,
+                        userId: this.data.publicUserData.studentId
+                      }
+                    })
+                    this.onUpdateStatus();
+                    this.onUpdateDinner();
+                  }
+                  else {
+                    wx.showModal({
+                      title: "Code Scan Failure",
+                      content: `Ticket of status ${checkTicketStatus.data[0].status} cannot be issued.`,
+                      showCancel: false,
+                      confirmText: "Dismiss"
+                    })
+                  }
                 }
                 else {
                   wx.showModal({
@@ -226,6 +244,41 @@ Component({
                 }
               }
             },
+          })
+        },
+        onIssueTicketStation: async function() {
+          wx.navigateTo({
+            url: "/pages/StationModeAnyInput/StationModeAnyInput",
+            success: (res) => {
+              res.eventChannel.on("data", async (data) => {
+                let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, data);
+                if (parseCodeData!=="invalid"){
+                  if(parseCodeData[0]==="ticketCode"){
+                    await wx.cloud.callFunction({
+                      name: "AnyTicketIssueTicket",
+                      data: {
+                        type: "issue",
+                        ticketId: parseCodeData[1],
+                        issuerId: this.data.adminStatus.userId,
+                        issuerName: this.data.adminStatus.adminName,
+                        studentName: this.data.computedUserName,
+                        userId: this.data.publicUserData.studentId
+                      }
+                    })
+                    this.onUpdateStatus();
+                    this.onUpdateDinner();
+                  }
+                  else {
+                    wx.showModal({
+                      title: "Code Scan Failure",
+                      content: "Please scan Ticket Code, not Personal Code.",
+                      showCancel: false,
+                      confirmText: "Dismiss"
+                    })
+                  }
+                }
+              })
+            }
           })
         },
         cheeseTap: function(){
@@ -265,6 +318,7 @@ Component({
               this.onUpdateDinner();
             }
             else{
+              this.onUpdateDinner();
               wx.showModal({
                 title: "Invalid Selection",
                 content: "Please select a dinner option.",
@@ -297,6 +351,7 @@ Component({
               this.onUpdateDinner();
             }
             else {
+              this.onUpdateDinner();
               wx.showModal({
                 title: "Invalid Selection",
                 content: "Please select a dinner option.",
@@ -307,10 +362,8 @@ Component({
           }
         },
         onShow: function(){
-          if (this.data.publicUserData.studentId!==undefined){
-            this.onUpdateStatus();
-            this.onUpdateDinner();
-          }
+          this.onUpdateStatus();
+          this.onUpdateDinner();
         },
         onLoad: async function() {
             this.setData({
@@ -390,57 +443,76 @@ Component({
                 let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
                   userId: userData.studentId,
                 }).get();
+                let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                  userId: userData.studentId.concat("LOST"),
+                }).get();
+                let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
+                  userId: userData.studentId,
+                }).get();
                 if (checkAnyTicketStatus.data.length === 0){
-                  this.setData({
-                    anyTicketStatus: "No",
-                    anyTicketStatusClass: "sub"
-                  })
-                }
-                else{
-                  let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
-                    userId: userData.studentId,
-                  }).get();
-                  let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
-                    userId: userData.studentId.concat("LOST"),
-                  }).get();
+                  //No active ticket, check if lost ticket
                   if (checkLostTicketStatus.data.length === 0){
-                    if (checkDinnerStatus.data.length === 0){
-                      this.setData({
-                        dinnerSelection: "Not Selected",
-                        dinnerSelectionClass: "unsub",
-                        anyTicketStatus: "Issued",
-                        anyTicketStatusClass: "acc",
-                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
-                      })
-                    }
-                    else {
-                      this.setData({
-                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
-                        dinnerSelectionClass: "acc",
-                        anyTicketStatus: "Issued",
-                        anyTicketStatusClass: "acc",
-                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
-                      })
-                    }
+                    //No lost ticket
+                    this.setData({
+                      anyTicketStatus: "No",
+                      anyTicketStatusClass: "sub"
+                    })
+                    this.onUpdateStatus();
+                    this.onUpdateDinner();
                   }
                   else{
+                    //Found lost ticket
                     if (checkDinnerStatus.data.length === 0){
+                      //No dinner selection
                       this.setData({
                         dinnerSelection: "Not Selected",
                         dinnerSelectionClass: "unsub",
                         anyTicketStatus: "Lost",
                         anyTicketStatusClass: "unsub",
-                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                        anyTicketId: checkLostTicketStatus.data[0].ticketId
                       })
+                      this.onUpdateStatus();
+                      this.onUpdateDinner();
                     }
                     else {
                       this.setData({
+                        //Lost ticket with dinner selection
                         dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
                         dinnerSelectionClass: "acc",
                         anyTicketStatus: "Lost",
                         anyTicketStatusClass: "unsub",
+                        anyTicketId: checkLostTicketStatus.data[0].ticketId
+                      })
+                      this.onUpdateStatus();
+                      this.onUpdateDinner();
+                    }
+                  }
+                }
+                else{
+                  //Active ticket
+                    if (checkDinnerStatus.data.length === 0){
+                      //No dinner selection
+                      this.setData({
+                        dinnerSelection: "Not Selected",
+                        dinnerSelectionClass: "unsub",
+                        anyTicketStatus: "Issued",
+                        anyTicketStatusClass: "acc",
                         anyTicketId: checkAnyTicketStatus.data[0].ticketId
                       })
+                      this.onUpdateStatus();
+                      this.onUpdateDinner();
+                    }
+                    else {
+                      //Active ticket and dinner selection
+                      this.setData({
+                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+                        dinnerSelectionClass: "acc",
+                        anyTicketStatus: "Issued",
+                        anyTicketStatusClass: "acc",
+                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                      })
+                      this.onUpdateStatus();
+                      this.onUpdateDinner();
                     }
                   }
                 /*this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
@@ -448,9 +520,8 @@ Component({
                         anyOrderOrder: res as any,
                     });
                 });*/
-                }
-              }
-            })
+            }
+          })
         },
         configureAdminClick: function() {
           wx.navigateTo({

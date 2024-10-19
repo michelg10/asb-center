@@ -5,8 +5,11 @@
     flex-direction: column;
     padding-top: 10px;
     padding-bottom: 80px;
-    margin: 0 16px;
+    padding: 0 16px;
     margin-bottom: 50px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--page-background);
 }
 #StudentDetailForAdminMainViewHeader {
     display: flex;
@@ -79,6 +82,7 @@
   padding: 12px 16px;
   border-radius: 9px;
   background-color: var(--subcontainer-background);
+  margin-top: 5px;
   margin-bottom: 5px;
 }
 #full-width-option-container text {

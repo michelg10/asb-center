@@ -1,0 +1,28 @@
+<view id="any-ticket-master-container">
+  <text class="big-title-text">Admin</text>
+  <text class="heading-text">Validate Tickets (Station Mode)</text>
+  <view id="ticket-option-subheading">
+    <text>Station mode is designed for laptop users with physical QR code scanners. Admins using phones should use the scan option on the </text>
+    <text class="link-text" bindtap="adminPageClicked">event admin page. </text>
+    <text>Configure your physical QR code scanner to return a newline after scanned data, and ensure your IME is set to English mode.</text>
+  </view>
+  <view id="ticket-option-subheading">
+    <text>After scanning a ticket with this function, the ticket will be marked as used and is not reversible. Only scan tickets upon the participant's entry, and the corresponding ticket info will be displayed.</text>
+  </view>
+  <view class="student-list-search-container">
+    <input class="student-search-textfield" placeholder="Scan Code..." placeholder-class="student-search-textfield-placeholder" bindconfirm="confirmTicketScan" value="{{ inputCodeData }}"/>
+  </view>
+  <view id="response-icon" wx:if="{{checkTicketResponse}}" class="{{ticketResponseClass}}-icon"></view>
+  <view wx:if="{{checkTicketResponse}}">
+    <view id="ticket-option-subheading"><text>Ticket ID: {{ticketId}}</text></view>
+    <view id="ticket-option-subheading"><text>Ticket Holder Name: {{holderName}}</text></view>
+    <view id="ticket-option-subheading"><text class="status-{{ticketStatus}}">Ticket Status: {{ticketStatus}}</text></view>
+    <view id="ticket-option-subheading"><text class="status-entry-{{entryStatus}}">Entry Status: {{entryStatus}}</text></view>
+    <view class="button" id="add-clear-button">
+      <view class="button" bindtap="onClear" id="clear-button">
+        <text class="button-text">Clear</text>
+      </view>
+    </view>
+  </view>
+  <text class="heading-text" wx:if="{{!checkTicketResponse}}">Waiting for Ticket Scan</text>
+</view>

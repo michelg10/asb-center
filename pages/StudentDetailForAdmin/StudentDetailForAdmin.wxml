@@ -5,6 +5,7 @@
         <text id="persona-detail-id-text">{{publicUserData._id}}{{accountIsPseudo ? " (Pseudo account, "+otherAccounts+" account"+(otherAccounts === 1 ? "" : "s")+" linked)" : ""}}</text>
         <text id="persona-detail-gradeclass-text" wx:if="{{displayAnyTicket}}">Class {{studentGrade}}-{{studentClass}}</text>
     </view>
+    <text class="heading-text" wx:if="{{adminStatus.canAddAdmin}}">Admin</text>
     <view id="full-width-option-container" wx:if="{{adminStatus.canAddAdmin}}" bindtap="configureAdminClick">
         <text>Configure Admin...</text>
     </view>
@@ -12,7 +13,7 @@
         <text class="heading-text">{{anyTicketName}}</text>
       <view wx:if="{{displayAnyTicket}}">
         <text class="submission-{{anyTicketStatusClass}}">Status: {{anyTicketStatus}} Event Ticket</text>
-        <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus==='No'}}" bindtap="onIssueTicket">
+        <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueTicket" bindlongpress="onIssueTicketStation">
           <text>Issue Ticket...</text>
         </view>
       <view wx:if="{{anyTicketStatus!=='No'}}">

@@ -23,7 +23,12 @@
     "pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail",
     "pages/StationMode/StationMode",
     "pages/AnyTicketAdminPanel/AnyTicketAdminPanel",
-    "pages/ConfigureGlobalAdmin/ConfigureGlobalAdmin"
+    "pages/AnyTicketMainPage/AnyTicketMainPage",
+    "pages/ConfigureGlobalAdmin/ConfigureGlobalAdmin",
+    "pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
+    "pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
+    "pages/AnyTicketSubOption/AnyTicketSubOption",
+    "pages/StationModeAnyInput/StationModeAnyInput"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",

@@ -125,9 +125,15 @@ Component({
         }
       });
     },
-    onShow: function(){
+    onShow: async function(){
       if (this.data.holderUserId!==undefined){
-        this.updateTicketStatus();
+        await this.updateTicketStatus();
+        this.onUpdateDinner();
+      }
+    },
+    onPullDownRefresh: async function(){
+      if (this.data.holderUserId!==undefined){
+        await this.updateTicketStatus();
         this.onUpdateDinner();
       }
     },
@@ -185,6 +191,7 @@ Component({
           this.onUpdateDinner();
         }
         else{
+          this.onUpdateDinner();
           wx.showModal({
             title: "Invalid Selection",
             content: "Please select a dinner option.",
@@ -217,6 +224,7 @@ Component({
           this.onUpdateDinner();
         }
         else {
+          this.onUpdateDinner();
           wx.showModal({
             title: "Invalid Selection",
             content: "Please select a dinner option.",
@@ -282,7 +290,7 @@ Component({
                   userId: parseCodeData[1].studentId
                 }
               })
-              this.updateTicketStatus();
+              await this.updateTicketStatus();
               this.onUpdateDinner();
             }
             else {
@@ -297,6 +305,44 @@ Component({
         },
       })
     },
+    onIssueTicketStation: async function(){
+      wx.navigateTo({
+        url: "/pages/StationModeAnyInput/StationModeAnyInput",
+        success: (res) => {
+          res.eventChannel.on("data", async (data) => {
+            let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, data);
+            if (parseCodeData!=="invalid") {
+              if(parseCodeData[0]==="userCode"){
+                let checkStudentName = await this.data.db.collection("studentData").where({
+                  _id: parseCodeData[1].studentId,
+                }).get();
+                await wx.cloud.callFunction({
+                  name: "AnyTicketIssueTicket",
+                  data: {
+                    type: "issue",
+                    ticketId: this.data.ticketId,
+                    issuerId: this.data.adminStatus.userId,
+                    issuerName: this.data.adminStatus.adminName,
+                    studentName: checkStudentName.data[0].uniqueNickname,
+                    userId: parseCodeData[1].studentId
+                  }
+                })
+                await this.updateTicketStatus();
+                this.onUpdateDinner();
+              }
+              else {
+                wx.showModal({
+                  title: "Code Scan Failure",
+                  content: "Please scan Personal Code, not Ticket Code.",
+                  showCancel: false,
+                  confirmText: "Dismiss"
+                })
+              }
+            }
+          })
+        }
+      })
+    },
     onMarkTicket: async function() {
       await wx.cloud.callFunction({
         name: "AnyTicketUpdateStatus",
@@ -306,7 +352,7 @@ Component({
           updateStatus: true
         }
       });
-      this.updateTicketStatus();
+      await this.updateTicketStatus();
       this.onUpdateDinner();
     },
     onRevokeTicket: async function() {
@@ -317,7 +363,7 @@ Component({
           ticketId: this.data.ticketId,
         }
       })
-      this.updateTicketStatus();
+      await this.updateTicketStatus();
       this.onUpdateDinner();
     },
     onLostTicket: async function() {
@@ -331,7 +377,7 @@ Component({
           newUserId: newUserId
         }
       })
-      this.updateTicketStatus();
+      await this.updateTicketStatus();
       this.onUpdateDinner();
     },
     onRecoverTicket: async function() {
@@ -345,7 +391,7 @@ Component({
           newUserId: newUserId
         }
       })
-      this.updateTicketStatus();
+      await this.updateTicketStatus();
       this.onUpdateDinner();
     }
   }

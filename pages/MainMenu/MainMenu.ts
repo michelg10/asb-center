@@ -145,10 +145,9 @@ Component({
     stationModeClick: function() {
       wx.navigateTo({
         url: "/pages/StationMode/StationMode",
-        /*success: (res) => {
-          res.eventChannel.emit('userData', this.data.userData);
-          res.eventChannel.emit('sportsMeetFetchSecureCodes', this.sportsMeetFetchSecureCodes());
-        }*/
+        success: (res) => {
+          res.eventChannel.emit('data', this.data.userData.globalAdminName);
+        }
       });
     },
     sportsMeetFetchSecureCodes: async function() {
@@ -180,6 +179,16 @@ Component({
             }));
           }
         });
+      }
+      if (eventClickedId === "Blackout2024") {
+        wx.navigateTo({
+          url: '/pages/AnyTicketMainPage/AnyTicketMainPage',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('eventId', "Blackout2024");
+            res.eventChannel.emit('eventName', "Blackout 2024");
+          }
+        })
       }
       if (eventClickedId === "ChristmasSale2022") {
         wx.navigateTo({
@@ -262,15 +271,16 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5 * 1000 * 60);
-      const eventChannel = this.getOpenerEventChannel();
+      /*const eventChannel = this.getOpenerEventChannel();
       if(typeof eventChannel.on === 'function') {
         wx.navigateBack({
           delta: 1
         });
         eventChannel.on('stationModeData', (data: string) => {
+          console.log(data)
           handleCode(this, data);
         });
-      }
+      }*/
     },
     recomputeData: function (incremental: boolean) {
       //console.log("Tick at time", getUnixTime());

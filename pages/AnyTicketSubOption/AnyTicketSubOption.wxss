@@ -1,0 +1,59 @@
+/* pages/AnyTicketMainPage/AnyTicketMainPage.wxss */
+@import "../../global-colors.wxss";
+@import "../MainMenu/MainMenu.wxss";
+@import "/styles/studentContainer.wxss";
+@import "/styles/button.wxss";
+#any-ticket-master-container{
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--page-background);
+}
+#any-ticket-option-container{
+  display: flex;
+  flex-direction: column;
+}
+#option-subheading {
+  color: var(--secondary);
+  font-weight: 500;
+  font-size: 18px;
+  margin-top: 15px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+#option-subheading text {
+  margin-top: 15px;
+}
+#submit-button {
+  background-color: #D2E3FA;
+  margin-top: 26px;
+}
+#submit-button text {
+  color: #3180E9;
+}
+#add-submit-button {
+  margin-bottom: 10px;
+}
+.status-no {
+  color: #D81717;
+}
+.status-yes {
+  color: #36B909;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.option-toggle {
+  width: 24px;
+  height: 24px;
+}
+.option-text {
+  font-weight: 500;
+}

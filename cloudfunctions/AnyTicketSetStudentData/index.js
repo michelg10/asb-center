@@ -27,5 +27,37 @@ exports.main = async (event, context) => {
     });
       return;
     }
+    else if (event.type === "submitConsent"){
+      await db.collection('BlackoutStudentData').where({
+        userId: event.userId,
+      }).update({
+        data: {
+          consent: event.consent,
+          consentData: event.consentData
+        }
+    });
+      return;
+    }
+    else if (event.type === "submitConsentNew"){
+      await db.collection('BlackoutStudentData').add({
+        data: {
+          userId: event.userId,
+          consent: event.consent,
+          consentData: event.consentData
+        }
+    });
+      return;
+    }
+    else if (event.type === "submitMusic"){
+      await db.collection('BlackoutMusic').add({
+        data: {
+          userData: event.userData,
+          musicName: event.musicName,
+          musicComposer: event.musicComposer,
+          timestamp: Date.now()
+        }
+    });
+      return;
+    }
   return;
 }
