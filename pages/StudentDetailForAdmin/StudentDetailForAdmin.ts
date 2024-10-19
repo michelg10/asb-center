@@ -178,7 +178,7 @@ Component({
           let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
             userId: this.data.publicUserData.studentId,
           }).get();
-          if (checkDinnerStatus.data.length === 0){
+          if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
             this.setData({
               dinnerSelection: "Not Selected",
               dinnerSelectionClass: "unsub",
@@ -294,7 +294,10 @@ Component({
           });
         },
         onSaveDinner: async function(){
-          if (this.data.dinnerSelection==="Not Selected"){
+          let checkMeal = await this.data.db.collection("BlackoutStudentData").where({
+            userId: this.data.publicUserData.studentId,
+          }).get();
+          if(checkMeal.data.length===0){
             if (this.data.cheese===true){
               await wx.cloud.callFunction({
                 name: "AnyTicketSetStudentData",
@@ -462,7 +465,7 @@ Component({
                   }
                   else{
                     //Found lost ticket
-                    if (checkDinnerStatus.data.length === 0){
+                    if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
                       //No dinner selection
                       this.setData({
                         dinnerSelection: "Not Selected",
@@ -490,7 +493,7 @@ Component({
                 }
                 else{
                   //Active ticket
-                    if (checkDinnerStatus.data.length === 0){
+                    if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
                       //No dinner selection
                       this.setData({
                         dinnerSelection: "Not Selected",

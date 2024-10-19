@@ -133,9 +133,9 @@ Component({
         let checkMeal = await this.data.db.collection("BlackoutStudentData").where({
           userId: this.data.userData.student?.id,
         }).get();
-        if(checkMeal.data.length===0){
+        if(checkMeal.data.length===0 || checkMeal.data[0].dinnerOption===undefined){
           this.setData({
-            mealSelection: "No Selection",
+            mealSelection: "Not Selected",
             mealSelectionClass: "no"
           });
         }
@@ -197,15 +197,23 @@ Component({
           }).get();
           if(checkMeal.data.length===0){
             this.setData({
-              mealSelection: "No Selection",
+              mealSelection: "Not Selected",
               mealSelectionClass: "no"
             });
           }
           else{
-            this.setData({
-              mealSelection: checkMeal.data[0].dinnerOption,
-              mealSelectionClass: "yes"
-            });
+            if(checkMeal.data[0].dinnerOption===undefined){
+              this.setData({
+                mealSelection: "Not Selected",
+                mealSelectionClass: "no"
+              });
+            }
+            else{
+              this.setData({
+                mealSelection: checkMeal.data[0].dinnerOption,
+                mealSelectionClass: "yes"
+              });
+            }
           }
         })
       },
@@ -222,7 +230,10 @@ Component({
         });
       },
       onSaveDinner: async function(){
-        if (this.data.mealSelection==="Not Selected"){
+        let checkMeal = await this.data.db.collection("BlackoutStudentData").where({
+          userId: this.data.userData.student?.id,
+        }).get();
+        if(checkMeal.data.length===0){
           if (this.data.cheese===true){
             await wx.cloud.callFunction({
               name: "AnyTicketSetStudentData",
@@ -232,7 +243,8 @@ Component({
                 dinnerOption: "Cheese"
               }
             })
-            this.checkMealSelection();
+            await this.checkMealSelection();
+            wx.navigateBack();
           }
           else if (this.data.fish===true){
             await wx.cloud.callFunction({
@@ -243,7 +255,8 @@ Component({
                 dinnerOption: "Fish"
               }
             })
-            this.checkMealSelection();
+            await this.checkMealSelection();
+            wx.navigateBack();
           }
           else{
             this.checkMealSelection();
@@ -265,7 +278,8 @@ Component({
                 dinnerOption: "Cheese"
               }
             })
-            this.checkMealSelection();
+            await this.checkMealSelection();
+            wx.navigateBack();
           }
           else if (this.data.fish===true){
             await wx.cloud.callFunction({
@@ -276,7 +290,8 @@ Component({
                 dinnerOption: "Fish"
               }
             })
-            this.checkMealSelection();
+            await this.checkMealSelection();
+            wx.navigateBack();
           }
           else {
             this.checkMealSelection();

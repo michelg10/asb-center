@@ -110,7 +110,7 @@ Component({
           let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
             userId: getHolderInfo.data[0]._id
           }).get();
-            if (checkDinnerStatus.data.length === 0){
+            if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
               this.setData({
                 dinnerSelection: "Not Selected",
                 dinnerSelectionClass: "Lost",
@@ -141,7 +141,7 @@ Component({
       let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
         userId: this.data.holderUserId,
       }).get();
-      if (checkDinnerStatus.data.length === 0){
+      if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
         this.setData({
           dinnerSelection: "Not Selected",
           dinnerSelectionClass: "Lost",
@@ -167,7 +167,10 @@ Component({
       });
     },
     onSaveDinner: async function(){
-      if (this.data.dinnerSelection==="Not Selected"){
+      let checkMeal = await this.data.db.collection("BlackoutStudentData").where({
+        userId: this.data.holderUserId,
+      }).get();
+      if(checkMeal.data.length===0){
         if (this.data.cheese===true){
           await wx.cloud.callFunction({
             name: "AnyTicketSetStudentData",
