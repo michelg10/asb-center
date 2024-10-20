@@ -212,15 +212,32 @@ Component({
           this.setData({
               userData: data,
           });
-          this.data.db.collection("BlackoutTickets").where({
-            userId: this.data.userData.student?.id,
-          }).get().then((res) => {
-            if (res.data.length > 0) {
-              this.setData({
-                holderStatus: true
-              });
-            };
-          })
+          if (this.data.userData.student){
+            console.log("User registered.")
+            this.data.db.collection("BlackoutTickets").where({
+              userId: this.data.userData.student.id,
+            }).get().then((res) => {
+              if (res.data.length > 0) {
+                this.setData({
+                  holderStatus: true
+                });
+              };
+            })
+          }
+          else{
+            console.log("User not registered.")
+            wx.showModal({
+              title: "Not Registered",
+              content: "You must complete registration to participate in this event.",
+              showCancel: false,
+              confirmText: "Dismiss",
+              /*success: (res) => {
+                if (res.confirm){
+                  wx.navigateBack();
+                }
+              }*/
+            })
+          }
           this.data.db.collection("admins").where({
             userId: this.data.userData.id,
           }).get().then((res) => {

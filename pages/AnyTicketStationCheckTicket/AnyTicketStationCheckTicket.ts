@@ -36,6 +36,7 @@ Component({
       });
     },
     onShow: function() {
+      this.onClear();
       this.setData({
         inputCodeData: '',
       });
@@ -93,7 +94,8 @@ Component({
                 holderName: checkTicket.data[0].studentName,
                 entryStatus: checkTicket.data[0].entry,
                 checkTicketResponse: true,
-                ticketResponseClass: "check"
+                ticketResponseClass: "check",
+                inputCodeData: '',
               })
             } else{
               this.setData({
@@ -102,26 +104,32 @@ Component({
                 holderName: checkTicket.data[0].studentName,
                 entryStatus: checkTicket.data[0].entry,
                 checkTicketResponse: true,
-                ticketResponseClass: "cross"
+                ticketResponseClass: "cross",
+                inputCodeData: '',
               })
             }
           }
-        }
-        else {
-          wx.showModal({
-            title: "Code Scan Failure",
-            content: "Please scan Ticket Code, not Personal Code.",
-            showCancel: false,
-            confirmText: "Dismiss"
-          })
+          else {
+            wx.showModal({
+              title: "Code Scan Failure",
+              content: "Please scan Ticket Code, not Personal Code.",
+              showCancel: false,
+              confirmText: "Dismiss"
+            })
+            this.onClear();
+            this.setData({
+              inputCodeData: '',
+            });
+          }
         }
       }
     },
     onClear: function(){
       this.setData({
-        holderName: undefined,
+        holderName: '',
         checkTicketResponse: false,
-        ticketResponseClass: undefined,
+        ticketResponseClass: '',
+        inputCodeData: '',
       })
     }
   }

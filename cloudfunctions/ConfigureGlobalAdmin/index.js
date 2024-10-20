@@ -46,7 +46,7 @@ exports.main = async (event, context) => {
       userId: event.userId,
       canAddAdmin: event.canAddAdmin,
       canIssueTicket: event.canIssueTicket,
-      name: event.name,
+      adminName: event.name,
     };
     if (currentlyIsAdmin) {
       await db.collection("admins").doc(currentAdminEntryWxId).update({
