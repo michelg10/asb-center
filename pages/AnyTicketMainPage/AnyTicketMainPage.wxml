@@ -6,7 +6,7 @@
     </view>
   </view>
     <block wx:if="{{errorMessage !== undefined}}">
-        <text id="AnyOrderMainPageErrorMessage">{{errorMessage}}</text>
+        <text id="AnyTicketErrorMessage">{{errorMessage}}</text>
     </block>
     <block wx:else>
       <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
@@ -16,11 +16,13 @@
         <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
           <view id="event-option" bindtap="consentFormTap">
             <text>Submit Consent Form</text>
-            <view id="event-option-restrict-label" wx:if="{{!allowConsent}}">Restricted</view><view id="event-option-restrict-label" wx:if="{{consentDone}}">Submitted</view>
+            <view id="date-label" wx:if="{{allowConsent && !consentDone}}">Ends: {{consentEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowConsent}}">Restricted</view><view id="event-option-restrict-label" wx:if="{{consentDone && allowConsent}}">Submitted</view>
             <view id="event-option-icon" class="consent-icon"></view>
           </view>
           <view id="event-option" bindtap="mealOptionTap">
             <text>Browse Meal Options</text>
+            <view id="date-label" wx:if="{{allowMeal}}">Ends: {{mealEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowMeal}}">Restricted</view>
             <view id="event-option-icon" class="meal-icon"></view>
           </view>
@@ -28,11 +30,13 @@
         <view id="any-ticket-event-option-row" wx:if="{{allowLateOptions}}">
           <view id="event-option" bindtap="hauntedHouseTap">
             <text>Haunted House Sign-Up</text>
+            <view id="date-label" wx:if="{{allowHouse}}">Ends: {{houseEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowHouse}}">Restricted</view>
             <view id="event-option-icon" class="house-icon"></view>
           </view>
           <view id="event-option" bindtap="musicRequestTap">
             <text>Send Music Requests</text>
+            <view id="date-label" wx:if="{{allowMusic}}">Ends: {{musicEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
             <view id="event-option-icon" class="music-icon"></view>
           </view>

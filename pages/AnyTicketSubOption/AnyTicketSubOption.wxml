@@ -1,5 +1,6 @@
 <view id="any-ticket-master-container">
   <text class="big-title-text">{{eventName}}</text>
+  <view class="date-text">Ends: {{dueDate}}</view>
   <view id="any-ticket-option-container" wx:if="{{consent}}">
     <view class="heading-text">Submit Consent Form</view>
     <view id="option-subheading">
@@ -20,6 +21,16 @@
       <view class="student-list-search-container">
         <input class="student-search-textfield" placeholder="监护人签名 Parent Signature" placeholder-class="student-search-textfield-placeholder" bindchange="handleParentInput"/>
       </view>
+      <text>选择晚班校车站点（选填）
+      Select Late Bus Destination (Optional)</text>
+      <view>
+        <picker class="student-list-picker-container" mode="selector" range="{{busOptions}}" value="{{bus}}" bindchange="busChanged">
+          <view class="question-select">
+            {{busOptions[bus]}}
+            <image src="../../icons/chevron-down.svg" class="selectorIcon"></image>
+          </view>
+        </picker>
+      </view>
     </view>
     <view class="button" id="add-submit-button">
       <view class="button" bindtap="onConsentSubmit" id="submit-button">
@@ -31,14 +42,20 @@
     <view class="heading-text">Browse Meal Options</view>
     <view class="status-{{mealSelectionClass}}">Current Saved Option: {{mealSelection}}</view>
     <view class="option-row" bindtap="cheeseTap">
-      <text class="option-text">McDonald's Cheese Burger</text>
-      <image class="option-toggle" src="/icons/selector{{cheese ? '-selected' : ''}}.svg">
-      </image>
+      <view class="option-header">
+        <text class="option-text">McDonald's Cheese Burger</text>
+        <image class="option-toggle" src="/icons/selector{{cheese ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view id="option-image" class="cheese-option"></view>
     </view>
     <view class="option-row" bindtap="fishTap">
-      <text class="option-text">McDonald's Filet O' Fish Burger</text>
-      <image class="option-toggle" src="/icons/selector{{fish ? '-selected' : ''}}.svg">
-      </image>
+      <view class="option-header">
+        <text class="option-text">McDonald's Filet O' Fish Burger</text>
+        <image class="option-toggle" src="/icons/selector{{fish ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view id="option-image" class="fish-option"></view>
     </view>
     <view class="button" id="add-submit-button">
       <view class="button" bindtap="onSaveDinner" id="submit-button">

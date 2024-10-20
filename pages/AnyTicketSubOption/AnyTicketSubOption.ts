@@ -16,6 +16,9 @@ type ComponentDataInterface = {
   fish: boolean | false,
   musicName: string,
   musicComposer: string,
+  dueDate: number,
+  bus: number,
+  busOptions: string[],
 };
 
 Component({
@@ -45,11 +48,16 @@ Component({
           consentParent: x.detail.value,
         });
       },
+      busChanged: function(x: any) {
+        this.setData({
+            bus: x.detail.value,
+        });
+      },
       onConsentSubmit: async function(){
         if(this.data.consentStu !== '' && this.data.consentParent !== ''){
         wx.showModal({
           title: "Submit Form 提交",
-          content: "By submitting, you certify your digital signature is effective. You cannot edit this form after submission. \n确认提交后不可修改，并声明您的电子签名具有同等效应。",
+          content: "By submitting, you certify your digital signature is effective. You cannot edit this form after submission.\n确认提交则声明您的电子签名具有同等效应，提交后不可修改。",
           success: async (res) => {
             if(res.confirm){
                 let checkDatabase = await this.data.db.collection("BlackoutStudentData").where({
@@ -62,7 +70,7 @@ Component({
                       type: "submitConsent",
                       userId: this.data.userData.student?.id,
                       consent: true,
-                      consentData: [this.data.consentStu, this.data.consentParent, Date.now()]
+                      consentData: [this.data.consentStu, this.data.consentParent, this.data.busOptions[this.data.bus], Date.now()]
                     }
                   })
                 }
@@ -73,7 +81,7 @@ Component({
                       type: "submitConsentNew",
                       userId: this.data.userData.student?.id,
                       consent: true,
-                      consentData: [this.data.consentStu, this.data.consentParent, Date.now()]
+                      consentData: [this.data.consentStu, this.data.consentParent, this.data.busOptions[this.data.bus], Date.now()]
                     }
                   })
                 }
@@ -150,6 +158,7 @@ Component({
         this.setData({
           consentStu: '',
           consentParent: '',
+          bus: 0,
           musicName: '',
           musicComposer: ''
         })
@@ -164,6 +173,13 @@ Component({
         eventChannel.on('eventName', (res) => {
           this.setData({
             eventName: res,
+            bus: 0,
+            busOptions: ['无 None', '古北 Gubei', '莘庄 Xinzhuang', '浦东商城路 Pudong Shangcheng Rd', '浦东⻓清路 Changqing Rd', '徐家汇 Xujiahui', '虹梅 Hongmei', '江苏路 Jiangsu Rd']
+          });
+        })
+        eventChannel.on('dueDate', (res) => {
+          this.setData({
+            dueDate: res,
           });
         })
         eventChannel.on('option', (res) => {
@@ -213,6 +229,9 @@ Component({
                 mealSelection: checkMeal.data[0].dinnerOption,
                 mealSelectionClass: "yes"
               });
+            }
+            if(checkMeal.data[0].consent===true){
+              wx.navigateBack();
             }
           }
         })

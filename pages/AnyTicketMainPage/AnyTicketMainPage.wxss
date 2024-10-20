@@ -68,6 +68,11 @@
   font-weight: 700;
   font-size: 17px;
 }
+#date-label {
+  font-weight: 700;
+  font-size: 17px;
+  color: #3180E9;
+}
 #event-option-restrict-label{
   background-color: #000000;
   color: #FFFFFF;
@@ -94,4 +99,14 @@
   height: 120px;
   background-size: contain;
   background-repeat: no-repeat;
+}
+#AnyTicketErrorMessage {
+  margin-top: 51px;
+  margin-left: 38px;
+  margin-right: 38px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #D81717;
 }
