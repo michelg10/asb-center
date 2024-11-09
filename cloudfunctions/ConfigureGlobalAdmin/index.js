@@ -46,6 +46,7 @@ exports.main = async (event, context) => {
       userId: event.userId,
       canAddAdmin: event.canAddAdmin,
       canIssueTicket: event.canIssueTicket,
+      canIssueTicketToGuest: event.canIssueTicketToGuest,
       adminName: event.name,
     };
     if (currentlyIsAdmin) {

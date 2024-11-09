@@ -12,6 +12,11 @@
         <image class="admin-configure-toggle" src="/icons/selector{{canIssueTicket ? '-selected' : ''}}.svg">
         </image>
       </view>
+      <view class="admin-configure-row" bindtap="ticketToGuestTap" wx:if="{{canIssueTicket}}">
+        <text class="admin-configure-title">Issue tickets to guest</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{canIssueTicketToGuest ? '-selected' : ''}}.svg">
+        </image>
+      </view>
       <view class="admin-configure-row" bindtap="assignNewAdminTap">
         <text class="admin-configure-title">Assign new admins</text>
         <image class="admin-configure-toggle" src="/icons/selector{{canAddAdmin ? '-selected' : ''}}.svg">

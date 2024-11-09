@@ -137,8 +137,7 @@ export async function handleAnyTicketCode(obj: string, x: string) {
       return "invalid";
     }
   } else {
-    reportCodeScanError(`Not a valid Blackout Ticket Code.`);
+    reportCodeScanError(`This Code is bound to the unknown event ${keyToValueMap.get("event")}.`);
     return "invalid";
   }
-  return "invalid";
 }

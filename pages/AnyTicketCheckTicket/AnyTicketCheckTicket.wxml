@@ -12,6 +12,7 @@
   <view wx:if="{{checkTicketResponse}}">
     <view id="ticket-option-subheading"><text>Ticket ID: {{ticketId}}</text></view>
     <view id="ticket-option-subheading"><text>Ticket Holder Name: {{holderName}}</text></view>
+    <view id="ticket-option-subheading"><text>Ticket Holder Class: {{holderGrade}}-{{holderClass}}</text></view>
     <view id="ticket-option-subheading"><text class="status-{{ticketStatus}}">Ticket Status: {{ticketStatus}}</text></view>
     <view id="ticket-option-subheading"><text class="status-entry-{{entryStatus}}">Entry Status: {{entryStatus}}</text></view>
     <view class="button" id="add-clear-button">

@@ -28,6 +28,7 @@
     "pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
     "pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
     "pages/AnyTicketSubOption/AnyTicketSubOption",
+    "pages/AnyTicketConfirmMultiSelect/AnyTicketConfirmMultiSelect",
     "pages/StationModeAnyInput/StationModeAnyInput"
   ],
   "darkmode": true,

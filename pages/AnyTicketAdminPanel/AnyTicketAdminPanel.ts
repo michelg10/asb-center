@@ -23,6 +23,7 @@ type AdminStatusType = {
   wxId: string,
   userId: string,
   canIssueTicket: boolean,
+  canIssueTicketToGuest: boolean,
   canAddAdmin: boolean,
   adminName: string,
 };
@@ -62,17 +63,24 @@ Component({
         let getHolderInfo = await this.data.db.collection("studentData").where({
           _id: this.data.holderUserId
         }).get();
-        if (getHolderInfo.data.length===0){
-          this.setData({
-            holderName: getTicketStatus.data[0].studentName,
-          })
-        }
-        else{
-          this.setData({
-            holderName: getHolderInfo.data[0].nickname,
-            holderGrade: getHolderInfo.data[0].grade,
-            holderClass: getHolderInfo.data[0].class
-          })
+        if (getTicketStatus.data[0].status!=="Available"){
+          if (getHolderInfo.data.length===0){
+            let getHolderLostInfo = await this.data.db.collection("studentData").where({
+              _id: this.data.holderUserId.substring(0,this.data.holderUserId.length-4)
+            }).get();
+            this.setData({
+              holderName: getHolderLostInfo.data[0].nickname,
+              holderGrade: getHolderLostInfo.data[0].grade,
+              holderClass: getHolderLostInfo.data[0].class
+            })
+          }
+          else{
+            this.setData({
+              holderName: getHolderInfo.data[0].nickname,
+              holderGrade: getHolderInfo.data[0].grade,
+              holderClass: getHolderInfo.data[0].class
+            })
+          }
         }
         this.data.cacheSingleton = CacheSingleton.getInstance();
         this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
@@ -102,6 +110,7 @@ Component({
             wxId: checkAdmin.data[0]._id as string,
             userId: checkAdmin.data[0].userId,
             canIssueTicket: checkAdmin.data[0].canIssueTicket,
+            canIssueTicketToGuest: checkAdmin.data[0].canIssueTicketToGuest,
             canAddAdmin: checkAdmin.data[0].canAddAdmin,
             adminName: checkAdmin.data[0].adminName,
           }
@@ -260,8 +269,13 @@ Component({
         _id: this.data.holderUserId
       }).get();
       if (getHolderInfo.data.length===0){
+        let getHolderLostInfo = await this.data.db.collection("studentData").where({
+          _id: this.data.holderUserId.substring(0,this.data.holderUserId.length-4)
+        }).get();
         this.setData({
-          holderName: getTicketStatus.data[0].studentName
+          holderName: getHolderLostInfo.data[0].nickname,
+          holderGrade: getHolderLostInfo.data[0].grade,
+          holderClass: getHolderLostInfo.data[0].class
         })
       }
       else{
@@ -282,19 +296,34 @@ Component({
               let checkStudentName = await this.data.db.collection("studentData").where({
                 _id: parseCodeData[1].studentId,
               }).get();
-              await wx.cloud.callFunction({
-                name: "AnyTicketIssueTicket",
-                data: {
-                  type: "issue",
-                  ticketId: this.data.ticketId,
-                  issuerId: this.data.adminStatus.userId,
-                  issuerName: this.data.adminStatus.adminName,
-                  studentName: checkStudentName.data[0].uniqueNickname,
-                  userId: parseCodeData[1].studentId
-                }
-              })
-              await this.updateTicketStatus();
-              this.onUpdateDinner();
+              let checkTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                userId: parseCodeData[1].studentId,
+              }).get();
+              console.log(checkTicketStatus)
+              if (checkTicketStatus && checkTicketStatus.data.length!==0){
+                wx.showModal({
+                  title: "Code Scan Failure",
+                  content: "User already holds a valid blackout ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
+                  showCancel: false,
+                  confirmText: "Dismiss"
+                })
+                return;
+              }
+              else {
+                await wx.cloud.callFunction({
+                  name: "AnyTicketIssueTicket",
+                  data: {
+                    type: "issue",
+                    ticketId: this.data.ticketId,
+                    issuerId: this.data.adminStatus.userId,
+                    issuerName: this.data.adminStatus.adminName,
+                    studentName: checkStudentName.data[0].uniqueNickname,
+                    userId: parseCodeData[1].studentId
+                  }
+                })
+                await this.updateTicketStatus();
+                this.onUpdateDinner();
+              }
             }
             else {
               wx.showModal({
@@ -319,19 +348,34 @@ Component({
                 let checkStudentName = await this.data.db.collection("studentData").where({
                   _id: parseCodeData[1].studentId,
                 }).get();
-                await wx.cloud.callFunction({
-                  name: "AnyTicketIssueTicket",
-                  data: {
-                    type: "issue",
-                    ticketId: this.data.ticketId,
-                    issuerId: this.data.adminStatus.userId,
-                    issuerName: this.data.adminStatus.adminName,
-                    studentName: checkStudentName.data[0].uniqueNickname,
-                    userId: parseCodeData[1].studentId
-                  }
-                })
-                await this.updateTicketStatus();
-                this.onUpdateDinner();
+                let checkTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                  userId: parseCodeData[1].studentId,
+                }).get();
+                console.log(checkTicketStatus)
+                if (checkTicketStatus && checkTicketStatus.data.length!==0){
+                  wx.showModal({
+                    title: "Code Scan Failure",
+                    content: "User already holds a valid blackout ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
+                    showCancel: false,
+                    confirmText: "Dismiss"
+                  })
+                  return;
+                }
+                else{
+                  await wx.cloud.callFunction({
+                    name: "AnyTicketIssueTicket",
+                    data: {
+                      type: "issue",
+                      ticketId: this.data.ticketId,
+                      issuerId: this.data.adminStatus.userId,
+                      issuerName: this.data.adminStatus.adminName,
+                      studentName: checkStudentName.data[0].uniqueNickname,
+                      userId: parseCodeData[1].studentId
+                    }
+                  })
+                  await this.updateTicketStatus();
+                  this.onUpdateDinner();
+                }
               }
               else {
                 wx.showModal({
@@ -396,6 +440,31 @@ Component({
       })
       await this.updateTicketStatus();
       this.onUpdateDinner();
+    },
+    onIssueTicketToGuest: function(){
+      if (this.data.ticketStatus==="Available" && this.data.adminStatus.canIssueTicketToGuest){
+        wx.showModal({
+          title: "Issue as Guest Ticket",
+          content: "Confirm to issue as a guest ticket? Guest tickets are not linked to a student, and thus cannot be operated on again after leaving this page. Be sure to select the guest's meal option immediately.",
+          success: async (res) => {
+            if (res.confirm){
+              await wx.cloud.callFunction({
+                name: "AnyTicketIssueTicket",
+                data: {
+                  type: "issue",
+                  ticketId: this.data.ticketId,
+                  issuerId: this.data.adminStatus.userId,
+                  issuerName: this.data.adminStatus.adminName,
+                  studentName: "Guest",
+                  userId: "GUEST".concat(Math.floor(Math.random() * (99999999 - 10000000 + 1) + 10000000).toString())
+                }
+              })
+              await this.updateTicketStatus();
+              this.onUpdateDinner();
+            }
+          },
+        })
+      }
     }
   }
 })

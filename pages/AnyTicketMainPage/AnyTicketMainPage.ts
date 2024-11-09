@@ -5,6 +5,7 @@ type ComponentDataInterface = {
     eventId: String,
     userData: UserDataType,
     holderStatus: boolean | false,
+    holderLostStatus: boolean | false,
     isAdmin: boolean,
     consentDone: boolean | false,
     allowConsent: boolean | false,
@@ -64,13 +65,26 @@ Component({
         // Format the date to a string using the specified options
         return date.toLocaleString('en-US', options); // Change 'en-US' to your desired locale
       },
-      adminButtonTapped: function(){
-        wx.navigateTo({
-          url: "/pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
-          success: (res) => {
-            res.eventChannel.emit("myId", this.data.userData.id);
-          }
-        });
+      adminButtonTapped: async function(){
+        let allowValidation = await this.data.db.collection("BlackoutDeadlines").where({
+          optionId: "validate",
+        }).get();
+        if (allowValidation.data[0].startTime<=(Date.now()/1000) && (Date.now()/1000)<=allowValidation.data[0].endTime){
+          wx.navigateTo({
+            url: "/pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
+            success: (res) => {
+              res.eventChannel.emit("myId", this.data.userData.id);
+            }
+          });
+        }
+        else{
+          wx.showModal({
+            title: "Access Denied",
+            content: "Ticket validation function can only be accessed on the event day.",
+            showCancel: false,
+            confirmText: "Dismiss"
+          })
+        }
       },
       consentFormTap: function(){
         if(this.data.allowConsent && !this.data.consentDone){
@@ -125,12 +139,18 @@ Component({
         }
       },
       adminStationMode: function(){
-        wx.navigateTo({
-          url: "/pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
-          success: (res) => {
-            res.eventChannel.emit("myId", this.data.userData.id);
-          }
-        });
+        this.data.db.collection("admins").where({
+          userId: this.data.userData.id,
+        }).get().then((res) => {
+          if (res.data[0].canIssueTicketToGuest) {
+            wx.navigateTo({
+              url: "/pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
+              success: (res) => {
+                res.eventChannel.emit("myId", this.data.userData.id);
+              }
+            });
+          };
+        })
       },
       onShow: async function(){
         let getConsentDeadline = await this.data.db.collection("BlackoutDeadlines").where({
@@ -213,7 +233,6 @@ Component({
               userData: data,
           });
           if (this.data.userData.student){
-            console.log("User registered.")
             this.data.db.collection("BlackoutTickets").where({
               userId: this.data.userData.student.id,
             }).get().then((res) => {
@@ -221,11 +240,31 @@ Component({
                 this.setData({
                   holderStatus: true
                 });
-              };
+              }
+              else {
+                if (this.data.userData.student){
+                  this.data.db.collection("BlackoutTickets").where({
+                    userId: this.data.userData.student.id.concat("LOST"),
+                  }).get().then((res) => {
+                    if (res.data.length > 0) {
+                      this.setData({
+                        holderLostStatus: true
+                      });
+                    }
+                  })
+                }
+                else{
+                  wx.showModal({
+                    title: "Not Registered",
+                    content: "You must complete registration to participate in this event.",
+                    showCancel: false,
+                    confirmText: "Dismiss",
+                  })
+                }
+              }
             })
           }
           else{
-            console.log("User not registered.")
             wx.showModal({
               title: "Not Registered",
               content: "You must complete registration to participate in this event.",

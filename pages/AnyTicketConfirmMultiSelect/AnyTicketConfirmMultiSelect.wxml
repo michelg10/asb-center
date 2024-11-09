@@ -1,0 +1,17 @@
+<view id="confirm-multi-select-main-container">
+  <text class="big-title-text">Confirm Group Members</text>
+  <text class="big-title-sub-text">{{studentData.length}}/6 students selected</text>
+  <view id="selection-confirmation-list">
+    <block wx:for="{{studentData}}" wx:key="id">
+      <view class="student-select-container-block">
+        <view class="student-select-left-block">
+          <text class="student-select-nickname">{{item.nickname}} {{item.studentGrade}}-{{item.studentClass}}</text>
+          <text class="student-select-name">{{ item.chineseName+" ("+item.englishName+")" }}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="button" bindtap="confirmClicked" id="confirm-button">
+    <text class="button-text">Confirm</text>
+  </view>
+</view>

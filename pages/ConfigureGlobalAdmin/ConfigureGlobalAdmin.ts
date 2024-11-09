@@ -3,6 +3,7 @@ interface componentDataInterface {
   adminEnabled: boolean,
   canAddAdmin: boolean,
   canIssueTicket: boolean,
+  canIssueTicketToGuest: boolean,
   name: string,
   db: DB.Database,
   modFeedback: string,
@@ -36,6 +37,7 @@ Component({
           isAdmin: this.data.adminEnabled,
           canAddAdmin: this.data.canAddAdmin,
           canIssueTicket: this.data.canIssueTicket,
+          canIssueTicketToGuest: this.data.canIssueTicketToGuest,
           name: this.data.name,
         }
       }).then((res) => {
@@ -70,6 +72,11 @@ Component({
         canIssueTicket: !this.data.canIssueTicket,
       });
     },
+    ticketToGuestTap: function() {
+      this.setData({
+        canIssueTicketToGuest: !this.data.canIssueTicketToGuest,
+      });
+    },
     onLoad: async function() {
       this.data.db = wx.cloud.database();
       const eventChannel = this.getOpenerEventChannel();
@@ -82,6 +89,7 @@ Component({
           this.setData({
             adminEnabled: false,
             canIssueTicket: false,
+            canIssueTicketToGuest: false,
             canAddAdmin: false,
             name: "",
           });
@@ -89,6 +97,7 @@ Component({
           this.setData({
             adminEnabled: true,
             canIssueTicket: getAdminData.data[0].canIssueTicket,
+            canIssueTicketToGuest: getAdminData.data[0].canIssueTicketToGuest,
             canAddAdmin: getAdminData.data[0].canAddAdmin,
             name: getAdminData.data[0].adminName,
           });

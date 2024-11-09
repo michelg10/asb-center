@@ -1,6 +1,6 @@
 <view id="any-ticket-admin-panel-container">
   <view id="any-ticket-detail-container">
-    <text class="big-title-text">Admin</text>
+    <text class="big-title-text" bindlongpress="onIssueTicketToGuest">Admin</text>
     <text id="ticketid-text">Ticket ID: {{ticketId}}</text>
     <text id="ticketid-text" class="status-{{ticketStatus}}">Status: {{ticketStatus}}</text>
     <text id="ticketid-text" class="status-{{holderStatusClass}}" wx:if="{{ticketStatus==='Issued'}}">Entry Status: {{holderStatus}}</text>

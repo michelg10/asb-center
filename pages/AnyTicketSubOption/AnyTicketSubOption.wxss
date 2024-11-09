@@ -100,3 +100,35 @@
   font-weight: bold;
   color: #3180E9;
 }
+#multi-select-main-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px;
+  margin-top: 10px;
+}
+#multi-select-student-list-container {
+  margin-top: 16px;
+  margin-bottom: 21px;
+}
+#multi-select-student-list-main-container {
+  height: 300px;
+}
+.selector-image {
+  height: 19px;
+  width: 19px;
+}
+.admin-panel-full-width-button-container {
+  margin-top: 12px;
+  width: 100%;
+  height: 44px;
+  border-radius: 10px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.admin-panel-full-width-button-container text {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--link);
+}

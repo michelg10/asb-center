@@ -9,6 +9,8 @@ interface componentDataInterface {
   ticketId: string,
   ticketStatus: string,
   holderName: string | undefined,
+  holderGrade: number,
+  holderClass: number,
   entryStatus: boolean
 };
 type AdminStatusType = {
@@ -63,6 +65,12 @@ Component({
               let checkTicket = await this.data.db.collection("BlackoutTickets").where({
                 ticketId: parseCodeData[1],
               }).get();
+              let checkTicketHolder = await this.data.db.collection("studentData").where({
+                _id: checkTicket.data[0].userId,
+              }).get();
+              let checkTicketHolderAbnormal = await this.data.db.collection("studentData").where({
+                _id: checkTicket.data[0].userId.substring(0,checkTicket.data[0].userId.length-4),
+              }).get();
               if (checkTicket.data[0].status==="Issued" && checkTicket.data[0].entry===false){
                 await wx.cloud.callFunction({
                   name: "AnyTicketUpdateStatus",
@@ -80,6 +88,12 @@ Component({
                   checkTicketResponse: true,
                   ticketResponseClass: "check"
                 })
+                if (checkTicketHolder && checkTicketHolder.data.length!==0){
+                  this.setData({
+                    holderGrade: checkTicketHolder.data[0].grade,
+                    holderClass: checkTicketHolder.data[0].class
+                  })
+                }
               } else{
                 this.setData({
                   ticketId: parseCodeData[1],
@@ -89,6 +103,12 @@ Component({
                   checkTicketResponse: true,
                   ticketResponseClass: "cross"
                 })
+                if (checkTicketHolderAbnormal && checkTicketHolderAbnormal.data.length!==0){
+                  this.setData({
+                    holderGrade: checkTicketHolderAbnormal.data[0].grade,
+                    holderClass: checkTicketHolderAbnormal.data[0].class
+                  })
+                }
               }
             }
             else {
@@ -105,9 +125,11 @@ Component({
     },
     onClear: function(){
       this.setData({
-        holderName: undefined,
+        holderName: "",
+        holderGrade: 0,
+        holderClass: 0,
         checkTicketResponse: false,
-        ticketResponseClass: undefined,
+        ticketResponseClass: "",
       })
     }
   }

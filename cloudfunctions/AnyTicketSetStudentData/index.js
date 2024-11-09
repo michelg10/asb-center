@@ -59,5 +59,38 @@ exports.main = async (event, context) => {
     });
       return;
     }
+    else if (event.type === "houseModify"){
+      await db.collection('BlackoutStudentData').where({
+        userId: event.userId,
+      }).update({
+        data: {
+          house: event.house
+        }
+      });
+      await db.collection('BlackoutDeadlines').where({
+        optionId: "house",
+      }).update({
+        data: {
+          current: event.house
+        }
+      });
+      return;
+    }
+    else if (event.type === "houseAdd"){
+      await db.collection('BlackoutStudentData').add({
+        data: {
+          userId: event.userId,
+          house: event.house
+        }
+      });
+      await db.collection('BlackoutDeadlines').where({
+        optionId: "house",
+      }).update({
+        data: {
+          current: event.house
+        }
+      });
+      return;
+    }
   return;
 }

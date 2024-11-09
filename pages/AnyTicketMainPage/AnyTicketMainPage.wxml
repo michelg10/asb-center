@@ -44,8 +44,15 @@
       </view>
       <view id="any-ticket-display-container" wx:else>
         <view id="any-ticket-no-ticket" class="ticket-background"></view>
-        <text class="subheading-text">No Event Ticket</text>
-        <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to the Zombiefestation.</text>
+        <block wx:if="{{holderLostStatus}}">
+          <text class="subheading-text">Lost Event Ticket</text>
+          <text class="sub-text">Please visit our ticket sales stand to make up your lost event ticket for entry to the Zombiefestation.</text>
+          <text class="sub-text">A valid event ticket is required to access event registration functions. Your previous registration data will be saved. If you think this was a mistake, contact the ASB.</text>
+        </block>
+        <block wx:else>
+          <text class="subheading-text">No Event Ticket</text>
+          <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to the Zombiefestation.</text>
+        </block>
       </view>
     </block>
 </view>

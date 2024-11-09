@@ -31,13 +31,22 @@ Component({
     */
     methods: {
         selectStudent: function(x: any) {
+            wx.showLoading({
+              title: "Please Wait...",
+              mask: true,
+            });
             console.log("select");
             let index = x.currentTarget.dataset.index;
+            wx.hideLoading();
             const eventChannel = this.getOpenerEventChannel();
             eventChannel.emit("selectedStudent", this.data.studentData[index]);
             //wx.navigateBack();
         },
         onLoad: async function() {
+            wx.showLoading({
+              title: "Please Wait...",
+              mask: true,
+            });
             this.data.cacheSingleton = CacheSingleton.getInstance();
             this.data.db = wx.cloud.database();
             this.data.matchingIndexes = [];
@@ -50,6 +59,7 @@ Component({
                     limitGradeTo: data,
                 });
             })
+            wx.hideLoading();
         },
         doSearch: function(e: any) {
             if (this.data.studentData === undefined) {
