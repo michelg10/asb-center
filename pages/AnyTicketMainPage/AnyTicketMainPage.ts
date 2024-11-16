@@ -1,17 +1,24 @@
+import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
+import { extendNumberToLengthString } from "../../utils/util";
 
 type ComponentDataInterface = {
     eventName: String,
     eventId: String,
     userData: UserDataType,
+    upcomingEventDisplay: upcomingEventDisplayType[],
+    eventsList: EventsListItemType[],
+    reloadEventListSetInterval: any,
     holderStatus: boolean | false,
     holderLostStatus: boolean | false,
     isAdmin: boolean,
+    canIssueTicketToGuest: boolean,
     consentDone: boolean | false,
     allowConsent: boolean | false,
     allowMeal: boolean | false,
     allowHouse: boolean | false,
     allowMusic: boolean | false,
+    allowValidation: boolean | false,
     allowPreOptions: boolean | true,
     allowLateOptions: boolean | true,
     db: DB.Database,
@@ -20,14 +27,34 @@ type ComponentDataInterface = {
     mealStart: number,
     houseStart: number,
     musicStart: number,
+    eventStart: number,
     consentEnd: number,
     mealEnd: number,
     houseEnd: number,
     musicEnd: number,
+    eventEnd: number,
     consentEndDisplay: string,
     mealEndDisplay: string,
     houseEndDisplay: string,
     musicEndDisplay: string,
+};
+
+type EventsListItemType = {
+  startHour: number;
+  startMinute: number;
+  endHour: number;
+  endMinute: number;
+  id: string,
+  location: string,
+  name: string;
+};
+
+type upcomingEventDisplayType = {
+  name: string,
+  location: string,
+  isUpcoming: boolean,
+  time: string,
+  id: string,
 };
 
 Component({
@@ -66,10 +93,7 @@ Component({
         return date.toLocaleString('en-US', options); // Change 'en-US' to your desired locale
       },
       adminButtonTapped: async function(){
-        let allowValidation = await this.data.db.collection("BlackoutDeadlines").where({
-          optionId: "validate",
-        }).get();
-        if (allowValidation.data[0].startTime<=(Date.now()/1000) && (Date.now()/1000)<=allowValidation.data[0].endTime){
+        if (this.data.allowValidation){
           wx.navigateTo({
             url: "/pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
             success: (res) => {
@@ -139,18 +163,14 @@ Component({
         }
       },
       adminStationMode: function(){
-        this.data.db.collection("admins").where({
-          userId: this.data.userData.id,
-        }).get().then((res) => {
-          if (res.data[0].canIssueTicketToGuest) {
-            wx.navigateTo({
-              url: "/pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
-              success: (res) => {
-                res.eventChannel.emit("myId", this.data.userData.id);
-              }
-            });
-          };
-        })
+        if (this.data.canIssueTicketToGuest) {
+          wx.navigateTo({
+            url: "/pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
+            success: (res) => {
+              res.eventChannel.emit("myId", this.data.userData.id);
+            }
+          });
+        };
       },
       onShow: async function(){
         let getConsentDeadline = await this.data.db.collection("BlackoutDeadlines").where({
@@ -164,6 +184,9 @@ Component({
         }).get();
         let getMusicDeadline = await this.data.db.collection("BlackoutDeadlines").where({
           optionId: "music",
+        }).get();
+        let getEventDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+          optionId: "validate",
         }).get();
         let checkErrorMsg = await this.data.db.collection("BlackoutDeadlines").where({
           optionId: "errorMsg",
@@ -205,16 +228,19 @@ Component({
           mealStart: getMealDeadline.data[0].startTime,
           houseStart: getHouseDeadline.data[0].startTime,
           musicStart: getMusicDeadline.data[0].startTime,
+          eventStart: getEventDeadline.data[0].startTime,
           consentEnd: getConsentDeadline.data[0].endTime,
           mealEnd: getMealDeadline.data[0].endTime,
           houseEnd: getHouseDeadline.data[0].endTime,
           musicEnd: getMusicDeadline.data[0].endTime,
+          eventEnd: getEventDeadline.data[0].endTime
         });
         this.setData({
           allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
           allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
           allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
+          allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
           allowPreOptions: this.data.allowConsent && !this.data.consentDone || this.data.allowMeal,
@@ -224,6 +250,35 @@ Component({
           houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
         })
+      },
+      reloadUpcomingEventList: function() {
+        let date = new Date();
+        let currentDayTimeMark = date.getHours()*60+date.getMinutes();
+        let newUpcomingEventDisplay: upcomingEventDisplayType[] = [];
+        for (let i=0;i<this.data.eventsList.length;i++) {
+          let currentItem = this.data.eventsList[i];
+          let thisEntryStartDayTimeMark = currentItem.startHour*60+currentItem.startMinute;
+          let thisEntryEndDayTimeMark = currentItem.endHour*60+currentItem.endMinute;
+          let entryIsNow = false;
+          if (thisEntryStartDayTimeMark<=currentDayTimeMark && currentDayTimeMark<=thisEntryEndDayTimeMark) {
+            entryIsNow = true;
+          }
+          let convertToDisplayTime = (a: number, b: number) => {
+            let timePostfix = (a>=12 ? "PM" : "AM");
+            let actualA = (a >= 13 ? a-12 : a);
+            return `${actualA}:${extendNumberToLengthString(b, 2)}${timePostfix}`;
+          }
+          newUpcomingEventDisplay.push({
+            name: currentItem.name,
+            location: currentItem.location,
+            isUpcoming: !entryIsNow && !(currentDayTimeMark>thisEntryEndDayTimeMark),
+            time: `${convertToDisplayTime(currentItem.startHour, currentItem.startMinute)} - ${convertToDisplayTime(currentItem.endHour, currentItem.endMinute)}`,
+            id: currentItem.id,
+          });
+        }
+        this.setData({
+          upcomingEventDisplay: newUpcomingEventDisplay,
+        });
       },
       onLoad: async function(){
         this.data.db = wx.cloud.database();
@@ -284,6 +339,11 @@ Component({
               this.setData({
                 isAdmin: true
               });
+              if (res.data[0].canIssueTicketToGuest){
+                this.setData({
+                  canIssueTicketToGuest: true
+                });
+              }
             };
           })
         });
@@ -309,6 +369,9 @@ Component({
         let getMusicDeadline = await this.data.db.collection("BlackoutDeadlines").where({
           optionId: "music",
         }).get();
+        let getEventDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+          optionId: "validate",
+        }).get();
         if (getConsentDeadline.data.length===0||getMealDeadline.data.length===0||getHouseDeadline.data.length===0||getMusicDeadline.data.length===0){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
@@ -319,10 +382,12 @@ Component({
           mealStart: getMealDeadline.data[0].startTime,
           houseStart: getHouseDeadline.data[0].startTime,
           musicStart: getMusicDeadline.data[0].startTime,
+          eventStart: getEventDeadline.data[0].startTime,
           consentEnd: getConsentDeadline.data[0].endTime,
           mealEnd: getMealDeadline.data[0].endTime,
           houseEnd: getHouseDeadline.data[0].endTime,
           musicEnd: getMusicDeadline.data[0].endTime,
+          eventEnd: getEventDeadline.data[0].endTime
         });
         let getConsentStatus = await this.data.db.collection("BlackoutStudentData").where({
           userId: this.data.userData.student?.id,
@@ -349,6 +414,7 @@ Component({
           allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
           allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
+          allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
           allowPreOptions: this.data.allowConsent && !this.data.consentDone || this.data.allowMeal,
@@ -358,6 +424,55 @@ Component({
           houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
         })
+        allCollectionsData(this.data.db, "BlackoutTimetable").then((res) => {
+          let newEventsList: EventsListItemType[] = [];
+          for (let i=0;i<res.data.length;i++) {
+            newEventsList.push({
+              startHour: res.data[i].startHour,
+              startMinute: res.data[i].startMinute,
+              endHour: res.data[i].endHour,
+              endMinute: res.data[i].endMinute,
+              id: res.data[i].id,
+              location: res.data[i].location,
+              name: res.data[i].name,
+            });
+          }
+          // earlier events first
+          newEventsList.sort((a, b) => {
+            if (a.startHour < b.startHour) {
+              return -1;
+            }
+            if (a.startHour > b.startHour) {
+              return 1;
+            }
+            if (a.startMinute < b.startMinute) {
+              return -1;
+            }
+            if (a.startMinute > b.startMinute) {
+              return 1;
+            }
+            if (a.endMinute < b.endMinute) {
+              return -1;
+            }
+            if (a.endMinute > b.endMinute) {
+              return 1;
+            }
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          });
+          this.setData({
+            eventsList: newEventsList,
+          });
+          this.reloadUpcomingEventList();
+          this.data.reloadEventListSetInterval = setInterval(() => {
+            this.reloadUpcomingEventList();
+          }, 10*1000);
+        });
       }
   }
 })

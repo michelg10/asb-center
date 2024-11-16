@@ -111,7 +111,10 @@
   margin-bottom: 21px;
 }
 #multi-select-student-list-main-container {
-  height: 300px;
+  height: 230px;
+}
+#multi-display-student-list-main-container {
+  height: 450px;
 }
 .selector-image {
   height: 19px;

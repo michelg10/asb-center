@@ -54,5 +54,23 @@
           <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to the Zombiefestation.</text>
         </block>
       </view>
+      <view id="upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0 && !allowPreOptions && !allowLateOptions}}">
+        <text class="heading-text" id="upcoming-events-heading">Event Guide</text>
+        <view id="upcoming-events-inner-container">
+          <block wx:for="{{upcomingEventDisplay}}" wx:key="id">
+            <view wx:if="{{index!==0}}" class="logs-separator"></view>
+            <view class="upcoming-events-block logs-lr-arrange-block">
+              <view class="logs-left-top-down-arrange">
+                <text class="upcoming-event-upcoming" wx:if="{{item.isUpcoming}}">UPCOMING</text>
+                <text class="upcoming-events-title">{{item.name}}</text>
+              </view>
+              <view class="logs-right-top-down-arrange">
+                <text class="upcoming-events-location">{{item.location}}</text>
+                <text class="upcoming-events-time">{{item.time}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
     </block>
 </view>

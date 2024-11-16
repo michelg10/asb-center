@@ -59,6 +59,10 @@ Component({
       wx.scanCode({
         onlyFromCamera: true,
         success: async (res) => {
+          wx.showLoading({
+            title: "Please Wait...",
+            mask: true,
+          });
           let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
           if (parseCodeData!=="invalid") {
             if(parseCodeData[0]==="ticketCode"){
@@ -88,6 +92,7 @@ Component({
                   checkTicketResponse: true,
                   ticketResponseClass: "check"
                 })
+                wx.hideLoading();
                 if (checkTicketHolder && checkTicketHolder.data.length!==0){
                   this.setData({
                     holderGrade: checkTicketHolder.data[0].grade,
@@ -103,6 +108,7 @@ Component({
                   checkTicketResponse: true,
                   ticketResponseClass: "cross"
                 })
+                wx.hideLoading();
                 if (checkTicketHolderAbnormal && checkTicketHolderAbnormal.data.length!==0){
                   this.setData({
                     holderGrade: checkTicketHolderAbnormal.data[0].grade,
@@ -112,6 +118,7 @@ Component({
               }
             }
             else {
+              wx.hideLoading();
               wx.showModal({
                 title: "Code Scan Failure",
                 content: "Please scan Ticket Code, not Personal Code.",
@@ -120,6 +127,15 @@ Component({
               })
             }
           }
+          wx.hideLoading();
+        },
+        fail: () => {
+          wx.showModal({
+            title: "Code Scan Failure",
+            content: "User interrupted code scanning procedure.",
+            showCancel: false,
+            confirmText: "Dismiss"
+          })
         }
       })
     },

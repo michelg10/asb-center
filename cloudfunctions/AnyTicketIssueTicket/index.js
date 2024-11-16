@@ -36,6 +36,20 @@ exports.main = async (event, context) => {
       }
     });
     return;
+  } else if (event.type === "issuePreview"){
+    await db.collection('BlackoutTickets').add({
+      data: {
+        ticketId: "ADMIN".concat(Math.floor(Math.random() * (99999999 - 10000000 + 1) + 10000000).toString()),
+        entry: true,
+        status: "Issued",
+        issuerId: event.issuerId,
+        issuerName: event.issuerName,
+        studentName: event.studentName,
+        userId: event.userId,
+        timeStamp: Date.now(),
+      }
+    });
+    return;
   }
   return;
 }

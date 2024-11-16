@@ -14,6 +14,7 @@ exports.main = async (event, context) => {
       }).update({
         data: {
           entry: event.updateStatus,
+          entryTimeStamp: Date.now()
         }
       });
       return;
@@ -24,6 +25,7 @@ exports.main = async (event, context) => {
       }).update({
         data: {
           status: event.updateStatus,
+          timeStamp: Date.now()
         }
       });
       return;
@@ -34,7 +36,8 @@ exports.main = async (event, context) => {
       }).update({
         data: {
           status: event.updateStatus,
-          userId: event.newUserId
+          userId: event.newUserId,
+          timeStamp: Date.now()
         }
       });
       return;

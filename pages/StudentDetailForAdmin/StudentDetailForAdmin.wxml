@@ -10,7 +10,7 @@
         <text>Configure Admin...</text>
     </view>
     <view class="any-order-container">
-        <text class="heading-text">{{anyTicketName}}</text>
+        <text class="heading-text" bindlongpress="onIssuePreview">{{anyTicketName}}</text>
       <view wx:if="{{displayAnyTicket}}">
         <text class="submission-{{anyTicketStatusClass}}">Status: {{anyTicketStatus}} Event Ticket</text>
         <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueTicket" bindlongpress="onIssueTicketStation">

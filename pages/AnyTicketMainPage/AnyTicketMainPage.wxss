@@ -110,3 +110,59 @@
   line-height: 20px;
   color: #D81717;
 }
+#upcoming-events-container {
+  margin-top: 23px;
+  display: flex;
+  flex-direction: column; 
+}
+#upcoming-events-inner-container {
+  margin-top: 12px;
+  background-color: var(--subcontainer-background);
+  border-radius: 11px;
+}
+.logs-separator {
+  margin-left: 18px;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+.upcoming-events-block {
+  height: 55px;
+}
+.logs-left-top-down-arrange {
+  display: flex;
+  flex-direction: column;
+}
+.logs-right-top-down-arrange {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.upcoming-event-upcoming {
+  color: #3671E0;
+  font-weight: bold;
+  font-size: 13px;
+}
+.upcoming-events-title {
+  font-size: 17px;
+  font-weight: 500;
+}
+.upcoming-events-location {
+  color: var(--secondary);
+  font-size: 15px;
+  font-weight: 500;
+}
+.upcoming-events-time {
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+#upcoming-events-heading {
+  margin: 0 auto;
+}
+.logs-lr-arrange-block {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 16px;
+  align-items: center;
+}

@@ -38,6 +38,7 @@ type AdminStatusType = {
   wxId: string,
   userId: string,
   canIssueTicket: boolean,
+  canIssueTicketToGuest: boolean,
   canAddAdmin: boolean,
   adminName: string,
 };
@@ -198,6 +199,30 @@ Component({
               res.eventChannel.emit('ticketId', this.data.anyTicketId);
             }
           });
+        },
+        onIssuePreview: function(){
+          if (this.data.adminStatus.canIssueTicketToGuest){
+            wx.showModal({
+              title: "Enable Preview",
+              content: "Enable preview allows the current user to submit consent form, meal option, and music requests even without a physical ticket. This also makes the user discoverable within house grouping.",
+              success: async (res) => {
+                if (res.confirm){
+                  await wx.cloud.callFunction({
+                    name: "AnyTicketIssueTicket",
+                    data: {
+                      type: "issuePreview",
+                      issuerId: this.data.adminStatus.userId,
+                      issuerName: this.data.adminStatus.adminName,
+                      studentName: this.data.computedUserName,
+                      userId: this.data.publicUserData.studentId
+                    }
+                  })
+                  this.onUpdateStatus();
+                  this.onUpdateDinner();
+                }
+              }
+            })
+          }
         },
         onIssueTicket: function() {
           wx.scanCode({
@@ -439,6 +464,7 @@ Component({
                     wxId: checkAdmin.data[0]._id as string,
                     userId: checkAdmin.data[0].userId,
                     canIssueTicket: checkAdmin.data[0].canIssueTicket,
+                    canIssueTicketToGuest: checkAdmin.data[0].canIssueTicketToGuest,
                     canAddAdmin: checkAdmin.data[0].canAddAdmin,
                     adminName: checkAdmin.data[0].adminName,
                   }

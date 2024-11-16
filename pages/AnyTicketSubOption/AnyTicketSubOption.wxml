@@ -6,13 +6,13 @@
     <view id="option-subheading">
       <text>Blackout 2024 Consent Form 告家长书</text>
       <text>家长您好:</text>
-      <text user-select="true">Blackout 定于 2024 年 11 ⽉ 22 ⽇ (星期五) 下午 17:00-19:30 在国际部中兴楼举⾏，活动提供晚餐，请家长协助监督学⽣注意安全。晚班校车将于当天 20:00 准时从学校上中路校门离开，如果您的孩⼦需要乘坐晚班校车，请在本页最下⽅勾选站点。请学⽣与监护⼈⾃⾏负责回家交通安全，并请确保学⽣参与活动期间遵守上海中学国际部学生守则 (严禁饮酒等⾏为)，承诺校车管理规定⽂明乘车。</text>
-      <text>上海中学国际部 2024 年 10 ⽉</text>
+      <text user-select="true">Blackout 定于 2024 年 11 ⽉ 29 ⽇ (星期五) 下午 17:00-19:30 在国际部中兴楼举⾏，活动提供晚餐，请家长协助监督学⽣注意安全。晚班校车将于当天 20:00 准时从学校上中路校门离开，如果您的孩⼦需要乘坐晚班校车，请在本页最下⽅勾选站点。请学⽣与监护⼈⾃⾏负责回家交通安全，并请确保学⽣参与活动期间遵守上海中学国际部学生守则 (严禁饮酒等⾏为)，承诺校车管理规定⽂明乘车。</text>
+      <text>上海中学国际部 2024 年 11 ⽉</text>
       <text>Blackout 2024 Parent Consent Form</text>
       <text>Dear parents:</text>
-      <text user-select="true">Blackout 2024 is scheduled to be held on Friday, November 22nd 2024, from 17:00 P.M. to 19:30 P.M. The event will be held at SHSID Zhongxing Building and dinner will be provided. Please assist in supervising your child’s safety and that your child is not in violation of the SHSID Guidelines for Students (behaviors include, but are not limited to, drinking alcohol, are in violation and are strictly forbidden) during the event. The late bus will leave the campus at 20:00 P.M. from the Shangzhong Road gate. Please select the destination at the bottom of the page if your child wishes to take the late bus service. Hence, you ensure that your child will strictly abide by school’s regulations while taking the late bus.</text>
+      <text user-select="true">Blackout 2024 is scheduled to be held on Friday, November 29th 2024, from 17:00 P.M. to 19:30 P.M. The event will be held at SHSID Zhongxing Building and dinner will be provided. Please assist in supervising your child’s safety and that your child is not in violation of the SHSID Guidelines for Students (behaviors include, but are not limited to, drinking alcohol, are in violation and are strictly forbidden) during the event. The late bus will leave the campus at 20:00 P.M. from the Shangzhong Road gate. Please select the destination at the bottom of the page if your child wishes to take the late bus service. Hence, you ensure that your child will strictly abide by school’s regulations while taking the late bus.</text>
       <text>Shanghai High School International Divison</text>
-      <text>October 2024</text>
+      <text>November 2024</text>
       <text>输入学生电子签名 Input Student Signature</text>
       <view class="student-list-search-container">
         <input class="student-search-textfield" placeholder="学生签名 Student Signature" placeholder-class="student-search-textfield-placeholder" bindchange="handleStuInput"/>
@@ -118,7 +118,7 @@
       <text>Registered Haunted House Group</text>
       <text>You are registered in a haunted house group, view your group members below. If you think this was a mistake, contact the ASB.</text>
       <view class="student-list-container" id="multi-select-student-list-container">
-        <view class="student-list-main-container" id="multi-select-student-list-main-container">
+        <view class="student-list-main-container" id="multi-display-student-list-main-container">
           <block wx:for="{{houseIndex}}" wx:key="*this">
             <view class="student-select-container-block" data-chosenid="{{item}}">
               <view class="student-select-left-block">
