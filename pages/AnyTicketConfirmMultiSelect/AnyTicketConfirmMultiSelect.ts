@@ -3,6 +3,9 @@ import { Student } from "../../classes/student";
 type componentDataInterface = {
   studentData: Student[],
   db: DB.Database,
+  sizeMin: number,
+  sizeMax: number,
+  groupLimit: number,
 };
 Component({
   /**
@@ -29,6 +32,15 @@ Component({
           studentData: data,
         });
       });
+      this.data.db.collection("BlackoutDeadlines").where({
+        optionId: "house",
+      }).get().then((res) => {
+        this.setData({
+          sizeMax: res.data[0].sizeMax,
+          sizeMin: res.data[0].sizeMin,
+          groupLimit: res.data[0].limit
+        });
+      })
     },
     confirmClicked: function() {
       let allowHouseFinal = true;
@@ -46,7 +58,7 @@ Component({
             let checkGroupLimit = await this.data.db.collection("BlackoutDeadlines").where({
               optionId: "house",
             }).get();
-            if (checkGroupLimit.data[0].current>=checkGroupLimit.data[0].limit){
+            if (checkGroupLimit.data[0].current>=this.data.groupLimit){
               wx.showModal({
                 title: "Sign-Up Full",
                 content: "We're sorry, sign-ups for the haunted house are currently full.",
@@ -57,10 +69,10 @@ Component({
               wx.hideLoading();
               return;
             }
-            else if (this.data.studentData.length<checkGroupLimit.data[0].sizeMin || this.data.studentData.length>checkGroupLimit.data[0].sizeMax){
+            else if (this.data.studentData.length<this.data.sizeMin || this.data.studentData.length>this.data.sizeMax){
               wx.showModal({
                 title: "Invalid Selection",
-                content: `Your group size must be between ${checkGroupLimit.data[0].sizeMin as string} to ${checkGroupLimit.data[0].sizeMax as string} people.`,
+                content: `Your group size must be between ${this.data.sizeMin} to ${this.data.sizeMax} people.`,
                 showCancel: false,
                 confirmText: "Dismiss"
               });
