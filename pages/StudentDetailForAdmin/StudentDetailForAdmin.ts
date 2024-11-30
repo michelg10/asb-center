@@ -389,10 +389,10 @@ Component({
             }
           }
         },
-        onShow: function(){
+        /*onShow: function(){
           this.onUpdateStatus();
           this.onUpdateDinner();
-        },
+        },*/
         onLoad: async function() {
             this.setData({
                 anyOrderName: "Elfin Express",
@@ -469,7 +469,7 @@ Component({
                     adminName: checkAdmin.data[0].adminName,
                   }
                   });
-                let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                /*let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
                   userId: userData.studentId,
                 }).get();
                 let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
@@ -543,7 +543,7 @@ Component({
                       this.onUpdateStatus();
                       this.onUpdateDinner();
                     }
-                  }
+                  }*/
                 /*this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
                     this.setData({
                         anyOrderOrder: res as any,

@@ -9,7 +9,7 @@
     <view id="full-width-option-container" wx:if="{{adminStatus.canAddAdmin}}" bindtap="configureAdminClick">
         <text>Configure Admin...</text>
     </view>
-    <view class="any-order-container">
+    <!--view class="any-order-container">
         <text class="heading-text" bindlongpress="onIssuePreview">{{anyTicketName}}</text>
       <view wx:if="{{displayAnyTicket}}">
         <text class="submission-{{anyTicketStatusClass}}">Status: {{anyTicketStatus}} Event Ticket</text>
@@ -40,7 +40,7 @@
       </view>
     </view>
     <text class="heading-text" wx:else>Current User is Not Registered!</text>
-    </view>
+    </view-->
     <view class="any-order-container" wx:if="{{anyOrderOrder !== undefined}}">
         <text class="heading-text">{{anyOrderName}}</text>
         <text id="any-order-submission" class="submission-{{anyOrderOrder.orderStatus}}">Status: {{(anyOrderOrder.orderStatus === 'unsub' ? 'No submission' : (anyOrderOrder.orderStatus === 'sub' ? 'Submitted' : 'Accepted'))}}</text>
