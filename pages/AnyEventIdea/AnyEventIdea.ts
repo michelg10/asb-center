@@ -109,14 +109,18 @@ Component({
                 console.log("Successfully Submitted");
                 this.data.allowSubmission = false;
                 await wx.cloud.callFunction({
-                    name: "SuggestionsBoxSubmit",
+                    name: "AnyEventIdeaSubmit",
                     data: {
                         userData: this.data.userData,
                         name: this.data.name,
                         contactInformation: this.data.contactInformation,
-                        grade: this.data.gradeOptions[this.data.grade],
+                        type: this.data.gradeOptions[this.data.grade],
                         suggestion: this.data.suggestion,
                     }
+                }).then(res => {
+                  console.log("Cloud function success:", res);
+                }).catch(err => {
+                  console.error("Cloud function error:", err);
                 });
 
                 this.setData({
