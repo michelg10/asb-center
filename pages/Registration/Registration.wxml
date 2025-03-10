@@ -27,6 +27,6 @@
     </view>
     <view id="registration-skip-container">
         <text id="registration-skip-text" bindtap="skipRegistration">Skip registration</text>
-        <text class="subtext" id="registration-skip-subtext">Registration is required to participate in most events, such as Sports Meet and Blackout.</text>
+        <text class="subtext" id="registration-skip-subtext">Registration is required to participate in most events, such as Sports Meet and Spring Formal.</text>
     </view>
 </view>

@@ -5,6 +5,7 @@ type ComponentDataInterface = {
     db: DB.Database,
     userData: UserDataType,
     hasBeenSubmitted: boolean,
+    eventName: string,
     name: string,
     contactInformation: string,
     grade: number,
@@ -12,8 +13,6 @@ type ComponentDataInterface = {
     suggestion: string,
     language: string,
     allowSubmission: boolean,
-    isAdmin: boolean,
-    canResolve: boolean
 };
 
 Component({
@@ -40,7 +39,7 @@ Component({
                 name: "",
                 contactInformation: "",
                 grade: 0,
-                gradeOptions: ['Please Select 请选择...','11','12'],
+                gradeOptions: ['Please Select 请选择...','Venue 场馆','Theme 主题', 'Food and Beverage 饮食', 'Dress Code 着装需求', 'General Idea or Suggestion 其他想法与建议'],
                 suggestion: "",
                 language: "en",
                 allowSubmission: true,
@@ -50,19 +49,12 @@ Component({
               this.setData({
                 userData: data,
               });
-              this.data.db.collection("admins").where({
-                userId:this.data.userData.id,
-              }).get().then((res) => {
-                if (res.data.length === 1 && res.data[0].canCheckSBLogs) {
-                  this.setData({
-                    isAdmin: true
-                  });
-                  if (res.data[0].canResolveSBLogs) {
-                    this.data.canResolve = true;
-                  }
-                };
-              })
-            })
+            });
+            eventChannel.on('eventName', (data: string) => {
+              this.setData({
+                eventName: data,
+              });
+            });
         },
         nameInputChanged: function(x: any) {
             this.setData({
@@ -131,15 +123,6 @@ Component({
                     hasBeenSubmitted: true,
                 });
             }
-        },
-        adminButtonTapped: function() {
-          wx.navigateTo({
-            url: "/pages/SuggestionsBoxAdminPanel/SuggestionsBoxAdminPanel",
-            success: (res) => {
-              res.eventChannel.emit("isAdmin", this.data.isAdmin);
-              res.eventChannel.emit("canResolve", this.data.canResolve);
-            }
-          });
         }
     }
 })

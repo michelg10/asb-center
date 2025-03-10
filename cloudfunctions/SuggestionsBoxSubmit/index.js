@@ -16,6 +16,7 @@ exports.main = async (event, context) => {
             contactInformation: event.contactInformation,
             grade: event.grade,
             suggestion: event.suggestion,
+            resolved: false
         }
     });
 }

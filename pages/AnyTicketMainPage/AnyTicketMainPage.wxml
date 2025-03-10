@@ -10,24 +10,31 @@
     </block>
     <block wx:else>
       <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
-        <view id="any-ticket-ticket" class="ticket-background"></view>
+        <image id="any-ticket-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image>
         <text class="subheading-text">Purchased Event Ticket</text>
-        <text class="sub-text">Please present your physical event ticket for entry to the Zombiefestation.</text>
-        <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
+        <text class="sub-text">Please present your physical event ticket for entry to {{eventName}}.</text>
+        <!-- <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}"> -->
+          <view id="any-ticket-event-option-row">
           <view id="event-option" bindtap="consentFormTap">
             <text>Submit Consent Form</text>
             <view id="date-label" wx:if="{{allowConsent && !consentDone}}">Ends: {{consentEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowConsent}}">Restricted</view><view id="event-option-restrict-label" wx:if="{{consentDone && allowConsent}}">Submitted</view>
-            <view id="event-option-icon" class="consent-icon"></view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/consent.png"></image>
           </view>
-          <view id="event-option" bindtap="mealOptionTap">
+          <view id="event-option" bindtap="musicRequestTap">
+            <text>Send Music Requests</text>
+            <view id="date-label" wx:if="{{allowMusic}}">Ends: {{musicEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/music.png"></image>
+          </view>
+          <!-- <view id="event-option" bindtap="mealOptionTap">
             <text>Browse Meal Options</text>
             <view id="date-label" wx:if="{{allowMeal}}">Ends: {{mealEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowMeal}}">Restricted</view>
             <view id="event-option-icon" class="meal-icon"></view>
-          </view>
+          </view> -->
         </view>
-        <view id="any-ticket-event-option-row" wx:if="{{allowLateOptions}}">
+        <!-- <view id="any-ticket-event-option-row" wx:if="{{allowLateOptions}}">
           <view id="event-option" bindtap="hauntedHouseTap">
             <text>Haunted House Sign-Up</text>
             <view id="date-label" wx:if="{{allowHouse}}">Ends: {{houseEndDisplay}}</view>
@@ -40,18 +47,18 @@
             <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
             <view id="event-option-icon" class="music-icon"></view>
           </view>
-        </view>
+        </view> -->
       </view>
       <view id="any-ticket-display-container" wx:else>
-        <view id="any-ticket-no-ticket" class="ticket-background"></view>
+        <image id="any-ticket-no-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image>
         <block wx:if="{{holderLostStatus}}">
           <text class="subheading-text">Lost Event Ticket</text>
-          <text class="sub-text">Please visit our ticket sales stand to make up your lost event ticket for entry to the Zombiefestation.</text>
+          <text class="sub-text">Please visit our ticket sales stand to make up your lost event ticket for entry to {{eventName}}.</text>
           <text class="sub-text">A valid event ticket is required to access event registration functions. Your previous registration data will be saved. If you think this was a mistake, contact the ASB.</text>
         </block>
         <block wx:else>
           <text class="subheading-text">No Event Ticket</text>
-          <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to the Zombiefestation.</text>
+          <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to {{eventName}}.</text>
         </block>
       </view>
       <view id="upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0 && !allowPreOptions && !allowLateOptions}}">

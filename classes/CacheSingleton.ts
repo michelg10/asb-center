@@ -1,9 +1,11 @@
 import allCollectionsData from "../utils/allCollectionsData";
 import { Student } from "./student";
+import { suggestionLog } from "./suggestionLog";
 let instance: CacheSingleton | null = null;
 
 class CacheSingleton {
     #studentData: Student[] | undefined
+    #suggestionLogs: suggestionLog[] | undefined
     #imageUrls: string[] | undefined
     #db!: DB.Database
     #userOpenId: string | undefined
@@ -69,6 +71,30 @@ class CacheSingleton {
       })).result as any).openid;
       this.#userOpenId = res;
       return this.#userOpenId;
+    }
+
+    async getSuggestionLogs() {
+      if (this.#suggestionLogs !== undefined) {
+        return;
+      }
+      this.#suggestionLogs = new Array<suggestionLog>();
+      let suggestionLogs = await allCollectionsData(this.#db, "SuggestionsBox");
+      for (let i=0;i<suggestionLogs.data.length;i++) {
+          let name = "Anonymous";
+          let contactInformation = "undefined";
+          if (suggestionLogs.data[i].name !== "") {
+            name = suggestionLogs.data[i].name as string;
+          }
+          if (suggestionLogs.data[i].contactInformation !== "") {
+            contactInformation = suggestionLogs.data[i].contactInformation as string;
+          }
+          this.#suggestionLogs.push(new suggestionLog(suggestionLogs.data[i]._id as string, contactInformation, suggestionLogs.data[i].grade as number, name, suggestionLogs.data[i].suggestion as string, suggestionLogs.data[i].resolved as boolean, suggestionLogs.data[i].timestamp as number));
+      }
+    }
+
+    async fetchSuggestionLogs(): Promise<suggestionLog[]> {
+      await this.getSuggestionLogs();
+      return this.#suggestionLogs!;
     }
 }
 

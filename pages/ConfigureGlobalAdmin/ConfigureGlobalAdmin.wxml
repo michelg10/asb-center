@@ -7,6 +7,16 @@
       </image>
     </view>
     <view id="configure-already-admin-container" wx:if="{{adminEnabled}}">
+      <view class="admin-configure-row" bindtap="checkSBTap">
+        <text class="admin-configure-title">Check Suggestions Box</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{canCheckSBLogs ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view class="admin-configure-row" bindtap="resolveSBTap" wx:if="{{canCheckSBLogs}}">
+        <text class="admin-configure-title">Resolve Suggestions</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{canResolveSBLogs ? '-selected' : ''}}.svg">
+        </image>
+      </view>
       <view class="admin-configure-row" bindtap="ticketTap">
         <text class="admin-configure-title">Issue tickets</text>
         <image class="admin-configure-toggle" src="/icons/selector{{canIssueTicket ? '-selected' : ''}}.svg">

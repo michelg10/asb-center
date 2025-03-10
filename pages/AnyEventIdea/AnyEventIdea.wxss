@@ -1,8 +1,6 @@
 /* pages/SuggestionsBox/SuggestionsBox.wxss */
 @import "./SBBackgroundImageBackgroundStyle.wxss";
 @import "./SBCheckmarkBackgroundStyle.wxss";
-@import "./SBTitleBackgroundStyle.wxss";
-@import "./SBTitleChineseBackgroundStyle.wxss";
 
 #main-container {
     padding-top: 10px;
@@ -32,17 +30,14 @@
     color: #010E29;
 }
 
-#suggestions-box-heading-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
-  width: 100%;
-}
-
 .main-container-fullscreen {
     height: 100%;
     justify-content: space-between;
+}
+
+#sb-title {
+    width: 100%;
+    margin-bottom: 25px;
 }
 
 #sb-wehearyou {

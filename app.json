@@ -7,6 +7,7 @@
     "pages/ConfigureAdmin/ConfigureAdmin",
     "pages/PersonalCode/PersonalCode",
     "pages/SuggestionsBox/SuggestionsBox",
+    "pages/SuggestionsBoxAdminPanel/SuggestionsBoxAdminPanel",
     "pages/AnyOrderMainPage/AnyOrderMainPage",
     "pages/AnyOrderSubOrder/AnyOrderSubOrder",
     "pages/StudentChoose/StudentChoose",
@@ -29,7 +30,8 @@
     "pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
     "pages/AnyTicketSubOption/AnyTicketSubOption",
     "pages/AnyTicketConfirmMultiSelect/AnyTicketConfirmMultiSelect",
-    "pages/StationModeAnyInput/StationModeAnyInput"
+    "pages/StationModeAnyInput/StationModeAnyInput",
+    "pages/AnyEventIdea/AnyEventIdea"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",

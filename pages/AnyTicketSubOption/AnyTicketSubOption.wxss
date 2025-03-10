@@ -1,5 +1,5 @@
 /* pages/AnyTicketMainPage/AnyTicketMainPage.wxss */
-@import "imageStyles.wxss";
+/* @import "imageStyles.wxss"; */
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
 @import "/styles/studentContainer.wxss";

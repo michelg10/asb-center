@@ -6,8 +6,8 @@ import { Order } from "../AnyOrderMainPage/AnyOrderMainPage";
 interface ComponentDataInterface {
     publicUserData: PublicUserData,
     computedUserName: string,
-    dinnerSelectionClass: string,
-    dinnerSelection: string,
+    // dinnerSelectionClass: string,
+    // dinnerSelection: string,
     cheese: boolean | false,
     fish: boolean | false,
     displayAnyTicket: boolean,
@@ -142,10 +142,10 @@ Component({
             });
         },
         onUpdateStatus: async function() {
-          let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+          let checkAnyTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
             userId: this.data.publicUserData.studentId,
           }).get();
-          let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+          let checkLostTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
             userId: this.data.publicUserData.studentId.concat("LOST"),
           }).get();
           if (checkAnyTicketStatus.data.length === 0){
@@ -175,23 +175,23 @@ Component({
             })
           }
         },
-        onUpdateDinner: async function(){
-          let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
-            userId: this.data.publicUserData.studentId,
-          }).get();
-          if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
-            this.setData({
-              dinnerSelection: "Not Selected",
-              dinnerSelectionClass: "unsub",
-            })
-          }
-          else {
-            this.setData({
-              dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
-              dinnerSelectionClass: "acc",
-            })
-          }
-        },
+        // onUpdateDinner: async function(){
+        //   let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+        //     userId: this.data.publicUserData.studentId,
+        //   }).get();
+        //   if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
+        //     this.setData({
+        //       dinnerSelection: "Not Selected",
+        //       dinnerSelectionClass: "unsub",
+        //     })
+        //   }
+        //   else {
+        //     this.setData({
+        //       dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+        //       dinnerSelectionClass: "acc",
+        //     })
+        //   }
+        // },
         onOperateTicket: function() {
           wx.navigateTo({
             url: '/pages/AnyTicketAdminPanel/AnyTicketAdminPanel',
@@ -204,7 +204,8 @@ Component({
           if (this.data.adminStatus.canIssueTicketToGuest){
             wx.showModal({
               title: "Enable Preview",
-              content: "Enable preview allows the current user to submit consent form, meal option, and music requests even without a physical ticket. This also makes the user discoverable within house grouping.",
+              // content: "Enable preview allows the current user to submit consent form, meal option, and music requests even without a physical ticket. This also makes the user discoverable within house grouping.",
+              content: "Enable preview allows the current user to submit consent form and music requests even without a physical ticket.",
               success: async (res) => {
                 if (res.confirm){
                   await wx.cloud.callFunction({
@@ -218,7 +219,7 @@ Component({
                     }
                   })
                   this.onUpdateStatus();
-                  this.onUpdateDinner();
+                  // this.onUpdateDinner();
                 }
               }
             })
@@ -228,11 +229,15 @@ Component({
           wx.scanCode({
             onlyFromCamera: true,
             success: async (res) => {
+              wx.showLoading({
+                title: "Please Wait...",
+                mask: true,
+              });
               let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
               if (parseCodeData!=="invalid"){
                 if(parseCodeData[0]==="ticketCode"){
                   //Valid code format, check if already issued
-                  let checkTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                  let checkTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
                     ticketId: parseCodeData[1],
                   }).get();
                   if(checkTicketStatus.data[0].status==="Available"){
@@ -247,10 +252,11 @@ Component({
                         userId: this.data.publicUserData.studentId
                       }
                     })
+                    wx.hideLoading();
                     this.onUpdateStatus();
-                    this.onUpdateDinner();
-                  }
-                  else {
+                    // this.onUpdateDinner();
+                  } else {
+                    wx.hideLoading();
                     wx.showModal({
                       title: "Code Scan Failure",
                       content: `Ticket of status ${checkTicketStatus.data[0].status} cannot be issued.`,
@@ -258,8 +264,8 @@ Component({
                       confirmText: "Dismiss"
                     })
                   }
-                }
-                else {
+                } else {
+                  wx.hideLoading();
                   wx.showModal({
                     title: "Code Scan Failure",
                     content: "Please scan Ticket Code, not Personal Code.",
@@ -267,7 +273,7 @@ Component({
                     confirmText: "Dismiss"
                   })
                 }
-              }
+              } else wx.hideLoading();
             },
           })
         },
@@ -291,7 +297,7 @@ Component({
                       }
                     })
                     this.onUpdateStatus();
-                    this.onUpdateDinner();
+                    // this.onUpdateDinner();
                   }
                   else {
                     wx.showModal({
@@ -318,108 +324,108 @@ Component({
             cheese: false
           });
         },
-        onSaveDinner: async function(){
-          let checkMeal = await this.data.db.collection("BlackoutStudentData").where({
-            userId: this.data.publicUserData.studentId,
-          }).get();
-          if(checkMeal.data.length===0){
-            if (this.data.cheese===true){
-              await wx.cloud.callFunction({
-                name: "AnyTicketSetStudentData",
-                data: {
-                  type: "dinner",
-                  userId: this.data.publicUserData.studentId,
-                  dinnerOption: "Cheese"
-                }
-              })
-              this.onUpdateDinner();
-            }
-            else if (this.data.fish===true){
-              await wx.cloud.callFunction({
-                name: "AnyTicketSetStudentData",
-                data: {
-                  type: "dinner",
-                  userId: this.data.publicUserData.studentId,
-                  dinnerOption: "Fish"
-                }
-              })
-              this.onUpdateDinner();
-            }
-            else{
-              this.onUpdateDinner();
-              wx.showModal({
-                title: "Invalid Selection",
-                content: "Please select a dinner option.",
-                showCancel: false,
-                confirmText: "Dismiss"
-              })
-            }
-          }
-          else{
-            if (this.data.cheese===true){
-              await wx.cloud.callFunction({
-                name: "AnyTicketSetStudentData",
-                data: {
-                  type: "dinnerModify",
-                  userId: this.data.publicUserData.studentId,
-                  dinnerOption: "Cheese"
-                }
-              })
-              this.onUpdateDinner();
-            }
-            else if (this.data.fish===true){
-              await wx.cloud.callFunction({
-                name: "AnyTicketSetStudentData",
-                data: {
-                  type: "dinnerModify",
-                  userId: this.data.publicUserData.studentId,
-                  dinnerOption: "Fish"
-                }
-              })
-              this.onUpdateDinner();
-            }
-            else {
-              this.onUpdateDinner();
-              wx.showModal({
-                title: "Invalid Selection",
-                content: "Please select a dinner option.",
-                showCancel: false,
-                confirmText: "Dismiss"
-              })
-            }
-          }
-        },
-        /*onShow: function(){
+        // onSaveDinner: async function(){
+        //   let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+        //     userId: this.data.publicUserData.studentId,
+        //   }).get();
+        //   if(checkMeal.data.length===0){
+        //     if (this.data.cheese===true){
+        //       await wx.cloud.callFunction({
+        //         name: "AnyTicketSetStudentData",
+        //         data: {
+        //           type: "dinner",
+        //           userId: this.data.publicUserData.studentId,
+        //           dinnerOption: "Cheese"
+        //         }
+        //       })
+        //       // this.onUpdateDinner();
+        //     }
+        //     else if (this.data.fish===true){
+        //       await wx.cloud.callFunction({
+        //         name: "AnyTicketSetStudentData",
+        //         data: {
+        //           type: "dinner",
+        //           userId: this.data.publicUserData.studentId,
+        //           dinnerOption: "Fish"
+        //         }
+        //       })
+        //       // this.onUpdateDinner();
+        //     }
+        //     else{
+        //       // this.onUpdateDinner();
+        //       wx.showModal({
+        //         title: "Invalid Selection",
+        //         content: "Please select a dinner option.",
+        //         showCancel: false,
+        //         confirmText: "Dismiss"
+        //       })
+        //     }
+        //   }
+        //   else{
+        //     if (this.data.cheese===true){
+        //       await wx.cloud.callFunction({
+        //         name: "AnyTicketSetStudentData",
+        //         data: {
+        //           type: "dinnerModify",
+        //           userId: this.data.publicUserData.studentId,
+        //           dinnerOption: "Cheese"
+        //         }
+        //       })
+        //       // this.onUpdateDinner();
+        //     }
+        //     else if (this.data.fish===true){
+        //       await wx.cloud.callFunction({
+        //         name: "AnyTicketSetStudentData",
+        //         data: {
+        //           type: "dinnerModify",
+        //           userId: this.data.publicUserData.studentId,
+        //           dinnerOption: "Fish"
+        //         }
+        //       })
+        //       // this.onUpdateDinner();
+        //     }
+        //     else {
+        //       // this.onUpdateDinner();
+        //       wx.showModal({
+        //         title: "Invalid Selection",
+        //         content: "Please select a dinner option.",
+        //         showCancel: false,
+        //         confirmText: "Dismiss"
+        //       })
+        //     }
+        //   }
+        // },
+        onShow: function(){
           this.onUpdateStatus();
-          this.onUpdateDinner();
-        },*/
+          // this.onUpdateDinner();
+        },
         onLoad: async function() {
             this.setData({
                 anyOrderName: "Elfin Express",
-                anyTicketName: "Blackout"
+                anyTicketName: "Spring Formal"
             });
             this.data.db = wx.cloud.database();
             this.data.updateOrderCallBusy = false;
             // act on eventChannel Data
             const eventChannel = this.getOpenerEventChannel();
-            eventChannel.on("userId", async(userData: PublicUserData) => {
-                this.setData({
+            eventChannel.on("userId", async (userData: PublicUserData) => {
+                await this.setData({
                     publicUserData: userData,
                     computedUserName: userData.compactId,
                 });
                 // get the student name to put on the title instead of an ID and fetch orders for White V
-                if (userData.studentId!==undefined) {
+                if (this.data.publicUserData.studentId!==undefined) {
                   this.setData({
                     displayAnyTicket: true
                   })
                   let determineAccount = await this.data.db.collection("studentData").where({
-                    _id: userData.studentId,
+                    _id: this.data.publicUserData.studentId,
                   }).get();
-                  if (determineAccount.data[0].pseudoId===userData._id){
+                  if (determineAccount.data[0].pseudoId === this.data.publicUserData._id){
                     let accountsNumber = await wx.cloud.callFunction({
                       name: "associatedAccountsNumber",
                       data: {
-                        studentId: userData.studentId,
+                        studentId: this.data.publicUserData.studentId,
                       }
                     });
                     this.setData({
@@ -427,7 +433,7 @@ Component({
                       otherAccounts: (accountsNumber.result as any).result-1,
                     })
                   }
-                this.fetchUserStudentName(userData.studentId).then((res) => {
+                this.fetchUserStudentName(this.data.publicUserData.studentId).then((res) => {
                     if (res !== undefined) {
                         this.setData({
                             computedUserName: res[0] as string,
@@ -469,15 +475,15 @@ Component({
                     adminName: checkAdmin.data[0].adminName,
                   }
                   });
-                /*let checkAnyTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                let checkAnyTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
                   userId: userData.studentId,
                 }).get();
-                let checkLostTicketStatus = await this.data.db.collection("BlackoutTickets").where({
+                let checkLostTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
                   userId: userData.studentId.concat("LOST"),
                 }).get();
-                let checkDinnerStatus = await this.data.db.collection("BlackoutStudentData").where({
-                  userId: userData.studentId,
-                }).get();
+                // let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+                //   userId: userData.studentId,
+                // }).get();
                 if (checkAnyTicketStatus.data.length === 0){
                   //No active ticket, check if lost ticket
                   if (checkLostTicketStatus.data.length === 0){
@@ -487,69 +493,69 @@ Component({
                       anyTicketStatusClass: "sub"
                     })
                     this.onUpdateStatus();
-                    this.onUpdateDinner();
+                    // this.onUpdateDinner();
                   }
                   else{
                     //Found lost ticket
-                    if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
+                    // if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
                       //No dinner selection
                       this.setData({
-                        dinnerSelection: "Not Selected",
-                        dinnerSelectionClass: "unsub",
+                        // dinnerSelection: "Not Selected",
+                        // dinnerSelectionClass: "unsub",
                         anyTicketStatus: "Lost",
                         anyTicketStatusClass: "unsub",
                         anyTicketId: checkLostTicketStatus.data[0].ticketId
                       })
                       this.onUpdateStatus();
-                      this.onUpdateDinner();
-                    }
-                    else {
-                      this.setData({
-                        //Lost ticket with dinner selection
-                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
-                        dinnerSelectionClass: "acc",
-                        anyTicketStatus: "Lost",
-                        anyTicketStatusClass: "unsub",
-                        anyTicketId: checkLostTicketStatus.data[0].ticketId
-                      })
-                      this.onUpdateStatus();
-                      this.onUpdateDinner();
-                    }
+                      // this.onUpdateDinner();
+                    // }
+                    // else {
+                    //   this.setData({
+                    //     //Lost ticket with dinner selection
+                    //     dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+                    //     dinnerSelectionClass: "acc",
+                    //     anyTicketStatus: "Lost",
+                    //     anyTicketStatusClass: "unsub",
+                    //     anyTicketId: checkLostTicketStatus.data[0].ticketId
+                    //   })
+                    //   this.onUpdateStatus();
+                    //   // this.onUpdateDinner();
+                    // }
                   }
                 }
                 else{
                   //Active ticket
-                    if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
+                    // if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
                       //No dinner selection
                       this.setData({
-                        dinnerSelection: "Not Selected",
-                        dinnerSelectionClass: "unsub",
+                        // dinnerSelection: "Not Selected",
+                        // dinnerSelectionClass: "unsub",
                         anyTicketStatus: "Issued",
                         anyTicketStatusClass: "acc",
                         anyTicketId: checkAnyTicketStatus.data[0].ticketId
                       })
                       this.onUpdateStatus();
-                      this.onUpdateDinner();
+                      // this.onUpdateDinner();
                     }
-                    else {
-                      //Active ticket and dinner selection
-                      this.setData({
-                        dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
-                        dinnerSelectionClass: "acc",
-                        anyTicketStatus: "Issued",
-                        anyTicketStatusClass: "acc",
-                        anyTicketId: checkAnyTicketStatus.data[0].ticketId
-                      })
-                      this.onUpdateStatus();
-                      this.onUpdateDinner();
-                    }
-                  }*/
+                    // else {
+                    //   //Active ticket and dinner selection
+                    //   this.setData({
+                    //     dinnerSelection: checkDinnerStatus.data[0].dinnerOption,
+                    //     dinnerSelectionClass: "acc",
+                    //     anyTicketStatus: "Issued",
+                    //     anyTicketStatusClass: "acc",
+                    //     anyTicketId: checkAnyTicketStatus.data[0].ticketId
+                    //   })
+                    //   this.onUpdateStatus();
+                    //   // this.onUpdateDinner();
+                    // }
+                  }
                 /*this.fetchAnyOrderStatus("ChristmasSale2022", userData._id).then((res) => {
                     this.setData({
                         anyOrderOrder: res as any,
                     });
                 });*/
-            }
+            // }
           })
         },
         configureAdminClick: function() {

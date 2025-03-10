@@ -9,7 +9,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "entry"){
-      await db.collection('BlackoutTickets').where({
+      await db.collection('SpringFormalTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -20,7 +20,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "main"){
-      await db.collection('BlackoutTickets').where({
+      await db.collection('SpringFormalTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -31,7 +31,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "lost"){
-      await db.collection('BlackoutTickets').where({
+      await db.collection('SpringFormalTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {

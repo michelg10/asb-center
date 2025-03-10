@@ -45,6 +45,8 @@ exports.main = async (event, context) => {
     let databaseSetObj = {
       userId: event.userId,
       canAddAdmin: event.canAddAdmin,
+      canCheckSBLogs: event.canCheckSBLogs,
+      canResolveSBLogs: event.canResolveSBLogs,
       canIssueTicket: event.canIssueTicket,
       canIssueTicketToGuest: event.canIssueTicketToGuest,
       adminName: event.name,

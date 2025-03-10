@@ -27,7 +27,7 @@
   <view id="any-ticket-check-ticket-option" wx:if="{{ticketStatus==='Lost'}}" bindtap="onRecoverTicket">
     <text>Undo Lost Ticket Status</text>
   </view>
-  <view wx:if="{{ticketStatus==='Issued'}}">
+  <!--view wx:if="{{ticketStatus==='Issued'}}">
     <view class="heading-text">Select Dinner Option</view>
     <text class="status-{{dinnerSelectionClass}}">Option: {{dinnerSelection}}</text>
     <view class="option-row" bindtap="cheeseTap">
@@ -45,5 +45,5 @@
         <text class="button-text">Save</text>
       </view>
     </view>
-  </view>
+  </view-->
 </view>

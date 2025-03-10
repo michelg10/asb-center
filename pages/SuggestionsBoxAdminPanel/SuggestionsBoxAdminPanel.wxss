@@ -1,0 +1,17 @@
+/* pages/SuggestionsBoxAdminPanel/SuggestionsBoxAdminPanel.wxss */
+@import "/styles/suggestionLogs.wxss";
+#SuggestionsBoxAdminMainView {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 80px;
+    padding: 0 16px;
+    margin-bottom: 50px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-color: var(--page-background);
+}
+#SuggestionsBoxAdminViewHeader {
+    display: flex;
+    flex-direction: column;
+}

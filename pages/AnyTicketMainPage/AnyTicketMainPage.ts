@@ -15,27 +15,27 @@ type ComponentDataInterface = {
     canIssueTicketToGuest: boolean,
     consentDone: boolean | false,
     allowConsent: boolean | false,
-    allowMeal: boolean | false,
-    allowHouse: boolean | false,
+    // allowMeal: boolean | false,
+    // allowHouse: boolean | false,
     allowMusic: boolean | false,
     allowValidation: boolean | false,
-    allowPreOptions: boolean | true,
-    allowLateOptions: boolean | true,
+    // allowPreOptions: boolean | true,
+    // allowLateOptions: boolean | true,
     db: DB.Database,
     errorMessage: String | undefined,
     consentStart: number,
-    mealStart: number,
-    houseStart: number,
+    // mealStart: number,
+    // houseStart: number,
     musicStart: number,
     eventStart: number,
     consentEnd: number,
-    mealEnd: number,
-    houseEnd: number,
+    // mealEnd: number,
+    // houseEnd: number,
     musicEnd: number,
     eventEnd: number,
     consentEndDisplay: string,
-    mealEndDisplay: string,
-    houseEndDisplay: string,
+    // mealEndDisplay: string,
+    // houseEndDisplay: string,
     musicEndDisplay: string,
 };
 
@@ -123,32 +123,32 @@ Component({
           });
         }
       },
-      mealOptionTap: function(){
-        if(this.data.allowMeal){
-          wx.navigateTo({
-            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-            success: (res) => {
-              res.eventChannel.emit("eventName", this.data.eventName);
-              res.eventChannel.emit("option", "meal");
-              res.eventChannel.emit("dueDate", this.data.mealEndDisplay);
-              res.eventChannel.emit("userData", this.data.userData);
-            }
-          });
-        }
-      },
-      hauntedHouseTap: function(){
-        if(this.data.allowHouse){
-          wx.navigateTo({
-            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-            success: (res) => {
-              res.eventChannel.emit("eventName", this.data.eventName);
-              res.eventChannel.emit("option", "house");
-              res.eventChannel.emit("dueDate", this.data.houseEndDisplay);
-              res.eventChannel.emit("userData", this.data.userData);
-            }
-          });
-        }
-      },
+      // mealOptionTap: function(){
+      //   if(this.data.allowMeal){
+      //     wx.navigateTo({
+      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+      //       success: (res) => {
+      //         res.eventChannel.emit("eventName", this.data.eventName);
+      //         res.eventChannel.emit("option", "meal");
+      //         res.eventChannel.emit("dueDate", this.data.mealEndDisplay);
+      //         res.eventChannel.emit("userData", this.data.userData);
+      //       }
+      //     });
+      //   }
+      // },
+      // hauntedHouseTap: function(){
+      //   if(this.data.allowHouse){
+      //     wx.navigateTo({
+      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+      //       success: (res) => {
+      //         res.eventChannel.emit("eventName", this.data.eventName);
+      //         res.eventChannel.emit("option", "house");
+      //         res.eventChannel.emit("dueDate", this.data.houseEndDisplay);
+      //         res.eventChannel.emit("userData", this.data.userData);
+      //       }
+      //     });
+      //   }
+      // },
       musicRequestTap: function(){
         if(this.data.allowMusic){
           wx.navigateTo({
@@ -173,25 +173,25 @@ Component({
         };
       },
       onShow: async function(){
-        let getConsentDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        let getConsentDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "consent",
         }).get();
-        let getMealDeadline = await this.data.db.collection("BlackoutDeadlines").where({
-          optionId: "meal",
-        }).get();
-        let getHouseDeadline = await this.data.db.collection("BlackoutDeadlines").where({
-          optionId: "house",
-        }).get();
-        let getMusicDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        // let getMealDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
+        //   optionId: "meal",
+        // }).get();
+        // let getHouseDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
+        //   optionId: "house",
+        // }).get();
+        let getMusicDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "music",
         }).get();
-        let getEventDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        let getEventDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "validate",
         }).get();
-        let checkErrorMsg = await this.data.db.collection("BlackoutDeadlines").where({
+        let checkErrorMsg = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "errorMsg",
         }).get();
-        if (getConsentDeadline.data.length===0||getMealDeadline.data.length===0||getHouseDeadline.data.length===0||getMusicDeadline.data.length===0){
+        if (getConsentDeadline.data.length === 0 || getMusicDeadline.data.length === 0){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
           });
@@ -203,7 +203,7 @@ Component({
             });
           }
         }
-        let getConsentStatus = await this.data.db.collection("BlackoutStudentData").where({
+        let getConsentStatus = await this.data.db.collection("SpringFormalStudentData").where({
           userId: this.data.userData.student?.id,
         }).get();
         if(getConsentStatus.data.length!==0){
@@ -225,29 +225,29 @@ Component({
         }
         this.setData({
           consentStart: getConsentDeadline.data[0].startTime,
-          mealStart: getMealDeadline.data[0].startTime,
-          houseStart: getHouseDeadline.data[0].startTime,
+          // mealStart: getMealDeadline.data[0].startTime,
+          // houseStart: getHouseDeadline.data[0].startTime,
           musicStart: getMusicDeadline.data[0].startTime,
           eventStart: getEventDeadline.data[0].startTime,
           consentEnd: getConsentDeadline.data[0].endTime,
-          mealEnd: getMealDeadline.data[0].endTime,
-          houseEnd: getHouseDeadline.data[0].endTime,
+          // mealEnd: getMealDeadline.data[0].endTime,
+          // houseEnd: getHouseDeadline.data[0].endTime,
           musicEnd: getMusicDeadline.data[0].endTime,
           eventEnd: getEventDeadline.data[0].endTime
         });
         this.setData({
           allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
-          allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
-          allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          // allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
+          // allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          allowPreOptions: this.data.allowConsent && !this.data.consentDone || this.data.allowMeal,
-          allowLateOptions: this.data.allowHouse || this.data.allowMusic,
+          // allowPreOptions: this.data.allowConsent && !this.data.consentDone,
+          // allowLateOptions: this.data.allowMusic,
           consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
-          mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
+          // houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
         })
       },
@@ -288,7 +288,7 @@ Component({
               userData: data,
           });
           if (this.data.userData.student){
-            this.data.db.collection("BlackoutTickets").where({
+            this.data.db.collection("SpringFormalTickets").where({
               userId: this.data.userData.student.id,
             }).get().then((res) => {
               if (res.data.length > 0) {
@@ -298,7 +298,7 @@ Component({
               }
               else {
                 if (this.data.userData.student){
-                  this.data.db.collection("BlackoutTickets").where({
+                  this.data.db.collection("SpringFormalTickets").where({
                     userId: this.data.userData.student.id.concat("LOST"),
                   }).get().then((res) => {
                     if (res.data.length > 0) {
@@ -357,39 +357,39 @@ Component({
               eventId: data,
           });
         });
-        let getConsentDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        let getConsentDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "consent",
         }).get();
-        let getMealDeadline = await this.data.db.collection("BlackoutDeadlines").where({
-          optionId: "meal",
-        }).get();
-        let getHouseDeadline = await this.data.db.collection("BlackoutDeadlines").where({
-          optionId: "house",
-        }).get();
-        let getMusicDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        // let getMealDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
+        //   optionId: "meal",
+        // }).get();
+        // let getHouseDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
+        //   optionId: "house",
+        // }).get();
+        let getMusicDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "music",
         }).get();
-        let getEventDeadline = await this.data.db.collection("BlackoutDeadlines").where({
+        let getEventDeadline = await this.data.db.collection("SpringFormalDeadlines").where({
           optionId: "validate",
         }).get();
-        if (getConsentDeadline.data.length===0||getMealDeadline.data.length===0||getHouseDeadline.data.length===0||getMusicDeadline.data.length===0){
+        if (getConsentDeadline.data.length === 0 || getMusicDeadline.data.length === 0){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
           });
         }
         this.setData({
           consentStart: getConsentDeadline.data[0].startTime,
-          mealStart: getMealDeadline.data[0].startTime,
-          houseStart: getHouseDeadline.data[0].startTime,
+          // mealStart: getMealDeadline.data[0].startTime,
+          // houseStart: getHouseDeadline.data[0].startTime,
           musicStart: getMusicDeadline.data[0].startTime,
           eventStart: getEventDeadline.data[0].startTime,
           consentEnd: getConsentDeadline.data[0].endTime,
-          mealEnd: getMealDeadline.data[0].endTime,
-          houseEnd: getHouseDeadline.data[0].endTime,
+          // mealEnd: getMealDeadline.data[0].endTime,
+          // houseEnd: getHouseDeadline.data[0].endTime,
           musicEnd: getMusicDeadline.data[0].endTime,
           eventEnd: getEventDeadline.data[0].endTime
         });
-        let getConsentStatus = await this.data.db.collection("BlackoutStudentData").where({
+        let getConsentStatus = await this.data.db.collection("SpringFormalStudentData").where({
           userId: this.data.userData.student?.id,
         }).get();
         if(getConsentStatus.data.length!==0){
@@ -411,20 +411,20 @@ Component({
         }
         this.setData({
           allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
-          allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
-          allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          // allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
+          // allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          allowPreOptions: this.data.allowConsent && !this.data.consentDone || this.data.allowMeal,
-          allowLateOptions: this.data.allowHouse || this.data.allowMusic,
+          // allowPreOptions: this.data.allowConsent && !this.data.consentDone,
+          // allowLateOptions: this.data.allowMusic,
           consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
-          mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
+          // houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
         })
-        allCollectionsData(this.data.db, "BlackoutTimetable").then((res) => {
+        allCollectionsData(this.data.db, "SpringFormalTimetable").then((res) => {
           let newEventsList: EventsListItemType[] = [];
           for (let i=0;i<res.data.length;i++) {
             newEventsList.push({

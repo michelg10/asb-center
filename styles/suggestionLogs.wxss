@@ -1,0 +1,71 @@
+.logs-heading-text-container {
+  margin-bottom: 12px;
+}
+.logs-list {
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
+  margin-top: 20px;
+}
+.logs-block {
+  margin: 0 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.logs-block-up {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logs-block-left {
+  display: flex;
+  flex-direction: column;
+}
+.logs-block-subtext {
+  font-size: 13px;
+  color: var(--secondary);
+}
+.logs-block-heading {
+  font-size: 17px;
+  font-weight: 500;
+}
+.logs-block-right {
+  display: flex;
+}
+.logs-block-down {
+  display: flex;
+  padding-top: 10px;
+}
+.log-block-resolve-button {
+  height: 24px;
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #D2E3FA;
+  border-radius: 12px;
+}
+.log-block-resolve-button text {
+  color: var(--link);
+  font-size: 13px;
+  font-weight: 500;
+}
+.log-block-information text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--secondary);
+}
+.log-separator {
+  margin-left: 17px;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+.logs-container {
+  margin-bottom: 39px;
+}
+.log-resolved-text {
+  text-align: right;
+  color: var(--green);
+}

@@ -1,11 +1,11 @@
 /* pages/AnyTicketMainPage/AnyTicketMainPage.wxss */
-@import "imageStyles.wxss";
+/* @import "imageStyles.wxss"; */
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
 #any-ticket-master-container{
   padding-left: 16px;
   padding-right: 16px;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 80px;
   min-height: 100vh;
   box-sizing: border-box;

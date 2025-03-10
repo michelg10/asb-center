@@ -1,6 +1,8 @@
 interface componentDataInterface {
   userId: string,
   adminEnabled: boolean,
+  canCheckSBLogs: boolean,
+  canResolveSBLogs: boolean,
   canAddAdmin: boolean,
   canIssueTicket: boolean,
   canIssueTicketToGuest: boolean,
@@ -38,6 +40,8 @@ Component({
           canAddAdmin: this.data.canAddAdmin,
           canIssueTicket: this.data.canIssueTicket,
           canIssueTicketToGuest: this.data.canIssueTicketToGuest,
+          canCheckSBLogs: this.data.canCheckSBLogs,
+          canResolveSBLogs: this.data.canResolveSBLogs,
           name: this.data.name,
         }
       }).then((res) => {
@@ -77,6 +81,16 @@ Component({
         canIssueTicketToGuest: !this.data.canIssueTicketToGuest,
       });
     },
+    checkSBTap: function() {
+      this.setData({
+        canCheckSBLogs: !this.data.canCheckSBLogs,
+      });
+    },
+    resolveSBTap: function() {
+      this.setData({
+        canResolveSBLogs: !this.data.canResolveSBLogs,
+      });
+    },
     onLoad: async function() {
       this.data.db = wx.cloud.database();
       const eventChannel = this.getOpenerEventChannel();
@@ -91,6 +105,8 @@ Component({
             canIssueTicket: false,
             canIssueTicketToGuest: false,
             canAddAdmin: false,
+            canCheckSBLogs: false,
+            canResolveSBLogs: false,
             name: "",
           });
         } else {
@@ -99,6 +115,8 @@ Component({
             canIssueTicket: getAdminData.data[0].canIssueTicket,
             canIssueTicketToGuest: getAdminData.data[0].canIssueTicketToGuest,
             canAddAdmin: getAdminData.data[0].canAddAdmin,
+            canCheckSBLogs: getAdminData.data[0].canCheckSBLogs,
+            canResolveSBLogs: getAdminData.data[0].canResolveSBLogs,
             name: getAdminData.data[0].adminName,
           });
         }

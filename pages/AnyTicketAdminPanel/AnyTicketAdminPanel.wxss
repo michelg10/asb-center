@@ -70,3 +70,6 @@
 #add-save-button {
   margin-bottom: 10px;
 }
+.heading-text {
+  margin-bottom: 10px;
+}

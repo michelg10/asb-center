@@ -1,0 +1,38 @@
+<view id="main-container" class="sb-background-image-background-style {{hasBeenSubmitted ? 'main-container-fullscreen' : ''}}">
+    <text class="big-title-text" id="sb-title">{{eventName}}</text>
+    <block wx:if="{{!hasBeenSubmitted}}">
+        <text id="submissions-box-text">{{language === 'ch' ? '我们希望今年的毕业舞会成为一次难忘的体验，而你的想法至关重要！请在这个建议箱中分享你对主题、场馆、饮食、着装需求等方面的创意。无论你是否有一个梦想中的舞会主题，知道一个完美的场地，或者想提出其他建议，我们都愿意倾听！没有任何想法是太大或太小的，而这是你打造完美毕业舞会的机会。快来提交你的建议，让我们一起创造最棒的2025年毕业舞会吧！' : 'We want PROM 2025 to be unforgettable, and your input matters! Use this suggestion box to share your best ideas for themes, venues, food, dress code, and more. Whether you have a dream theme in mind, know of the perfect venue, or want to suggest an awesome idea, we’re all ears! No idea is too big or too small, and this is your chance to shape the night. Drop your suggestions here, and let’s make PROM 2025 the best one yet!'}}
+        </text>
+        <text id="submissions-box-text-disclaimer">{{(language === 'ch' ? '每一份建议不一定都能开花结果，但一定不会有声音石沉大海。' : 'We cannot guarantee that all suggestions will be fulfilled - but we can guarantee that they will be thoroughly discussed and reviewed by the ASB.')}}</text>
+        <view class="question">
+            <text class="question-label">{{(language === 'ch' ? '姓名 & 班级（选填）' : 'Name & Homeroom (optional)')}}</text>
+            <input class="question-input" value="{{name}}" bindinput="nameInputChanged" />
+        </view>
+        <view class="question">
+            <text class="question-label">{{language === 'ch' ? '联系方式（选填）' : 'Contact Information (optional)'}}</text>
+            <input class="question-input" value="{{contactInformation}}" bindinput="contactInformationChanged" />
+        </view>
+        <view class="question">
+            <text class="question-label">{{language === 'ch' ? '建议类型' : 'Suggestion Type'}}</text>
+            <picker class="question-input" mode="selector" range="{{gradeOptions}}" value="{{grade}}" bindchange="gradeChanged">
+              <view class="question-select">
+                {{gradeOptions[grade]}}
+                <image src="../../icons/chevron-down.svg" class="selectorIcon"></image>
+              </view>
+            </picker>
+        </view>
+        <view class="question">
+            <text class="question-label">{{language === 'ch' ? '你的建议' : 'Your Suggestion'}}</text>
+            <textarea class="question-textarea" value="{{suggestion}}" maxlength="-1" bindinput="suggestionChanged" ></textarea>
+        </view>
+        <view id="submit-button-{{suggestion === '' || grade == 0 ? 'inactive' : 'active'}}" class="submit-button" bindtap="submitButtonTapped">{{language === 'ch' ? '提交' : 'Submit'}}</view>
+    </block>
+    <block wx:if="{{hasBeenSubmitted}}">
+        <view id="submission-complete-container">
+            <view class="sb-checkmark-background-style" id="submission-complete-checkmark"></view>
+            <text id="submission-complete-text">{{language === 'ch' ? '我们已收到你的建议。谢谢！' : 'We’ve recieved your suggestion. Thank you for your submission!'}}</text>
+        </view>
+        <view id="flex-layout-container"></view>
+    </block>
+</view>
+<view id="language-choose" bindtap="changeLanguage">{{language === 'en' ? "Eng" : "中"}}</view>

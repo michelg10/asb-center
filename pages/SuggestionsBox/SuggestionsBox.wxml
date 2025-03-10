@@ -1,5 +1,10 @@
 <view id="main-container" class="sb-background-image-background-style {{hasBeenSubmitted ? 'main-container-fullscreen' : ''}}">
-    <text class="big-title-text" id="sb-title">Suggestions Box</text>
+    <view id="suggestions-box-heading-container">
+        <text class="big-title-text">Suggestions Box</text>
+        <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+          <image src="/icons/bolt.svg" class="admin-image"></image>
+        </view>
+    </view>
     <block wx:if="{{!hasBeenSubmitted}}">
         <view class="sb-title{{language === 'ch' ? '-chinese' : ''}}-background-style sb-wehearyou{{language}}" id="sb-wehearyou"></view>
         <text id="submissions-box-text">{{language === 'ch' ? '在新的学年里，ASB增加了与校方的沟通，以此建立起学校和学生之间的桥梁。SHSID应该重视什么？有哪些不足？应当如何改进？我们相信每一种声音都应当被听见；我们希望，每一位学生都能够自由提出意见；我们认为，没有人应该被迫沉默。\n\n作为SHSID的一名学生，你可以将自己的心声填写在下方的输入框内，或投入中兴楼/先棉堂大堂的意见箱里。如果你有任何有关心理健康，希望学校重视的事务，更请告诉我们！' : 'The ASB is enhancing communication with the school administration to make sure students’ voices are heard, and we want to hear from you — the student body — what do you think needs changing? What do you want to see more of? How do you want to improve our school?\n\nYou can leave anything you want to see changed within the school below or in our physical submission box at ZXB/XMT lobby. Furthermore, if there are any topics related specifically to mental health or student opinion you would like to see the school discuss and possibly hold lectures on, tell us!'}}

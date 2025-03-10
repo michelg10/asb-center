@@ -180,13 +180,13 @@ Component({
           }
         });
       }
-      if (eventClickedId === "Blackout2024") {
+      if (eventClickedId === "SpringFormal2025") {
         wx.navigateTo({
           url: '/pages/AnyTicketMainPage/AnyTicketMainPage',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', "Blackout2024");
-            res.eventChannel.emit('eventName', "Blackout 2024");
+            res.eventChannel.emit('eventId', "SpringFormal2025");
+            res.eventChannel.emit('eventName', "Spring Formal 2025");
           }
         })
       }
@@ -226,21 +226,77 @@ Component({
       }
       if (eventClickedId === "suggestionsBox") {
         console.log(this.data.userData.student?.grade);
-        if(this.data.userData.student?.grade === 9 || this.data.userData.student?.grade === 10){
-          wx.showModal({
-            title: "Access Denied",
-            content: "Sorry, this suggestions box is for G11-12 only! Please contact the G9-10 ASB for access to the G9-10 suggestions box.",
-            showCancel: false,
-            confirmText: "Dismiss",
-          })
-        }
-        else{
+        if(this.data.userData.student !== null && this.data.userData.student.grade === 11 || this.data.userData.student !== null && this.data.userData.student.grade === 12){
           wx.navigateTo({
             url: '/pages/SuggestionsBox/SuggestionsBox',
             success: (res) => {
               res.eventChannel.emit('userData', this.data.userData);
             }
           });
+        } else if (this.data.userData.student === null) {
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, this suggestions box is for G11-12 only and requires registration. Please first complete registration and try again.",
+            cancelText: "Back",
+            confirmText: "Continue",
+            success: () => {
+              wx.redirectTo({
+                url: '/pages/Registration/Registration'
+              });
+            }
+          });
+        } else if (this.data.userData.globalAdminName !== null) {
+          wx.navigateTo({
+            url: '/pages/SuggestionsBox/SuggestionsBox',
+            success: (res) => {
+              res.eventChannel.emit('userData', this.data.userData);
+            }
+          });
+        } else {
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, this suggestions box is for G11-12 only! Please contact the G9-10 ASB for access to the G9-10 suggestions box.",
+            showCancel: false,
+            confirmText: "Dismiss",
+          });
+        }
+      }
+      if (eventClickedId === "PM25Idea") {
+        if(this.data.userData.student !== null && this.data.userData.student.grade === 12){
+          wx.navigateTo({
+            url: '/pages/AnyEventIdea/AnyEventIdea',
+            success: (res) => {
+              res.eventChannel.emit('userData', this.data.userData);
+              res.eventChannel.emit('eventName', "PROM 2025 Suggestions");
+            }
+          })
+        } else if (this.data.userData.student === null) {
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, the PROM 2025 suggestions box is for G12 only and requires registration. Please first complete registration and try again.",
+            cancelText: "Back",
+            confirmText: "Continue",
+            success: () => {
+              wx.redirectTo({
+                url: '/pages/Registration/Registration'
+              });
+            }
+          });
+        } else if (this.data.userData.globalAdminName !== null) {
+          wx.navigateTo({
+            url: '/pages/AnyEventIdea/AnyEventIdea',
+            success: (res) => {
+              res.eventChannel.emit('userData', this.data.userData);
+              res.eventChannel.emit('eventName', "PROM 2025 Suggestions");
+            }
+          })
+        } else {
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, the PROM 2025 suggestions box is for G12 only!",
+            showCancel: false,
+            confirmText: "Dismiss",
+          })
         }
       }
     },
@@ -263,7 +319,7 @@ Component({
       let newServiceData = new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
       newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
-      // newServiceData.push(new DisplayRow("Order Lunch", "", true, "lunchOrdering", null));
+      newServiceData.push(new DisplayRow("PROM 2025 Suggestions", "", true, "PM25Idea", null));
       this.setData({
         servicesData: newServiceData
       })
