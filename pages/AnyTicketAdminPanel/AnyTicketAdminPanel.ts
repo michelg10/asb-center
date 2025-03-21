@@ -427,6 +427,33 @@ Component({
         }
       })
     },
+    onClearTicket: async function() {
+      wx.showModal({
+        title: 'Clear Entry Status?',
+        content: "Confirm you want to clear the entry status on this ticket? This ticket will be valid for re-entry. Only use this function upon the participant's request to temporarily leave the event.",
+        confirmText: 'Confirm',
+        cancelText: 'Cancel',
+        success: async (res) => {
+          if (res.confirm) {
+            wx.showLoading({
+              title: "Please Wait...",
+              mask: true,
+            });
+            await wx.cloud.callFunction({
+              name: "AnyTicketUpdateStatus",
+              data: {
+                type: "exit",
+                ticketId: this.data.ticketId,
+                updateStatus: false
+              }
+            });
+            wx.hideLoading();
+            await this.updateTicketStatus();
+            // this.onUpdateDinner();
+          }
+        }
+      })
+    },
     onRevokeTicket: async function() {
       wx.showLoading({
         title: "Please Wait...",

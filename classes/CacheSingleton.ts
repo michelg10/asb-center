@@ -1,11 +1,13 @@
 import allCollectionsData from "../utils/allCollectionsData";
 import { Student } from "./student";
 import { suggestionLog } from "./suggestionLog";
+import { anyEventIdeaLog } from "./anyEventIdeaLog";
 let instance: CacheSingleton | null = null;
 
 class CacheSingleton {
     #studentData: Student[] | undefined
     #suggestionLogs: suggestionLog[] | undefined
+    #anyEventIdeaLogs: anyEventIdeaLog[] | undefined
     #imageUrls: string[] | undefined
     #db!: DB.Database
     #userOpenId: string | undefined
@@ -74,9 +76,6 @@ class CacheSingleton {
     }
 
     async getSuggestionLogs() {
-      if (this.#suggestionLogs !== undefined) {
-        return;
-      }
       this.#suggestionLogs = new Array<suggestionLog>();
       let suggestionLogs = await allCollectionsData(this.#db, "SuggestionsBox");
       for (let i=0;i<suggestionLogs.data.length;i++) {
@@ -93,8 +92,37 @@ class CacheSingleton {
     }
 
     async fetchSuggestionLogs(): Promise<suggestionLog[]> {
-      await this.getSuggestionLogs();
-      return this.#suggestionLogs!;
+      if (this.#suggestionLogs !== undefined) {
+        return this.#suggestionLogs!;
+      } else {
+        await this.getSuggestionLogs();
+        return this.#suggestionLogs!;
+      }
+    }
+
+    async getAnyEventIdeaLogs() {
+      this.#anyEventIdeaLogs = new Array<anyEventIdeaLog>();
+      let anyEventIdeaLogs = await allCollectionsData(this.#db, "PromIdeas");
+      for (let i=0;i<anyEventIdeaLogs.data.length;i++) {
+          let name = "Anonymous";
+          let contactInformation = "undefined";
+          if (anyEventIdeaLogs.data[i].name !== "") {
+            name = anyEventIdeaLogs.data[i].name as string;
+          }
+          if (anyEventIdeaLogs.data[i].contactInformation !== "") {
+            contactInformation = anyEventIdeaLogs.data[i].contactInformation as string;
+          }
+          this.#anyEventIdeaLogs.push(new anyEventIdeaLog(anyEventIdeaLogs.data[i]._id as string, contactInformation, name, anyEventIdeaLogs.data[i].read as boolean, anyEventIdeaLogs.data[i].suggestion as string, anyEventIdeaLogs.data[i].timestamp as number, anyEventIdeaLogs.data[i].type as string));
+      }
+    }
+
+    async fetchAnyEventIdeaLogs(): Promise<anyEventIdeaLog[]> {
+      if (this.#anyEventIdeaLogs !== undefined) {
+        return this.#anyEventIdeaLogs!;;
+      } else {
+        await this.getAnyEventIdeaLogs();
+        return this.#anyEventIdeaLogs!;
+      }
     }
 }
 

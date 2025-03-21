@@ -31,7 +31,8 @@
     "pages/AnyTicketSubOption/AnyTicketSubOption",
     "pages/AnyTicketConfirmMultiSelect/AnyTicketConfirmMultiSelect",
     "pages/StationModeAnyInput/StationModeAnyInput",
-    "pages/AnyEventIdea/AnyEventIdea"
+    "pages/AnyEventIdea/AnyEventIdea",
+    "pages/AnyEventIdeaAdminPanel/AnyEventIdeaAdminPanel"
   ],
   "darkmode": true,
   "themeLocation": "theme.json",

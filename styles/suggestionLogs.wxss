@@ -5,6 +5,7 @@
   background-color: var(--subcontainer-background);
   border-radius: 8px;
   margin-top: 20px;
+  margin-bottom: 50px;
 }
 .logs-block {
   margin: 0 16px;

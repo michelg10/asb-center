@@ -1,6 +1,5 @@
-// pages/SuggestionsBoxAdminPanel/SuggestionsBoxAdminPanel.ts
 import CacheSingleton from "../../classes/CacheSingleton";
-import { suggestionLog } from "../../classes/suggestionLog";
+import { anyEventIdeaLog } from "../../classes/anyEventIdeaLog";
 
 interface componentDataInterface {
   isAdmin: boolean,
@@ -8,7 +7,7 @@ interface componentDataInterface {
   isWaiting: boolean,
   db: DB.Database,
   cacheSingleton: CacheSingleton,
-  suggestions: suggestionLog[],
+  suggestions: anyEventIdeaLog[],
 };
 
 Component({
@@ -43,7 +42,7 @@ Component({
         });
         this.data.cacheSingleton = CacheSingleton.getInstance();
         this.setData({
-          suggestions: await this.data.cacheSingleton.fetchSuggestionLogs(),
+          suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
         });
       },
       resolveSuggestionLog: function(x: any) {
@@ -53,7 +52,7 @@ Component({
         this.data.isWaiting = true;
         wx.showModal({
           title: "Confirm?",
-          content: "Mark this suggestion log as resolved? This action is not reversible.",
+          content: "Mark this suggestion log as read? This action is not reversible.",
           confirmText: "Confirm",
           cancelText: "Cancel",
           success: (res) => {
@@ -61,13 +60,13 @@ Component({
               wx.cloud.callFunction({
                 name: "SuggestionsBoxResolve",
                 data: {
-                  type: 'suggestions',
+                  type: 'anyEventIdea',
                   logId: this.data.suggestions[x.currentTarget.dataset.itemindex].logId,
                 }
               }).then(async () => {
-                await this.data.cacheSingleton.getSuggestionLogs();
+                await this.data.cacheSingleton.getAnyEventIdeaLogs();
                 this.setData({
-                  suggestions: await this.data.cacheSingleton.fetchSuggestionLogs(),
+                  suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
                 })
               })
             }

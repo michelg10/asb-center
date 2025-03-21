@@ -19,6 +19,17 @@ exports.main = async (event, context) => {
       });
       return;
     }
+    else if (event.type === "exit"){
+      await db.collection('SpringFormalTickets').where({
+        ticketId: event.ticketId,
+      }).update({
+        data: {
+          entry: event.updateStatus,
+          entryTimeStamp: Date.now()
+        }
+      });
+      return;
+    }
     else if (event.type === "main"){
       await db.collection('SpringFormalTickets').where({
         ticketId: event.ticketId,

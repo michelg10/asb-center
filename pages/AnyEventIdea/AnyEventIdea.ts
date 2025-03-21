@@ -13,6 +13,8 @@ type ComponentDataInterface = {
     suggestion: string,
     language: string,
     allowSubmission: boolean,
+    isAdmin: boolean,
+    canResolve: boolean
 };
 
 Component({
@@ -49,6 +51,18 @@ Component({
               this.setData({
                 userData: data,
               });
+              this.data.db.collection("admins").where({
+                userId:this.data.userData.id,
+              }).get().then((res) => {
+                if (res.data.length === 1 && res.data[0].canCheckSBLogs) {
+                  this.setData({
+                    isAdmin: true
+                  });
+                  if (res.data[0].canResolveSBLogs) {
+                    this.data.canResolve = true;
+                  }
+                };
+              })
             });
             eventChannel.on('eventName', (data: string) => {
               this.setData({
@@ -127,6 +141,15 @@ Component({
                     hasBeenSubmitted: true,
                 });
             }
+        },
+        adminButtonTapped: function() {
+          wx.navigateTo({
+            url: "/pages/AnyEventIdeaAdminPanel/AnyEventIdeaAdminPanel",
+            success: (res) => {
+              res.eventChannel.emit("isAdmin", this.data.isAdmin);
+              res.eventChannel.emit("canResolve", this.data.canResolve);
+            }
+          });
         }
     }
 })
