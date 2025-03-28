@@ -113,7 +113,7 @@ export async function handleCode(obj: any, x: string) {
       reportCodeScanError(`This Sports Carnival ID Code is of unknown type ${keyToValueMap.get("type")}.`);
     }
   }
-  else if (keyToValueMap.get("event")==="SF25") {
+  else if (keyToValueMap.get("event")==="ANY_TICKET_EVENT_ID") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj.data.userData.globalAdminName !== null) {
