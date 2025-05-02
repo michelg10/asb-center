@@ -2,6 +2,7 @@
 /* @import "imageStyles.wxss"; */
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
+@import "/styles/secureCodePreview.wxss";
 #any-ticket-master-container{
   padding-left: 16px;
   padding-right: 16px;
@@ -64,6 +65,22 @@
   background-color: var(--subcontainer-background);
 }
 #event-option text {
+  margin-top: 5px;
+  font-weight: 700;
+  font-size: 17px;
+}
+#event-option-full{
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 5px;
+  padding: 9px 20px;
+  box-sizing: border-box;
+  background-color: var(--subcontainer-background);
+}
+#event-option-full text {
   margin-top: 5px;
   font-weight: 700;
   font-size: 17px;
@@ -165,4 +182,16 @@
   justify-content: space-between;
   margin: 0 16px;
   align-items: center;
+}
+#ticket-display-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-align: center;
+}
+#ticket-code-code-container {
+  margin: 15px 5px;
+  border-radius: 8px;
+  padding: 9px 9px;
+  background-color: var(--subcontainer-background);
 }

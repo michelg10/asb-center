@@ -180,13 +180,13 @@ Component({
           }
         });
       }
-      if (eventClickedId === "SpringFormal2025") {
+      if (eventClickedId === "Prom2025") {
         wx.navigateTo({
           url: '/pages/AnyTicketMainPage/AnyTicketMainPage',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', "SpringFormal2025");
-            res.eventChannel.emit('eventName', "Spring Formal 2025");
+            res.eventChannel.emit('eventId', "Prom2025");
+            res.eventChannel.emit('eventName', "PROM 2025");
           }
         })
       }

@@ -10,9 +10,25 @@
     </block>
     <block wx:else>
       <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
-        <image id="any-ticket-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image>
+        <!-- <image id="any-ticket-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image> -->
         <text class="subheading-text">Purchased Event Ticket</text>
-        <text class="sub-text">Please present your physical event ticket for entry to {{eventName}}.</text>
+        <view id="ticket-code-code-container">
+          <view class="secure-code-preview-container">
+            <view id="ticket-display-title">
+              <text>Your {{eventName}}\nEvent Ticket</text>
+            </view>
+            <canvas type="2d" class="secure-code-canvas" id="ticketcodecanvas"></canvas>
+            <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nPlease present this digital event ticket for entry to PROM 2025.\nDo not share your digital event ticket.'}}</text>
+          </view>
+        </view>
+        <view id="any-ticket-event-option-row">
+          <view id="event-option" bindtap="musicRequestTap">
+            <text>Send Music Requests</text>
+            <view id="date-label" wx:if="{{allowMusic}}">Ends: {{musicEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/music.png"></image>
+          </view>
+        </view>
         <!-- <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}"> -->
           <!-- <view id="any-ticket-event-option-row">
           <view id="event-option" bindtap="consentFormTap">
@@ -50,32 +66,28 @@
         </view> -->
       </view>
       <view id="any-ticket-display-container" wx:else>
-        <image id="any-ticket-no-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image>
+        <!-- <image id="any-ticket-no-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image> -->
         <block wx:if="{{holderLostStatus}}">
-          <text class="subheading-text">Lost Event Ticket</text>
-          <text class="sub-text">Please visit our ticket sales stand to make up your lost event ticket for entry to {{eventName}}. If you think this was a mistake, contact the ASB.</text>
+          <text class="subheading-text">Event Ticket on Hold</text>
+          <text class="sub-text">Your event ticket is issued, but on hold and cannot be used at this moment. Please ensure that you have met all pre-event requirements (e.g. submitted your consent form) for your event ticket to be valid. If you think this was a mistake, please visit our ticket sales stand or contact the ASB.</text>
           <!-- <text class="sub-text">A valid event ticket is required to access event registration functions. Your previous registration data will be saved. If you think this was a mistake, contact the ASB.</text> -->
         </block>
         <block wx:else>
           <text class="subheading-text">No Event Ticket</text>
-          <text class="sub-text">Please visit our ticket sales stand to purchase an event ticket for entry to {{eventName}}.</text>
-        </block>
+          <text class="sub-text">Please select the option below to purchase an event ticket directly online, or visit our ticket sales stand.
+          
+          If you choose to purchase an event ticket directly online, please allow up to 48 hours for the ASB to validate your purchase and issue your digital event ticket. If you have any concerns, please visit our ticket sales stand or contact the ASB.</text>
+        <view id="any-ticket-event-option-row">
+          <view id="event-option-full" bindtap="ticketTap">
+            <text>Purchase {{eventName}} Tickets Now Online!</text>
+            <view id="event-option-restrict-label" wx:if="{{!allowTicket}}">Restricted</view>
+            <view id="date-label">Available From {{ticketStartDisplay}} to {{ticketEndDisplay}}</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/ticket.png"></image>
+          </view>
+        </view>
+      </block>
       </view>
       <!-- <view id="upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0 && !allowPreOptions && !allowLateOptions}}"> -->
-      <view id="any-ticket-event-option-row">
-        <view id="event-option" bindtap="consentFormTap">
-          <text>Submit Consent Form</text>
-          <view id="date-label" wx:if="{{allowConsent && !consentDone}}">Ends: {{consentEndDisplay}}</view>
-          <view id="event-option-restrict-label" wx:if="{{!allowConsent}}">Restricted</view><view id="event-option-restrict-label" wx:if="{{consentDone && allowConsent}}">Submitted</view>
-          <image id="event-option-icon" src="/pages/AnyTicketMainPage/consent.png"></image>
-        </view>
-        <view id="event-option" bindtap="musicRequestTap">
-          <text>Send Music Requests</text>
-          <view id="date-label" wx:if="{{allowMusic}}">Ends: {{musicEndDisplay}}</view>
-          <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
-          <image id="event-option-icon" src="/pages/AnyTicketMainPage/music.png"></image>
-        </view>
-      </view>
       <view id="upcoming-events-container" wx:if="{{upcomingEventDisplay.length>0}}">
         <text class="heading-text" id="upcoming-events-heading">Event Guide</text>
         <view id="upcoming-events-inner-container">

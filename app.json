@@ -34,6 +34,9 @@
     "pages/AnyEventIdea/AnyEventIdea",
     "pages/AnyEventIdeaAdminPanel/AnyEventIdeaAdminPanel"
   ],
+  "embeddedAppIdList": [
+    "wxebadf544ddae62cb"
+  ],
   "darkmode": true,
   "themeLocation": "theme.json",
   "window": {

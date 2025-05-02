@@ -113,15 +113,15 @@ export async function handleCode(obj: any, x: string) {
       reportCodeScanError(`This Sports Carnival ID Code is of unknown type ${keyToValueMap.get("type")}.`);
     }
   }
-  else if (keyToValueMap.get("event")==="ANY_TICKET_EVENT_ID") {
+  else if (keyToValueMap.get("event")==="PM25") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj.data.userData.globalAdminName !== null) {
-        let getTicketData = await wx.cloud.database().collection("SpringFormalTickets").where({
+        let getTicketData = await wx.cloud.database().collection("PromTickets").where({
           ticketId: scannedTicketId,
         }).get();
         if (getTicketData.data.length === 0) {
-          reportCodeScanError(`This Spring Formal Ticket Code is invalid.`);
+          reportCodeScanError(`This PROM Ticket Code is invalid.`);
           return;
         }
         else {
@@ -134,11 +134,11 @@ export async function handleCode(obj: any, x: string) {
           return;
         }
       } else {
-        reportCodeScanError(`Your account is not authorized to scan Spring Formal Ticket Codes.`);
+        reportCodeScanError(`Your account is not authorized to scan PROM Ticket Codes.`);
         return;
       }
     } else {
-      reportCodeScanError(`This Spring Formal Code is of unknown type ${keyToValueMap.get("type")}.`);
+      reportCodeScanError(`This PROM Code is of unknown type ${keyToValueMap.get("type")}.`);
       return;
     }
   }

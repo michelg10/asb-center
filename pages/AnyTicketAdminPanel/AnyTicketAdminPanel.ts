@@ -42,7 +42,7 @@ Component({
         this.setData({
           ticketId: ticketId,
         });
-        let getTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+        let getTicketStatus = await this.data.db.collection("PromTickets").where({
           ticketId: this.data.ticketId,
         }).get();
         this.setData({
@@ -116,7 +116,7 @@ Component({
           }
         });
         // if (getTicketStatus.data[0].status!=="Available"){
-        //   let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+        //   let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
         //     userId: getHolderInfo.data[0]._id
         //   }).get();
         //     if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
@@ -147,7 +147,7 @@ Component({
       }
     },
     // onUpdateDinner: async function(){
-    //   let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+    //   let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
     //     userId: this.data.holderUserId,
     //   }).get();
     //   if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
@@ -176,7 +176,7 @@ Component({
       });
     },
     // onSaveDinner: async function(){
-    //   let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+    //   let checkMeal = await this.data.db.collection("PromStudentData").where({
     //     userId: this.data.holderUserId,
     //   }).get();
     //   if(checkMeal.data.length===0){
@@ -247,7 +247,7 @@ Component({
     //   }
     // },
     updateTicketStatus: async function(){
-      let getTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+      let getTicketStatus = await this.data.db.collection("PromTickets").where({
         ticketId: this.data.ticketId,
       }).get();
       await this.setData({
@@ -303,7 +303,7 @@ Component({
               let checkStudentName = await this.data.db.collection("studentData").where({
                 _id: parseCodeData[1].studentId,
               }).get();
-              let checkTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+              let checkTicketStatus = await this.data.db.collection("PromTickets").where({
                 userId: parseCodeData[1].studentId,
               }).get();
               console.log(checkTicketStatus)
@@ -311,7 +311,7 @@ Component({
                 wx.hideLoading();
                 wx.showModal({
                   title: "Code Scan Failure",
-                  content: "User already holds a valid Spring Formal ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
+                  content: "User already holds a valid PROM ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
                   showCancel: false,
                   confirmText: "Dismiss"
                 })
@@ -358,14 +358,14 @@ Component({
                 let checkStudentName = await this.data.db.collection("studentData").where({
                   _id: parseCodeData[1].studentId,
                 }).get();
-                let checkTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+                let checkTicketStatus = await this.data.db.collection("PromTickets").where({
                   userId: parseCodeData[1].studentId,
                 }).get();
                 console.log(checkTicketStatus)
                 if (checkTicketStatus && checkTicketStatus.data.length!==0){
                   wx.showModal({
                     title: "Code Scan Failure",
-                    content: "User already holds a valid Spring Formal ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
+                    content: "User already holds a valid PROM ticket, unable to assign new ticket. If user has lost their original ticket, mark their ticket as lost first, before assigning new ticket.",
                     showCancel: false,
                     confirmText: "Dismiss"
                   })

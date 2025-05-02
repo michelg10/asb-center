@@ -32,7 +32,7 @@ Component({
           studentData: data,
         });
       });
-      this.data.db.collection("SpringFormalDeadlines").where({
+      this.data.db.collection("PromDeadlines").where({
         optionId: "house",
       }).get().then((res) => {
         this.setData({
@@ -55,7 +55,7 @@ Component({
               title: "Please Wait...",
               mask: true,
             });            
-            let checkGroupLimit = await this.data.db.collection("SpringFormalDeadlines").where({
+            let checkGroupLimit = await this.data.db.collection("PromDeadlines").where({
               optionId: "house",
             }).get();
             if (checkGroupLimit.data[0].current>=this.data.groupLimit){
@@ -83,7 +83,7 @@ Component({
             }
             else {
               for(let i=0;i<this.data.studentData.length;i++){
-                let checkStudent = await this.data.db.collection("SpringFormalStudentData").where({
+                let checkStudent = await this.data.db.collection("PromStudentData").where({
                   userId: this.data.studentData[i].id,
                 }).get();
                 if (checkStudent){
@@ -117,7 +117,7 @@ Component({
               if (allowHouseFinal){
                 for(let i=0;i<this.data.studentData.length;i++){
                   console.log(this.data.studentData[i].id);
-                  let checkStudent = await this.data.db.collection("SpringFormalStudentData").where({
+                  let checkStudent = await this.data.db.collection("PromStudentData").where({
                     userId: this.data.studentData[i].id,
                   }).get();
                   if (checkStudent && checkStudent.data.length!==0){

@@ -80,7 +80,7 @@ Component({
           content: "By submitting, you certify your digital signature is effective. You cannot edit this form after submission.\n确认提交则声明您的电子签名具有同等效应，提交后不可修改。",
           success: async (res) => {
             if(res.confirm){
-                let checkDatabase = await this.data.db.collection("SpringFormalStudentData").where({
+                let checkDatabase = await this.data.db.collection("PromStudentData").where({
                   userId: this.data.userData.student?.id,
                 }).get();
                 if (checkDatabase.data.length!==0){
@@ -165,7 +165,7 @@ Component({
         }
       },
       // checkMealSelection: async function(){
-      //   let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+      //   let checkMeal = await this.data.db.collection("PromStudentData").where({
       //     userId: this.data.userData.student?.id,
       //   }).get();
       //   if(checkMeal.data.length===0 || checkMeal.data[0].dinnerOption===undefined){
@@ -192,7 +192,7 @@ Component({
           // studentSearchTextfield: '',
         })
         // if(this.data.userData && this.data.userData.student){
-        //   let checkHouse = await this.data.db.collection("SpringFormalStudentData").where({
+        //   let checkHouse = await this.data.db.collection("PromStudentData").where({
         //     userId: this.data.userData.student?.id,
         //   }).get();
           // if (checkHouse.data[0].house===undefined || checkHouse.data[0].house<=0){
@@ -257,7 +257,7 @@ Component({
           //     title: "Please Wait...",
           //     mask: true,
           //   });
-          //   allCollectionsData(this.data.db, "SpringFormalTickets").then((res) => {
+          //   allCollectionsData(this.data.db, "PromTickets").then((res) => {
           //     let tmpTicketData = [];
           //     let tmpStudentData: Student[] = [];
           //     let tmpGNumbers: gNumber[] = [];
@@ -350,7 +350,7 @@ Component({
           this.setData({
             userData: res,
           });
-          let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+          let checkMeal = await this.data.db.collection("PromStudentData").where({
             userId: this.data.userData.student?.id,
           }).get();
           // if(checkMeal.data.length===0){
@@ -444,7 +444,7 @@ Component({
         });*/
       },
       // checkHouseAvail: async function() {
-      //   let checkGroupLimit = await this.data.db.collection("SpringFormalDeadlines").where({
+      //   let checkGroupLimit = await this.data.db.collection("PromDeadlines").where({
       //     optionId: "house",
       //   }).get();
       //   if (checkGroupLimit.data[0].current>=checkGroupLimit.data[0].limit){
@@ -462,11 +462,11 @@ Component({
       // },
       // displayStudentsInSameHouse: async function() {
       //   try {
-      //     let studentData = await this.data.db.collection("SpringFormalStudentData").where({
+      //     let studentData = await this.data.db.collection("PromStudentData").where({
       //       userId: this.data.userData.student?.id,
       //     }).get();
       //     let houseNumber = studentData.data[0].house;
-      //     let houseStudents = await this.data.db.collection("SpringFormalStudentData").where({
+      //     let houseStudents = await this.data.db.collection("PromStudentData").where({
       //       house: houseNumber,
       //     }).get();
       //     let matchingStudentDataIndexes: number[] = [];
@@ -517,7 +517,7 @@ Component({
     //       title: "Please Wait...",
     //       mask: true,
     //     });
-    //     let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+    //     let checkMeal = await this.data.db.collection("PromStudentData").where({
     //       userId: this.data.userData.student?.id,
     //     }).get();
     //     if(checkMeal.data.length===0){

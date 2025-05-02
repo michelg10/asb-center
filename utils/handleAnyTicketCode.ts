@@ -85,26 +85,26 @@ export async function handleAnyTicketCode(obj: string, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="SF25") {
+  if (keyToValueMap.get("event")==="PM25") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj !== null) {
-        let getTicketData = await wx.cloud.database().collection("SpringFormalTickets").where({
+        let getTicketData = await wx.cloud.database().collection("PromTickets").where({
           ticketId: scannedTicketId,
         }).get();
         if (getTicketData.data.length === 0) {
-          reportCodeScanError(`This Spring Formal Ticket Code is invalid.`);
+          reportCodeScanError(`This PROM Ticket Code is invalid.`);
           return "invalid";
         }
         else {
           return ["ticketCode",scannedTicketId];
         }
       } else {
-        reportCodeScanError(`Your account is not authorized to scan Spring Formal Ticket Codes.`);
+        reportCodeScanError(`Your account is not authorized to scan PROM Ticket Codes.`);
         return "invalid";
       }
     } else {
-      reportCodeScanError(`This Spring Formal Code is of unknown type ${keyToValueMap.get("type")}.`);
+      reportCodeScanError(`This PROM Code is of unknown type ${keyToValueMap.get("type")}.`);
       return "invalid";
     }
   }

@@ -142,10 +142,10 @@ Component({
             });
         },
         onUpdateStatus: async function() {
-          let checkAnyTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+          let checkAnyTicketStatus = await this.data.db.collection("PromTickets").where({
             userId: this.data.publicUserData.studentId,
           }).get();
-          let checkLostTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+          let checkLostTicketStatus = await this.data.db.collection("PromTickets").where({
             userId: this.data.publicUserData.studentId.concat("LOST"),
           }).get();
           if (checkAnyTicketStatus.data.length === 0){
@@ -169,14 +169,14 @@ Component({
           else{
             //Active ticket
             this.setData({
-              anyTicketStatus: checkAnyTicketStatus.data[0].status,
+              anyTicketStatus: "Issued",
               anyTicketStatusClass: "acc",
               anyTicketId: checkAnyTicketStatus.data[0].ticketId
             })
           }
         },
         // onUpdateDinner: async function(){
-        //   let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+        //   let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
         //     userId: this.data.publicUserData.studentId,
         //   }).get();
         //   if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
@@ -206,6 +206,8 @@ Component({
               title: "Enable Preview",
               // content: "Enable preview allows the current user to submit consent form, meal option, and music requests even without a physical ticket. This also makes the user discoverable within house grouping.",
               content: "Enable preview allows the current user to submit consent form and music requests even without a physical ticket.",
+              cancelText: "Cancel",
+              confirmText: "Confirm",
               success: async (res) => {
                 if (res.confirm){
                   await wx.cloud.callFunction({
@@ -237,7 +239,7 @@ Component({
               if (parseCodeData!=="invalid"){
                 if(parseCodeData[0]==="ticketCode"){
                   //Valid code format, check if already issued
-                  let checkTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+                  let checkTicketStatus = await this.data.db.collection("PromTickets").where({
                     ticketId: parseCodeData[1],
                   }).get();
                   if(checkTicketStatus.data[0].status==="Available"){
@@ -275,6 +277,38 @@ Component({
                 }
               } else wx.hideLoading();
             },
+          })
+        },
+        onIssueDigitalTicket: async function() {
+          wx.showModal({
+            title: 'Confirm Issuance',
+            content: 'Are you sure you want to issue a digital event ticket to this guest? Confirm that the guest has paid before continuing.',
+            cancelText: 'Cancel',
+            confirmText: 'Confirm',
+            success: async (res) => {
+              if(res.confirm){
+                wx.showLoading({
+                  title: "Please Wait...",
+                  mask: true,
+                });
+                let getAvailableTickets = await this.data.db.collection("PromTickets").where({
+                  status: 'Available',
+                }).limit(1).get();
+                await wx.cloud.callFunction({
+                  name: "AnyTicketIssueTicket",
+                  data: {
+                    type: "issue",
+                    ticketId: getAvailableTickets.data[0].ticketId,
+                    issuerId: this.data.adminStatus.userId,
+                    issuerName: this.data.adminStatus.adminName,
+                    studentName: this.data.computedUserName,
+                    userId: this.data.publicUserData.studentId
+                  }
+                })
+                wx.hideLoading();
+                this.onUpdateStatus();
+              }
+            }
           })
         },
         onIssueTicketStation: async function() {
@@ -325,7 +359,7 @@ Component({
           });
         },
         // onSaveDinner: async function(){
-        //   let checkMeal = await this.data.db.collection("SpringFormalStudentData").where({
+        //   let checkMeal = await this.data.db.collection("PromStudentData").where({
         //     userId: this.data.publicUserData.studentId,
         //   }).get();
         //   if(checkMeal.data.length===0){
@@ -402,7 +436,7 @@ Component({
         onLoad: async function() {
             this.setData({
                 anyOrderName: "Elfin Express",
-                anyTicketName: "Spring Formal"
+                anyTicketName: "PROM 2025"
             });
             this.data.db = wx.cloud.database();
             this.data.updateOrderCallBusy = false;
@@ -475,13 +509,13 @@ Component({
                     adminName: checkAdmin.data[0].adminName,
                   }
                   });
-                let checkAnyTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+                let checkAnyTicketStatus = await this.data.db.collection("PromTickets").where({
                   userId: userData.studentId,
                 }).get();
-                let checkLostTicketStatus = await this.data.db.collection("SpringFormalTickets").where({
+                let checkLostTicketStatus = await this.data.db.collection("PromTickets").where({
                   userId: userData.studentId.concat("LOST"),
                 }).get();
-                // let checkDinnerStatus = await this.data.db.collection("SpringFormalStudentData").where({
+                // let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
                 //   userId: userData.studentId,
                 // }).get();
                 if (checkAnyTicketStatus.data.length === 0){

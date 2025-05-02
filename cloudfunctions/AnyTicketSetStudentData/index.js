@@ -9,7 +9,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "dinnerModify"){
-      await db.collection('SpringFormalStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -19,7 +19,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "dinner"){
-      await db.collection('SpringFormalStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           dinnerOption: event.dinnerOption
@@ -28,7 +28,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitConsent"){
-      await db.collection('SpringFormalStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitConsentNew"){
-      await db.collection('SpringFormalStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           consent: event.consent,
@@ -49,7 +49,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitMusic"){
-      await db.collection('SpringFormalMusic').add({
+      await db.collection('PromMusic').add({
         data: {
           userData: event.userData,
           musicName: event.musicName,
@@ -60,14 +60,14 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "houseModify"){
-      await db.collection('SpringFormalStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
           house: event.house
         }
       });
-      await db.collection('SpringFormalDeadlines').where({
+      await db.collection('PromDeadlines').where({
         optionId: "house",
       }).update({
         data: {
@@ -77,13 +77,13 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "houseAdd"){
-      await db.collection('SpringFormalStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           house: event.house
         }
       });
-      await db.collection('SpringFormalDeadlines').where({
+      await db.collection('PromDeadlines').where({
         optionId: "house",
       }).update({
         data: {

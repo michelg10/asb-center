@@ -82,7 +82,7 @@ Component({
         let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, this.data.inputCodeData);
         if (parseCodeData!=="invalid") {
           if(parseCodeData[0]==="ticketCode"){
-            let checkTicket = await this.data.db.collection("SpringFormalTickets").where({
+            let checkTicket = await this.data.db.collection("PromTickets").where({
               ticketId: parseCodeData[1],
             }).get();
             let checkTicketHolder = await this.data.db.collection("studentData").where({
