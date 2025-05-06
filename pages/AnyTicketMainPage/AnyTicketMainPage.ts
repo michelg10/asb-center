@@ -175,11 +175,20 @@ Component({
       },
       ticketTap: function(){
         if(this.data.allowTicket){
-          wx.openEmbeddedMiniProgram({
-            appId: 'wxebadf544ddae62cb',
-            path: 'pages/webview/index?sid=21597613&hash=xd16&navigateBackMiniProgram=true',
-            allowFullScreen: true
-          });
+          if(this.data.userData.student){
+            wx.openEmbeddedMiniProgram({
+              appId: 'wxebadf544ddae62cb',
+              path: 'pages/webview/index?sid=21597613&hash=xd16&navigateBackMiniProgram=true',
+              allowFullScreen: true
+            });
+          } else {
+            wx.showModal({
+              title: "Not Registered",
+              content: "You must complete registration to participate in this event.",
+              showCancel: false,
+              confirmText: "Dismiss",
+            })
+          }
         }
       },
       adminStationMode: function(){
@@ -343,8 +352,7 @@ Component({
                       });
                     }
                   })
-                }
-                else{
+                } else {
                   wx.showModal({
                     title: "Not Registered",
                     content: "You must complete registration to participate in this event.",

@@ -79,7 +79,7 @@
           If you choose to purchase an event ticket directly online, please allow up to 48 hours for the ASB to validate your purchase and issue your digital event ticket. If you have any concerns, please visit our ticket sales stand or contact the ASB.</text>
         <view id="any-ticket-event-option-row">
           <view id="event-option-full" bindtap="ticketTap">
-            <text>Purchase {{eventName}} Tickets Now Online!</text>
+            <text>Click to Purchase {{eventName}} Tickets Now!</text>
             <view id="event-option-restrict-label" wx:if="{{!allowTicket}}">Restricted</view>
             <view id="date-label">Available From {{ticketStartDisplay}} to {{ticketEndDisplay}}</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/ticket.png"></image>
