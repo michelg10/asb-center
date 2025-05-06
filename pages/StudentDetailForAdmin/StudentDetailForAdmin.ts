@@ -227,6 +227,13 @@ Component({
             })
           }
         },
+        onAdminOverride: function() {
+          if (this.data.adminStatus.canIssueTicketToGuest && !this.data.displayAnyTicket) {
+            this.setData({
+              displayAnyTicket: true
+            })
+          }
+        },
         onIssueTicket: function() {
           wx.scanCode({
             onlyFromCamera: true,

@@ -1,7 +1,7 @@
 <!--pages/StudentDetailForAdmin/StudentDetailForAdmin.wxml-->
 <view id="StudentDetailForAdminMainView">
     <view id="StudentDetailForAdminMainViewHeader">
-        <text class="big-title-text">{{computedUserName}}</text>
+        <text class="big-title-text" bindlongpress="onAdminOverride">{{computedUserName}}</text>
         <text id="persona-detail-id-text">{{publicUserData._id}}{{accountIsPseudo ? " (Pseudo account, "+otherAccounts+" account"+(otherAccounts === 1 ? "" : "s")+" linked)" : ""}}</text>
         <text id="persona-detail-gradeclass-text" wx:if="{{displayAnyTicket}}">Class {{studentGrade}}-{{studentClass}}</text>
     </view>
