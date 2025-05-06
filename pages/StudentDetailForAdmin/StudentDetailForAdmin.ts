@@ -449,9 +449,6 @@ Component({
                 });
                 // get the student name to put on the title instead of an ID and fetch orders for White V
                 if (this.data.publicUserData.studentId!==undefined) {
-                  this.setData({
-                    displayAnyTicket: true
-                  })
                   let determineAccount = await this.data.db.collection("studentData").where({
                     _id: this.data.publicUserData.studentId,
                   }).get();
@@ -474,6 +471,11 @@ Component({
                             studentGrade: res[1] as number,
                             studentClass: res[2] as number
                         });
+                        if (this.data.studentGrade === 12) {
+                          this.setData({
+                            displayAnyTicket: true
+                          })
+                        } // Grade limiting factor for PROM 25, remember to disable for other events
                     }
                 });
                 this.data.cacheSingleton = CacheSingleton.getInstance();

@@ -42,7 +42,7 @@
         </view> -->
       </view>
     </view>
-    <text class="heading-text" wx:else>Current User is Not Registered!</text>
+    <text class="heading-text" wx:else>The current user is either not registered or ineligible to participate in this event.</text>
     </view>
     <view class="any-order-container" wx:if="{{anyOrderOrder !== undefined}}">
         <text class="heading-text">{{anyOrderName}}</text>
