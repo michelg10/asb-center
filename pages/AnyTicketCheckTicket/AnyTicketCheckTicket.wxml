@@ -4,6 +4,16 @@
   <view id="ticket-option-subheading">
     <text>After scanning a ticket with this function, the ticket will be marked as used and is not reversible. Only scan tickets upon the participant's entry, and the corresponding ticket info will be displayed.</text>
   </view>
+  <view class="count-view-container" bindtap="updateCount">
+    <view class="issued-count">
+      <view class="count-heading">Issued Tickets:</view>
+      <view class="count-number">{{issuedCount}}</view>
+    </view>
+    <view class="entry-count">
+      <view class="count-heading">Entered Guests:</view>
+      <view class="count-number">{{entryCount}}</view>
+    </view>
+  </view>
   <view class="admin-panel-full-width-button-container" bindtap="handleTicketScan">
     <text>Scan Tickets...</text>
     <image src="../../icons/scan.svg" class="ticket-scan-image"></image>

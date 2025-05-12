@@ -53,5 +53,10 @@ exports.main = async (event, context) => {
       });
       return;
     }
+    else if (event.type === "updateCount"){
+      const countIssued = await db.collection('PromTickets').where({status: 'Issued'}).count();
+      const countEntry = await db.collection('PromTickets').where({entry: true}).count();
+      return {issued: countIssued.total, entry: countEntry.total};
+    }
     return;
 }

@@ -21,12 +21,39 @@
             <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nPlease present this digital event ticket for entry to PROM 2025.\nDo not share your digital event ticket.'}}</text>
           </view>
         </view>
-        <view id="any-ticket-event-option-row">
+        <view id="any-ticket-event-option-row" wx:if="{{allowHouse}}">
+          <view id="event-option-full" bindtap="houseTap">
+            <text>Click to Sign-Up for Table Groups!</text>
+            <view id="date-label">Available From {{houseStartDisplay}} Until {{houseEndDisplay}}</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/house.png"></image>
+          </view>
+        </view>
+        <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
+          <view id="event-option" bindtap="performanceTap">
+            <text>Click to Sign-Up to Perform!</text>
+            <view id="date-label" wx:if="{{allowPerf}}">Available Until: {{perfEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowPerf}}">Restricted</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/perf.png"></image>
+          </view>
+          <view id="event-option" bindtap="promposalTap">
+            <text>Click to Sign-Up for Promposals!</text>
+            <view id="date-label" wx:if="{{allowPrompose}}">Available Until: {{promposeEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowPrompose}}">Restricted</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/promposal.png"></image>
+          </view>
+        </view>
+        <view id="any-ticket-event-option-row" wx:if="{{allowLateOptions}}">
           <view id="event-option" bindtap="musicRequestTap">
-            <text>Send Music Requests</text>
-            <view id="date-label" wx:if="{{allowMusic}}">Ends: {{musicEndDisplay}}</view>
+            <text>Click to Send Music Requests!</text>
+            <view id="date-label" wx:if="{{allowMusic}}">Available Until: {{musicEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowMusic}}">Restricted</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/music.png"></image>
+          </view>
+          <view id="event-option" bindtap="suggestionsTap">
+            <text>Click to Submit Suggestions!</text>
+            <view id="date-label" wx:if="{{allowSuggestions}}">Available Until: {{suggestionsEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowSuggestions}}">Restricted</view>
+            <image id="event-option-icon" src="/pages/AnyTicketMainPage/suggestions.png"></image>
           </view>
         </view>
         <!-- <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}"> -->
@@ -81,7 +108,7 @@
           <view id="event-option-full" bindtap="ticketTap">
             <text>Click to Purchase {{eventName}} Tickets Now!</text>
             <view id="event-option-restrict-label" wx:if="{{!allowTicket}}">Restricted</view>
-            <view id="date-label">Available From {{ticketStartDisplay}} to {{ticketEndDisplay}}</view>
+            <view id="date-label">Available From {{ticketStartDisplay}} Until {{ticketEndDisplay}}</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/ticket.png"></image>
           </view>
         </view>

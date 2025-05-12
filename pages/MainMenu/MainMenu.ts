@@ -261,7 +261,7 @@ Component({
           });
         }
       }
-      if (eventClickedId === "PM25Idea") {
+      /*if (eventClickedId === "PM25Idea") {
         if(this.data.userData.student !== null && this.data.userData.student.grade === 12){
           wx.navigateTo({
             url: '/pages/AnyEventIdea/AnyEventIdea',
@@ -298,7 +298,7 @@ Component({
             confirmText: "Dismiss",
           })
         }
-      }
+      }*/
     },
     onLoad: function () {
       wx.cloud.init();
@@ -319,7 +319,7 @@ Component({
       let newServiceData = new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
       newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
-      newServiceData.push(new DisplayRow("PROM 2025 Suggestions", "", true, "PM25Idea", null));
+      // newServiceData.push(new DisplayRow("PROM 2025 Suggestions", "", true, "PM25Idea", null));
       this.setData({
         servicesData: newServiceData
       })

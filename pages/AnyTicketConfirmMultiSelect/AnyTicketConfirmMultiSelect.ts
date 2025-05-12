@@ -61,7 +61,7 @@ Component({
             if (checkGroupLimit.data[0].current>=this.data.groupLimit){
               wx.showModal({
                 title: "Sign-Up Full",
-                content: "We're sorry, sign-ups for the haunted house are currently full.",
+                content: "We're sorry, sign-ups for table groups are currently full.",
                 showCancel: false,
                 confirmText: "Dismiss"
               });
@@ -98,7 +98,7 @@ Component({
                     let getStudentNickname = checkStudentName.data[0].nickname as string;
                     wx.showModal({
                       title: "Group Member Unavailable",
-                      content: `${getStudentNickname} is already in another haunted house group.`,
+                      content: `${getStudentNickname} is already in another table group.`,
                       showCancel: false,
                       confirmText: "Return",
                       success: (res) => {

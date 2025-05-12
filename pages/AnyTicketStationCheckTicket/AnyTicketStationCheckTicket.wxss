@@ -66,3 +66,34 @@
 .link-text{
   color: #3180E9;
 }
+.issued-count{
+  background-color: #E3C019;
+  color: white;
+  height: 100px;
+  width: 50%;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+}
+.entry-count{
+  background-color: #36B909;
+  color: white;
+  height: 100px;
+  width: 50%;
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+}
+.count-view-container{
+  display: flex;
+  margin-bottom: 15px;
+}
+.count-heading{
+  font-weight: bold;
+  font-size: 20px;
+}
+.count-number{
+  text-align: center;
+  font-weight: bold;
+  font-size: 50px;
+}

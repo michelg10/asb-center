@@ -11,7 +11,9 @@ interface componentDataInterface {
   holderName: string | undefined,
   holderGrade: number,
   holderClass: number,
-  entryStatus: boolean
+  entryStatus: boolean,
+  issuedCount: number,
+  entryCount: number
 };
 type AdminStatusType = {
   wxId: string,
@@ -53,6 +55,27 @@ Component({
           }
         });
       })
+      this.updateCount();
+    },
+    updateCount: async function() {
+      wx.showLoading({
+        title: "Updating...",
+        mask: true,
+      });
+      this.onClear();
+      await wx.cloud.callFunction({
+        name: 'AnyTicketUpdateStatus',  // Replace with your actual function name
+        data: {
+          type: "updateCount"
+        }
+      }).then(res => {
+        const { issued, entry } = res.result as { issued: number, entry: number };
+        this.setData({
+          issuedCount: issued,
+          entryCount: entry
+        });
+      });
+      wx.hideLoading();
     },
     handleTicketScan: function(){
       this.onClear();
@@ -90,7 +113,8 @@ Component({
                   holderName: checkTicket.data[0].studentName,
                   entryStatus: checkTicket.data[0].entry,
                   checkTicketResponse: true,
-                  ticketResponseClass: "check"
+                  ticketResponseClass: "check",
+                  entryCount: this.data.entryCount += 1
                 })
                 wx.hideLoading();
                 if (checkTicketHolder && checkTicketHolder.data.length!==0){
@@ -147,6 +171,10 @@ Component({
         checkTicketResponse: false,
         ticketResponseClass: "",
       })
+    },
+    onShow: function() {
+      this.onClear();
+      this.updateCount();
     }
   }
 })

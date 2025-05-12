@@ -63,13 +63,13 @@
       </view>
     </view>
   </view> -->
-  <!-- <view id="any-ticket-option-container" wx:if="{{house}}">
-    <view class="heading-text">Haunted House Sign-Up</view>
+  <view id="any-ticket-option-container" wx:if="{{house}}">
+    <view class="heading-text">Table Groups Sign-Up</view>
     <view wx:if="{{!houseStatus}}">
       <view wx:if="{{allowHouse}}">
         <block wx:if="{{showStudentChoose}}">
         <view id="option-subheading">
-          <text>No Haunted House Group</text>
+          <text>No Table Group</text>
           <text>Search and select your group members below. Only participants holding a valid ticket will be displayed.</text>
           <text>Your group size must be between {{houseMin}} to {{houseMax}} people.</text>
         </view>
@@ -102,21 +102,21 @@
     <block wx:else>
       <view id="option-subheading">
         <text>Loading...</text>
-        <text>As we are currently experiencing high user access demand, database queries may take up to 1 minute to complete. If this is taking longer than expected, please check your network connection and reopen the page.</text>
+        <text>Database queries may take a few seconds to complete. If this is taking longer than expected, please check your network connection and reopen the page.</text>
       </view>
     </block>
     </view>
     <view wx:else>
       <view id="option-subheading">
-          <text>No Haunted House Group</text>
-          <text>We're sorry, sign-ups for the haunted house are currently full.</text>
+          <text>No Table Group</text>
+          <text>We're sorry, sign-ups for table groups are currently full.</text>
         </view>
     </view>
   </view>
   <view wx:else>
     <view id="option-subheading">
-      <text>Registered Haunted House Group</text>
-      <text>You are registered in a haunted house group, view your group members below. If you think this was a mistake, contact the ASB.</text>
+      <text>Registered Table Group</text>
+      <text>You are registered in a table group, view your group members below. If you think this was a mistake, contact the ASB.</text>
       <view class="student-list-container" id="multi-select-student-list-container">
         <view class="student-list-main-container" id="multi-display-student-list-main-container">
           <block wx:for="{{houseIndex}}" wx:key="*this">
@@ -130,7 +130,7 @@
       </view>
     </view>
   </view>
-  </view> -->
+  </view>
   <view id="any-ticket-option-container" wx:if="{{music}}">
     <view class="heading-text">Send Music Requests</view>
     <view id="option-subheading">

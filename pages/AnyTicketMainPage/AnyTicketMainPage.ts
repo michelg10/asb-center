@@ -19,29 +19,42 @@ type ComponentDataInterface = {
     // consentDone: boolean | false,
     // allowConsent: boolean | false,
     // allowMeal: boolean | false,
-    // allowHouse: boolean | false,
+    allowHouse: boolean | false,
+    allowPerf: boolean | false,
+    allowSuggestions: boolean | false,
+    allowPrompose: boolean | false,
     allowMusic: boolean | false,
     allowTicket: boolean | false,
     allowValidation: boolean | false,
-    // allowPreOptions: boolean | true,
-    // allowLateOptions: boolean | true,
+    allowPreOptions: boolean | true,
+    allowLateOptions: boolean | true,
     db: DB.Database,
     errorMessage: string | undefined,
     // consentStart: number,
     // mealStart: number,
-    // houseStart: number,
+    houseStart: number,
+    perfStart: number,
+    suggestionsStart: number,
+    promposeStart: number,
     musicStart: number,
     ticketStart: number,
     eventStart: number,
     // consentEnd: number,
     // mealEnd: number,
-    // houseEnd: number,
+    houseEnd: number,
+    perfEnd: number,
+    suggestionsEnd: number,
+    promposeEnd: number,
     musicEnd: number,
     ticketEnd: number,
     eventEnd: number,
     // consentEndDisplay: string,
     // mealEndDisplay: string,
-    // houseEndDisplay: string,
+    houseEndDisplay: string,
+    houseStartDisplay: string,
+    perfEndDisplay: string,
+    suggestionsEndDisplay: string,
+    promposeEndDisplay: string,
     musicEndDisplay: string,
     ticketStartDisplay: string,
     ticketEndDisplay: string,
@@ -147,20 +160,47 @@ Component({
       //     });
       //   }
       // },
-      // hauntedHouseTap: function(){
-      //   if(this.data.allowHouse){
-      //     wx.navigateTo({
-      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-      //       success: (res) => {
-      //         res.eventChannel.emit("eventName", this.data.eventName);
-      //         res.eventChannel.emit("option", "house");
-      //         res.eventChannel.emit("dueDate", this.data.houseEndDisplay);
-      //         res.eventChannel.emit("userData", this.data.userData);
-      //       }
-      //     });
-      //   }
-      // },
-      musicRequestTap: function(){
+      houseTap: function(){
+        if(this.data.allowHouse){
+          wx.navigateTo({
+            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+            success: (res) => {
+              res.eventChannel.emit("eventName", this.data.eventName);
+              res.eventChannel.emit("option", "house");
+              res.eventChannel.emit("dueDate", this.data.houseEndDisplay);
+              res.eventChannel.emit("userData", this.data.userData);
+            }
+          });
+        }
+      },
+      performanceTap: function(){
+        if(this.data.allowPerf){
+          wx.openEmbeddedMiniProgram({
+            appId: 'wxebadf544ddae62cb',
+            path: 'pages/webview/index?sid=21147588&hash=vx69&navigateBackMiniProgram=true',
+            allowFullScreen: true
+          });
+        }
+      },
+      promposalTap: function(){
+        if(this.data.allowPrompose){
+          wx.openEmbeddedMiniProgram({
+            appId: 'wxebadf544ddae62cb',
+            path: 'pages/webview/index?sid=21147569&hash=2o6b&navigateBackMiniProgram=true',
+            allowFullScreen: true
+          });
+        }
+      },
+      suggestionsTap: function() {
+        wx.navigateTo({
+          url: '/pages/AnyEventIdea/AnyEventIdea',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('eventName', "PROM 2025 Suggestions");
+          }
+        })
+      },
+      musicRequestTap: function() {
         if(this.data.allowMusic){
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
@@ -202,37 +242,23 @@ Component({
         };
       },
       onShow: async function(){
-        // let getConsentDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "consent",
-        // }).get();
-        // let getMealDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "meal",
-        // }).get();
-        // let getHouseDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "house",
-        // }).get();
-        this.data.viewVisible = true;
-        let getMusicDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "music",
-        }).get();
-        let getTicketDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "ticket",
-        }).get();
-        let getEventDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "validate",
-        }).get();
-        let checkErrorMsg = await this.data.db.collection("PromDeadlines").where({
-          optionId: "errorMsg",
-        }).get();
-        if (getMusicDeadline.data.length === 0 || getTicketDeadline.data.length === 0){
+        let deadlineRes = await this.data.db.collection("PromDeadlines").get();
+        let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
+        let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
+        let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
+        let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
+        let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
+        let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+        let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
+        let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
+        if (!getHouseDeadline || !getPerfDeadline || !getSuggestionsDeadline || !getPromposeDeadline || !getMusicDeadline || !getTicketDeadline || !getEventDeadline || !checkErrorMsg){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
           });
-        }
-        else if (checkErrorMsg.data.length!==0){
-          if (checkErrorMsg.data[0].startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.data[0].endTime){
+        } else if (checkErrorMsg) {
+          if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
             this.setData({
-              errorMessage: `Announcement from Admin: \n${checkErrorMsg.data[0].message}`,
+              errorMessage: `Announcement from the ASB: \n${checkErrorMsg?.message}`,
             });
           }
         }
@@ -259,31 +285,44 @@ Component({
         this.setData({
           // consentStart: getConsentDeadline.data[0].startTime,
           // mealStart: getMealDeadline.data[0].startTime,
-          // houseStart: getHouseDeadline.data[0].startTime,
-          musicStart: getMusicDeadline.data[0].startTime,
-          ticketStart: getTicketDeadline.data[0].startTime,
-          eventStart: getEventDeadline.data[0].startTime,
+          houseStart: getHouseDeadline?.startTime,
+          perfStart: getPerfDeadline?.startTime,
+          suggestionsStart: getSuggestionsDeadline?.startTime,
+          promposeStart: getPromposeDeadline?.startTime,
+          musicStart: getMusicDeadline?.startTime,
+          ticketStart: getTicketDeadline?.startTime,
+          eventStart: getEventDeadline?.startTime,
           // consentEnd: getConsentDeadline.data[0].endTime,
           // mealEnd: getMealDeadline.data[0].endTime,
-          // houseEnd: getHouseDeadline.data[0].endTime,
-          musicEnd: getMusicDeadline.data[0].endTime,
-          ticketEnd: getTicketDeadline.data[0].endTime,
-          eventEnd: getEventDeadline.data[0].endTime
+          houseEnd: getHouseDeadline?.endTime,
+          perfEnd: getPerfDeadline?.endTime,
+          suggestionsEnd: getSuggestionsDeadline?.endTime,
+          promposeEnd: getPromposeDeadline?.endTime,
+          musicEnd: getMusicDeadline?.endTime,
+          ticketEnd: getTicketDeadline?.endTime,
+          eventEnd: getEventDeadline?.endTime
         });
         this.setData({
           // allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
           // allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
-          // allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
+          allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
+          allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
           allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          // allowPreOptions: this.data.allowConsent && !this.data.consentDone,
-          // allowLateOptions: this.data.allowMusic,
+          allowPreOptions: this.data.allowPrompose && this.data.allowPerf,
+          allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          // houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          houseStartDisplay: this.convertUnixTime(this.data.houseStart),
+          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
+          suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
+          promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
           ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
           ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
@@ -401,42 +440,46 @@ Component({
               eventId: data,
           });
         });
-        // let getConsentDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "consent",
-        // }).get();
-        // let getMealDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "meal",
-        // }).get();
-        // let getHouseDeadline = await this.data.db.collection("PromDeadlines").where({
-        //   optionId: "house",
-        // }).get();
-        let getMusicDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "music",
-        }).get();
-        let getTicketDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "ticket",
-        }).get();
-        let getEventDeadline = await this.data.db.collection("PromDeadlines").where({
-          optionId: "validate",
-        }).get();
-        if (getMusicDeadline.data.length === 0 || getTicketDeadline.data.length === 0){
+        let deadlineRes = await this.data.db.collection("PromDeadlines").get();
+
+        let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
+        let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
+        let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
+        let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
+        let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
+        let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+        let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
+        let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
+        if (!getHouseDeadline || !getPerfDeadline || !getSuggestionsDeadline || !getPromposeDeadline || !getMusicDeadline || !getTicketDeadline || !getEventDeadline || !checkErrorMsg){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
           });
+        } else if (checkErrorMsg) {
+          if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
+            this.setData({
+              errorMessage: `Announcement from the ASB: \n${checkErrorMsg?.message}`,
+            });
+          }
         }
         this.setData({
           // consentStart: getConsentDeadline.data[0].startTime,
           // mealStart: getMealDeadline.data[0].startTime,
-          // houseStart: getHouseDeadline.data[0].startTime,
-          musicStart: getMusicDeadline.data[0].startTime,
-          ticketStart: getTicketDeadline.data[0].startTime,
-          eventStart: getEventDeadline.data[0].startTime,
+          houseStart: getHouseDeadline?.startTime,
+          perfStart: getPerfDeadline?.startTime,
+          suggestionsStart: getSuggestionsDeadline?.startTime,
+          promposeStart: getPromposeDeadline?.startTime,
+          musicStart: getMusicDeadline?.startTime,
+          ticketStart: getTicketDeadline?.startTime,
+          eventStart: getEventDeadline?.startTime,
           // consentEnd: getConsentDeadline.data[0].endTime,
           // mealEnd: getMealDeadline.data[0].endTime,
-          // houseEnd: getHouseDeadline.data[0].endTime,
-          musicEnd: getMusicDeadline.data[0].endTime,
-          ticketEnd: getTicketDeadline.data[0].endTime,
-          eventEnd: getEventDeadline.data[0].endTime
+          houseEnd: getHouseDeadline?.endTime,
+          perfEnd: getPerfDeadline?.endTime,
+          suggestionsEnd: getSuggestionsDeadline?.endTime,
+          promposeEnd: getPromposeDeadline?.endTime,
+          musicEnd: getMusicDeadline?.endTime,
+          ticketEnd: getTicketDeadline?.endTime,
+          eventEnd: getEventDeadline?.endTime
         });
         // let getConsentStatus = await this.data.db.collection("PromStudentData").where({
         //   userId: this.data.userData.student?.id,
@@ -461,17 +504,24 @@ Component({
         this.setData({
           // allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
           // allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
-          // allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+          allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
+          allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
+          allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
           allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          // allowPreOptions: this.data.allowConsent && !this.data.consentDone,
-          // allowLateOptions: this.data.allowMusic,
+          allowPreOptions: this.data.allowPrompose && this.data.allowPerf,
+          allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          // houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          houseStartDisplay: this.convertUnixTime(this.data.houseStart),
+          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
+          suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
+          promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
           ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
           ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),

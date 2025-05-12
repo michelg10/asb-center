@@ -4,9 +4,14 @@
 #confirm-multi-select-main-container {
   display: flex;
   flex-direction: column;
-  margin: 0 16px;
-  margin-top: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
   padding-bottom: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  min-height: 100vh;
+  background-color: var(--page-background);
 }
 #selection-confirmation-list {
   margin-top: 12px;

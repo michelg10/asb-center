@@ -41,7 +41,7 @@ Component({
                 name: "",
                 contactInformation: "",
                 grade: 0,
-                gradeOptions: ['Please Select 请选择...','Venue 场馆','Theme 主题', 'Food and Beverage 饮食', 'Dress Code 着装需求', 'General Idea or Suggestion 其他想法与建议'],
+                gradeOptions: ['Please Select 请选择...','Theme 主题', 'Food and Beverage 饮食', 'Dress Code 着装需求', 'General Idea or Suggestion 其他想法与建议'],
                 suggestion: "",
                 language: "en",
                 allowSubmission: true,
