@@ -1,6 +1,9 @@
 <view id="confirm-multi-select-main-container">
-  <text class="big-title-text">Confirm Group Members</text>
-  <text class="big-title-sub-text">{{studentData.length}}/{{sizeMax}} students selected</text>
+  <text class="big-title-text">{{eventName}}</text>
+  <view class="date-text">Ends: {{dueDate}}</view>
+  <view class="heading-text">Table Groups Sign-Up</view>
+  <text class="subheading-text">Group Members</text>
+  <text class="big-title-sub-text">{{studentData.length}}/{{sizeMax}} guests selected</text>
   <view id="selection-confirmation-list">
     <block wx:for="{{studentData}}" wx:key="id">
       <view class="student-select-container-block">
@@ -10,6 +13,39 @@
         </view>
       </view>
     </block>
+  </view>
+  <text class="subheading-text">Select Table</text>
+  <text class="sub-text">Click on a table to view its group members. Table 1 is located closest to the stage (front of the cruize), and Table 20 is located closest to the entrance (back of the cruize). Sign-ups are offered on a first come, first served basis!</text>
+  <scroll-view scroll-y="true" class="scroll-container">
+    <view class="student-list-main-container" id="multi-select-student-list-main-container">
+      <block wx:for="{{tableGroups}}" wx:key="tableId">
+        <view class="student-select-container-block" bindtap="handleTableChoose" data-chosenid="{{item}}">
+          <view class="student-select-left-block">
+            <text class="student-select-nickname">Table #{{item.tableId}}</text>
+            <text class="student-select-name">Capacity: {{item.guests.length}} / {{item.limit}}</text>
+          </view>
+          <view class="admin-select-right-block">
+            <image src="{{'/icons/selector'+(tableSelect[index] ? '-selected' : '')+'.svg'}}" class="selector-image" hidden="{{item.guests.length >= item.limit || studentData.length + item.guests.length > item.limit}}"></image>
+            <text class="capacity-warning-text" hidden="{{studentData.length + item.guests.length <= item.limit || item.guests.length >= item.limit}}">Insufficient Capacity</text>
+            <text class="full-warning-text" hidden="{{item.guests.length < item.limit}}">Table Full</text>
+          </view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+  <view class="table-guests-container" hidden="{{selectedTable === -1}}">
+    <text class="subheading-text">Table #{{selectedTable + 1}} Guests</text>
+    <text class="big-title-sub-text" wx:if="{{selectedTableGuests.length === 0}}">This table is currently empty.</text>
+    <view id="selection-confirmation-list" wx:else>
+      <block wx:for="{{selectedTableGuests}}" wx:key="id">
+        <view class="student-select-container-block">
+          <view class="student-select-left-block">
+            <text class="student-select-nickname">{{item.nickname}} {{item.studentGrade}}-{{item.studentClass}}</text>
+            <text class="student-select-name">{{ item.chineseName+" ("+item.englishName+")" }}</text>
+          </view>
+        </view>
+      </block>
+    </view>
   </view>
   <view class="button" bindtap="confirmClicked" id="confirm-button">
     <text class="button-text">Confirm</text>

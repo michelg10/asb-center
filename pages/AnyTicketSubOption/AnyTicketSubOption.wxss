@@ -21,7 +21,6 @@
   color: var(--secondary);
   font-weight: 500;
   font-size: 18px;
-  margin-top: 15px;
   margin-bottom: 12px;
   display: flex;
   flex-direction: column;
@@ -110,11 +109,16 @@
   margin-top: 16px;
   margin-bottom: 21px;
 }
-#multi-select-student-list-main-container {
-  height: 230px;
+#house-display-container{
+  margin-top: 15px;
+  padding: 10px 0;
+  background-color: var(--subcontainer-background);
+  border-radius: 8px;
 }
-#multi-display-student-list-main-container {
-  height: 450px;
+.subheading-text{
+  margin: 0 15px;
+  font-size: 22px;
+  font-weight: bold;
 }
 .selector-image {
   height: 19px;

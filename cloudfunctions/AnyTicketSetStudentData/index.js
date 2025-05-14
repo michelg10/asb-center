@@ -59,7 +59,7 @@ exports.main = async (event, context) => {
     });
       return;
     }
-    else if (event.type === "houseModify"){
+    /*else if (event.type === "houseModify"){
       await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
@@ -75,19 +75,29 @@ exports.main = async (event, context) => {
         }
       });
       return;
-    }
+    }*/
     else if (event.type === "houseAdd"){
       await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
-          house: event.house
+          house: true
         }
       });
-      await db.collection('PromDeadlines').where({
+      /*await db.collection('PromDeadlines').where({
         optionId: "house",
       }).update({
         data: {
           current: event.house
+        }
+      });*/
+      return;
+    }
+    else if (event.type === "houseModifyTable"){
+      await db.collection('PromTables').where({
+        tableId: event.tableId
+      }).update({
+        data: {
+          guests: event.guests
         }
       });
       return;

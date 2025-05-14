@@ -239,7 +239,7 @@ Component({
             onlyFromCamera: true,
             success: async (res) => {
               wx.showLoading({
-                title: "Please Wait...",
+                title: "Loading...",
                 mask: true,
               });
               let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
@@ -295,7 +295,7 @@ Component({
             success: async (res) => {
               if(res.confirm){
                 wx.showLoading({
-                  title: "Please Wait...",
+                  title: "Loading...",
                   mask: true,
                 });
                 let getAvailableTickets = await this.data.db.collection("PromTickets").where({

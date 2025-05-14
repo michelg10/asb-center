@@ -195,3 +195,13 @@
   padding: 9px 9px;
   background-color: var(--subcontainer-background);
 }
+.stamp-overlay {
+  position: absolute;
+  top: 23%;
+  left: 77%;
+  width: 150px;
+  height: 100px;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  pointer-events: none;
+  filter: saturate(3);
+}

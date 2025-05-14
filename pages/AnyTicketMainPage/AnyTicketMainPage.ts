@@ -14,12 +14,14 @@ type ComponentDataInterface = {
     holderStatus: boolean | false,
     holderLostStatus: boolean | false,
     holderTicketId: string,
+    ticketUsed: boolean | false,
     isAdmin: boolean,
     canIssueTicketToGuest: boolean,
     // consentDone: boolean | false,
     // allowConsent: boolean | false,
     // allowMeal: boolean | false,
     allowHouse: boolean | false,
+    hideHouse: boolean | false,
     allowPerf: boolean | false,
     allowSuggestions: boolean | false,
     allowPrompose: boolean | false,
@@ -295,6 +297,7 @@ Component({
           // consentEnd: getConsentDeadline.data[0].endTime,
           // mealEnd: getMealDeadline.data[0].endTime,
           houseEnd: getHouseDeadline?.endTime,
+          hideHouse: getHouseDeadline?.hide,
           perfEnd: getPerfDeadline?.endTime,
           suggestionsEnd: getSuggestionsDeadline?.endTime,
           promposeEnd: getPromposeDeadline?.endTime,
@@ -374,6 +377,11 @@ Component({
                   holderStatus: true,
                   holderTicketId: res.data[0].ticketId
                 });
+                if (res.data[0].entry){
+                  this.setData({
+                    ticketUsed: true
+                  })
+                }
                 setTimeout(
                   () => {
                     this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
@@ -474,6 +482,7 @@ Component({
           // consentEnd: getConsentDeadline.data[0].endTime,
           // mealEnd: getMealDeadline.data[0].endTime,
           houseEnd: getHouseDeadline?.endTime,
+          hideHouse: getHouseDeadline?.hide,
           perfEnd: getPerfDeadline?.endTime,
           suggestionsEnd: getSuggestionsDeadline?.endTime,
           promposeEnd: getPromposeDeadline?.endTime,

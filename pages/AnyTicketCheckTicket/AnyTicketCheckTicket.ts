@@ -83,7 +83,7 @@ Component({
         onlyFromCamera: true,
         success: async (res) => {
           wx.showLoading({
-            title: "Please Wait...",
+            title: "Loading...",
             mask: true,
           });
           let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);

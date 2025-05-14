@@ -1,4 +1,4 @@
-import { gNumber } from "../../classes/gNumber";
+// import { gNumber } from "../../classes/gNumber";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
 import { UserDataType } from "../../utils/common";
@@ -28,9 +28,9 @@ type ComponentDataInterface = {
   totalSelected: number,
   ticketData: string[],
   studentData: Student[],
-  gNumber: gNumber[],
+  // gNumber: gNumber[],
   houseData: Student[],
-  houseIndex: number[],
+  // houseIndex: number[],
   studentListSearch: string,
   userSelect: boolean[],
   matchingIndexes: number[],
@@ -184,7 +184,7 @@ Component({
       //   }
       // },
       onShow: async function(){
-        this.checkHouseAvail();
+        await this.checkHouseAvail();
         this.setData({
           consentStu: '',
           consentParent: '',
@@ -197,17 +197,16 @@ Component({
           let checkHouse = await this.data.db.collection("PromStudentData").where({
             userId: this.data.userData.student?.id,
           }).get();
-          if (checkHouse.data[0].house===undefined || checkHouse.data[0].house<=0){
+          if (checkHouse.data[0].house===undefined || !checkHouse.data[0].house){
             this.setData({
               houseStatus: false,
             })
-          }
-          else{
+          } else {
             if (this.data.house){
               this.displayStudentsInSameHouse();
               this.setData({
                 houseStatus: true,
-                houseNumber: checkHouse.data[0].house
+                // houseNumber: checkHouse.data[0].house
               })
             }
           }
@@ -221,7 +220,6 @@ Component({
         // this.data.studentSearchTextfield = '';
         this.data.cacheSingleton = CacheSingleton.getInstance();
         this.data.db = wx.cloud.database();
-        this.checkHouseAvail();
         const eventChannel = this.getOpenerEventChannel();
         eventChannel.on('eventName', (res) => {
           this.setData({
@@ -248,7 +246,7 @@ Component({
           //     meal: true,
           //   });
           //   wx.showLoading({
-          //     title: "Please Wait...",
+          //     title: "Loading...",
           //     mask: true,
           //   });
           // }
@@ -257,75 +255,78 @@ Component({
               house: true,
             });
             wx.showLoading({
-              title: "Please Wait...",
+              title: "Loading...",
               mask: true,
             });
-            let tmpTicketData: string[] = [];
-            let tmpStudentData: Student[] = [];
-            let tmpGNumbers: gNumber[] = [];
+            await this.checkHouseAvail();
+            if (this.data.allowHouse){
+              let tmpTicketData: string[] = [];
+              let tmpStudentData: Student[] = [];
+              // let tmpGNumbers: gNumber[] = [];
 
-            const allStudentRes = await this.data.cacheSingleton.getStudentData();
-            const ticketRes = await allCollectionsData(this.data.db, "PromTickets");
-            const gNumberRes = await allCollectionsData(this.data.db, "gNumbers");
+              const allStudentRes = await this.data.cacheSingleton.getStudentData();
+              const ticketRes = await allCollectionsData(this.data.db, "PromTickets");
+              // const gNumberRes = await allCollectionsData(this.data.db, "gNumbers");
 
-            const allStudentData = allStudentRes;
-            const allTickets = ticketRes.data;
-            const allGData = gNumberRes.data;
+              const allStudentData = allStudentRes;
+              const allTickets = ticketRes.data;
+              // const allGData = gNumberRes.data;
 
-            // Filter valid ticket holders
-            for (let i = 0; i < allTickets.length; i++) {
-              const t = allTickets[i];
-              if ((t?.userId !== undefined && t.userId !== "") && t.status === "Issued" && (t?.house === undefined || t.house <= 0)) {
-                tmpTicketData.push(t.userId);
+              // Filter valid ticket holders
+              for (let i = 0; i < allTickets.length; i++) {
+                const t = allTickets[i];
+                if ((t?.userId !== undefined && t.userId !== "") && t.status === "Issued" && (t?.house === undefined || t.house <= 0)) {
+                  tmpTicketData.push(t.userId);
+                }
               }
-            }
 
-            // Filter students by ticket holders
-            for (let j = 0; j < tmpTicketData.length; j++) {
-              const sid = tmpTicketData[j];
-              const match = allStudentData.find(stu => stu.id === sid);
-              if (match) {
-                tmpStudentData.push(new Student(
-                  match.id,
-                  match.nickname,
-                  match.uniqueNickname,
-                  match.englishName,
-                  match.chineseName,
-                  match.studentGrade,
-                  match.studentClass,
-                  match.pseudoId
-                ));
+              // Filter students by ticket holders
+              for (let j = 0; j < tmpTicketData.length; j++) {
+                const sid = tmpTicketData[j];
+                const match = allStudentData.find(stu => stu.id === sid);
+                if (match) {
+                  tmpStudentData.push(new Student(
+                    match.id,
+                    match.nickname,
+                    match.uniqueNickname,
+                    match.englishName,
+                    match.chineseName,
+                    match.studentGrade,
+                    match.studentClass,
+                    match.pseudoId
+                  ));
+                }
               }
-            }
 
-            // Match gNumbers
-            for (let j = 0; j < tmpTicketData.length; j++) {
-              const sid = tmpTicketData[j];
-              const match = allGData.find((g: {_id: string; gnumber: gNumber; studentId: string;}) => g.studentId === sid);
-              if (match) {
-                tmpGNumbers.push(new gNumber(
-                  match._id,
-                  match.gnumber,
-                  match.studentId
-                ));
+              // Match gNumbers
+              // for (let j = 0; j < tmpTicketData.length; j++) {
+              //   const sid = tmpTicketData[j];
+              //   const match = allGData.find((g: {_id: string; gnumber: gNumber; studentId: string;}) => g.studentId === sid);
+              //   if (match) {
+              //     tmpGNumbers.push(new gNumber(
+              //       match._id,
+              //       match.gnumber,
+              //       match.studentId
+              //     ));
+              //   }
+              // }
+
+              // Build userSelect array
+              let newUserSelect: boolean[] = tmpTicketData.map(() => false);
+              let currentUserIndex = tmpStudentData.findIndex(s => s.id === this.data.userData.student?.id);
+              if (currentUserIndex !== -1) {
+                newUserSelect[currentUserIndex] = true;
               }
-            }
 
-            // Build userSelect array
-            let newUserSelect: boolean[] = tmpTicketData.map(() => false);
-            let currentUserIndex = tmpStudentData.findIndex(s => s.id === this.data.userData.student?.id);
-            if (currentUserIndex !== -1) {
-              newUserSelect[currentUserIndex] = true;
+              this.setData({
+                ticketData: tmpTicketData,
+                studentData: tmpStudentData,
+                // gNumber: tmpGNumbers,
+                userSelect: newUserSelect,
+                totalSelected: newUserSelect.filter(x => x).length,
+                showStudentChoose: true
+              });
             }
-
-            this.setData({
-              ticketData: tmpTicketData,
-              studentData: tmpStudentData,
-              gNumber: tmpGNumbers,
-              userSelect: newUserSelect,
-              totalSelected: newUserSelect.filter(x => x).length,
-              showStudentChoose: true
-            });
             wx.hideLoading();
             /*allCollectionsData(this.data.db, "PromTickets").then((res) => {
               let tmpTicketData = [];
@@ -420,7 +421,11 @@ Component({
           this.setData({
             userData: res,
           });
-          let checkMeal = await this.data.db.collection("PromStudentData").where({
+          wx.showLoading({
+            title: "Loading...",
+            mask: true,
+          });
+          let checkHouse = await this.data.db.collection("PromStudentData").where({
             userId: this.data.userData.student?.id,
           }).get();
           // if(checkMeal.data.length===0){
@@ -461,21 +466,22 @@ Component({
             // if(checkMeal.data.length !== 0 && checkMeal.data[0].consent === true && this.data.consent === true){
             //   wx.navigateBack();
             // }
-            if(checkMeal.data[0].house===undefined || checkMeal.data[0].house<=0){
+            if(checkHouse.data[0].house===undefined || !checkHouse.data[0].house){
               this.setData({
                 houseStatus: false
               });
-            }
-            else{
+              wx.hideLoading();
+            } else {
               if (this.data.house) {
                 this.displayStudentsInSameHouse();
                 this.setData({
                   houseStatus: true,
-                  houseNumber: checkMeal.data[0].house
+                  // houseNumber: checkHouse.data[0].house
                 });
+                wx.hideLoading();
               }
-            }
-            if (!this.data.house){
+              wx.hideLoading();
+            } if (!this.data.house){
               wx.hideLoading();
             }
           // }
@@ -517,7 +523,8 @@ Component({
         let checkGroupLimit = await this.data.db.collection("PromDeadlines").where({
           optionId: "house",
         }).get();
-        if (checkGroupLimit.data[0].current>=checkGroupLimit.data[0].limit){
+        // if (checkGroupLimit.data[0].current>=checkGroupLimit.data[0].limit){
+        if (checkGroupLimit.data[0].full){
           this.setData({
             allowHouse: false
           })
@@ -530,44 +537,80 @@ Component({
         }
       },
       displayStudentsInSameHouse: async function() {
-        try {
-          let studentData = await this.data.db.collection("PromStudentData").where({
-            userId: this.data.userData.student?.id,
-          }).get();
-          let houseNumber = studentData.data[0].house;
-          let houseStudents = await this.data.db.collection("PromStudentData").where({
-            house: houseNumber,
-          }).get();
-          let matchingStudentDataIndexes: number[] = [];
-          let tmpStudentData: Student[] = [];
-          let promises = [];
-          for (let j = 0; j < houseStudents.data.length; j++) {
-            let studentPromise = this.data.db.collection("studentData").where({
-              _id: houseStudents.data[j].userId,
-            }).get().then((res) => {
-              tmpStudentData.push(new Student(
-                res.data[0]._id as string,
-                res.data[0].nickname,
-                res.data[0].uniqueNickname,
-                res.data[0].englishName,
-                res.data[0].chineseName,
-                res.data[0].grade,
-                res.data[0].class,
-                res.data[0].pseudoId
-              ));
-              matchingStudentDataIndexes.push(j);
-            });
-            promises.push(studentPromise);
-          }
-          Promise.all(promises).then(() => {
-            this.setData({
-              houseData: tmpStudentData,
-              houseIndex: matchingStudentDataIndexes
-            });
+        if (this.data.userData && this.data.userData.student){
+          wx.showLoading({
+            title: "Loading...",
+            mask: true,
           });
-        } catch (error) {
-          console.error("Error retrieving house data:", error);
+          const allStudentRes = await this.data.cacheSingleton.getStudentData();
+          const res = await this.data.db.collection("PromTables").where({
+            guests: this.data.db.command.elemMatch(this.data.db.command.eq(this.data.userData.student.id))
+          }).limit(1).get();
+          const tableDoc = res.data[0];
+          const guestIds: string[] = tableDoc.guests;
+          const allStudentData = allStudentRes;
+          const tmpStudentData: Student[] = [];
+          // const matchingStudentDataIndexes: number[] = [];
+          for (let i = 0; i < guestIds.length; i++) {
+            const id = guestIds[i];
+            const match = allStudentData.find(stu => stu.id === id);
+            if (match) {
+              tmpStudentData.push(match);
+              // matchingStudentDataIndexes.push(i);
+            }
+          }
+          this.setData({
+            houseData: tmpStudentData,
+            // houseIndex: matchingStudentDataIndexes,
+            houseNumber: res.data[0].tableId
+          });
+          wx.hideLoading();
+        } else {
+          wx.showModal({
+            title: "Not Registered",
+            content: "You must complete registration to participate in this event.",
+            showCancel: false,
+            confirmText: "Dismiss",
+          })
         }
+        // try {
+        //   let studentData = await this.data.db.collection("PromStudentData").where({
+        //     userId: this.data.userData.student?.id,
+        //   }).get();
+        //   let houseNumber = studentData.data[0].house;
+        //   let houseStudents = await this.data.db.collection("PromStudentData").where({
+        //     house: houseNumber,
+        //   }).get();
+        //   let matchingStudentDataIndexes: number[] = [];
+        //   let tmpStudentData: Student[] = [];
+        //   let promises = [];
+        //   for (let j = 0; j < houseStudents.data.length; j++) {
+        //     let studentPromise = this.data.db.collection("studentData").where({
+        //       _id: houseStudents.data[j].userId,
+        //     }).get().then((res) => {
+        //       tmpStudentData.push(new Student(
+        //         res.data[0]._id as string,
+        //         res.data[0].nickname,
+        //         res.data[0].uniqueNickname,
+        //         res.data[0].englishName,
+        //         res.data[0].chineseName,
+        //         res.data[0].grade,
+        //         res.data[0].class,
+        //         res.data[0].pseudoId
+        //       ));
+        //       matchingStudentDataIndexes.push(j);
+        //     });
+        //     promises.push(studentPromise);
+        //   }
+        //   Promise.all(promises).then(() => {
+        //     this.setData({
+        //       houseData: tmpStudentData,
+        //       houseIndex: matchingStudentDataIndexes
+        //     });
+        //   });
+        // } catch (error) {
+        //   console.error("Error retrieving house data:", error);
+        // }
       },      
     //   cheeseTap: function(){
     //     this.setData({
@@ -583,7 +626,7 @@ Component({
     //   },
     //   onSaveDinner: async function(){
     //     wx.showLoading({
-    //       title: "Please Wait...",
+    //       title: "Loading...",
     //       mask: true,
     //     });
     //     let checkMeal = await this.data.db.collection("PromStudentData").where({
@@ -794,15 +837,6 @@ Component({
         this.setData({
           studentSearchTextfield: ''
         })
-        if (this.data.totalSelected>=this.data.houseMax){
-          wx.showModal({
-            title: "Invalid Selection",
-            content: `Only up to ${this.data.houseMax} group members can be selected.`,
-            showCancel: false,
-            confirmText: "Dismiss"
-          })
-          return;
-        }
         let newUserSelect = this.data.userSelect;
         let newTotalSelected = this.data.totalSelected;
         const currentUserIndex = this.data.studentData.findIndex(student => student.id === this.data.userData.student?.id);
@@ -814,8 +848,15 @@ Component({
             confirmText: "Dismiss"
           })
           return;
-        }
-        else{
+        } else if (this.data.totalSelected >= this.data.houseMax && !newUserSelect[x.currentTarget.dataset.chosenid]){
+          wx.showModal({
+            title: "Invalid Selection",
+            content: `Only up to ${this.data.houseMax} group members can be selected.`,
+            showCancel: false,
+            confirmText: "Dismiss"
+          })
+          return;
+        } else {
           newUserSelect[x.currentTarget.dataset.chosenid] = !newUserSelect[x.currentTarget.dataset.chosenid];
           if (newUserSelect[x.currentTarget.dataset.chosenid]) {
             newTotalSelected+=1;
@@ -851,6 +892,8 @@ Component({
                   }
                 }
                 res.eventChannel.emit('selectedData', selectedData);
+                res.eventChannel.emit('eventName', this.data.eventName);
+                res.eventChannel.emit('dueDate', this.data.dueDate);
               }
             });
           }

@@ -294,7 +294,7 @@ Component({
         onlyFromCamera: true,
         success: async (res) => {
           wx.showLoading({
-            title: "Please Wait...",
+            title: "Loading...",
             mask: true,
           });
           let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, res.result);
@@ -409,7 +409,7 @@ Component({
         success: async (res) => {
           if (res.confirm) {
             wx.showLoading({
-              title: "Please Wait...",
+              title: "Loading...",
               mask: true,
             });
             await wx.cloud.callFunction({
@@ -436,7 +436,7 @@ Component({
         success: async (res) => {
           if (res.confirm) {
             wx.showLoading({
-              title: "Please Wait...",
+              title: "Loading...",
               mask: true,
             });
             await wx.cloud.callFunction({
@@ -456,7 +456,7 @@ Component({
     },
     onRevokeTicket: async function() {
       wx.showLoading({
-        title: "Please Wait...",
+        title: "Loading...",
         mask: true,
       });
       await wx.cloud.callFunction({
@@ -472,7 +472,7 @@ Component({
     },
     onLostTicket: async function() {
       wx.showLoading({
-        title: "Please Wait...",
+        title: "Loading...",
         mask: true,
       });
       let newUserId = this.data.holderUserId.concat("LOST");
@@ -491,7 +491,7 @@ Component({
     },
     onRecoverTicket: async function() {
       wx.showLoading({
-        title: "Please Wait...",
+        title: "Loading...",
         mask: true,
       });
       let newUserId = this.data.holderUserId.substring(0,this.data.holderUserId.length-4);

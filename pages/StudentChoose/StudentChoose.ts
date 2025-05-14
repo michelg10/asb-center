@@ -32,7 +32,7 @@ Component({
     methods: {
         selectStudent: function(x: any) {
             wx.showLoading({
-              title: "Please Wait...",
+              title: "Loading...",
               mask: true,
             });
             console.log("select");
@@ -44,7 +44,7 @@ Component({
         },
         onLoad: async function() {
             wx.showLoading({
-              title: "Please Wait...",
+              title: "Loading...",
               mask: true,
             });
             this.data.cacheSingleton = CacheSingleton.getInstance();

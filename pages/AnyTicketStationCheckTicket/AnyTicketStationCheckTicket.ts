@@ -98,7 +98,7 @@ Component({
     },
     confirmTicketScan: async function(x: any){
       wx.showLoading({
-        title: "Please Wait...",
+        title: "Loading...",
         mask: true,
       });
       this.onClear();

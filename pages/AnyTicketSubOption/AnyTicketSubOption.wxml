@@ -71,15 +71,15 @@
         <view id="option-subheading">
           <text>No Table Group</text>
           <text>Search and select your group members below. Only participants holding a valid ticket will be displayed.</text>
-          <text>Your group size must be between {{houseMin}} to {{houseMax}} people.</text>
+          <text>Your group size must be between {{houseMin}} to {{houseMax}} people. If you want to sign-up individually, directly click "Next".</text>
         </view>
-        <text class="big-title-sub-text" id="">{{totalSelected}}/{{houseMax}} students selected</text>
+        <text class="big-title-sub-text" id="">{{totalSelected}}/{{houseMax}} guests selected</text>
       <view class="student-list-container" id="multi-select-student-list-container">
         <view class="student-list-search-container">
           <image src="../../icons/search.svg" class="student-search-image"></image>  
           <input type="text" class="student-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="student-search-textfield-placeholder" value="{{studentSearchTextfield}}"/>
         </view>
-        <view class="student-list-main-container" id="multi-select-student-list-main-container">
+        <view class="student-list-main-container">
           <block wx:for="{{matchingIndexes}}" wx:key="*this">
             <view class="student-select-container-block" bindtap="handlePersonChoose" data-chosenid="{{item}}">
               <view class="student-select-left-block">
@@ -109,7 +109,7 @@
     <view wx:else>
       <view id="option-subheading">
           <text>No Table Group</text>
-          <text>We're sorry, sign-ups for table groups are currently full.</text>
+          <text>We're sorry, sign-ups for table groups are currently full. If you have any concerns, please contact the ASB.</text>
         </view>
     </view>
   </view>
@@ -117,17 +117,17 @@
     <view id="option-subheading">
       <text>Registered Table Group</text>
       <text>You are registered in a table group, view your group members below. If you think this was a mistake, contact the ASB.</text>
-      <view class="student-list-container" id="multi-select-student-list-container">
-        <view class="student-list-main-container" id="multi-display-student-list-main-container">
-          <block wx:for="{{houseIndex}}" wx:key="*this">
-            <view class="student-select-container-block" data-chosenid="{{item}}">
-              <view class="student-select-left-block">
-                <text class="student-select-nickname">{{houseData[item].nickname}} {{houseData[item].studentGrade}}-{{houseData[item].studentClass}}</text>
-              </view>
-            </view>
-          </block>
+    </view>
+    <view id="house-display-container">
+      <text class="subheading-text">Table #{{houseNumber}} Guests</text>
+      <block wx:for="{{houseData}}" wx:key="id">
+        <view class="student-select-container-block">
+          <view class="student-select-left-block">
+            <text class="student-select-nickname">{{item.nickname}} {{item.studentGrade}}-{{item.studentClass}}</text>
+            <text class="student-select-name">{{ item.chineseName+" ("+item.englishName+")" }}</text>
+          </view>
         </view>
-      </view>
+      </block>
     </view>
   </view>
   </view>

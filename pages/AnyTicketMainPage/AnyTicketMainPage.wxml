@@ -17,14 +17,16 @@
             <view id="ticket-display-title">
               <text>Your {{eventName}}\nEvent Ticket</text>
             </view>
+            <image src="/pages/AnyTicketMainPage/used.png" class="stamp-overlay" wx:if="{{ticketUsed}}"></image>
             <canvas type="2d" class="secure-code-canvas" id="ticketcodecanvas"></canvas>
             <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nPlease present this digital event ticket for entry to PROM 2025.\nDo not share your digital event ticket.'}}</text>
           </view>
         </view>
-        <view id="any-ticket-event-option-row" wx:if="{{allowHouse}}">
+        <view id="any-ticket-event-option-row" wx:if="{{!hideHouse}}">
           <view id="event-option-full" bindtap="houseTap">
             <text>Click to Sign-Up for Table Groups!</text>
             <view id="date-label">Available From {{houseStartDisplay}} Until {{houseEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowHouse}}">Restricted</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/house.png"></image>
           </view>
         </view>
@@ -107,8 +109,8 @@
         <view id="any-ticket-event-option-row">
           <view id="event-option-full" bindtap="ticketTap">
             <text>Click to Purchase {{eventName}} Tickets Now!</text>
-            <view id="event-option-restrict-label" wx:if="{{!allowTicket}}">Restricted</view>
             <view id="date-label">Available From {{ticketStartDisplay}} Until {{ticketEndDisplay}}</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowTicket}}">Restricted</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/ticket.png"></image>
           </view>
         </view>
