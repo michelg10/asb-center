@@ -466,7 +466,7 @@ Component({
             // if(checkMeal.data.length !== 0 && checkMeal.data[0].consent === true && this.data.consent === true){
             //   wx.navigateBack();
             // }
-            if(checkHouse.data[0].house===undefined || !checkHouse.data[0].house){
+            if(checkHouse.data.length === 0 || checkHouse.data[0].house===undefined || !checkHouse.data[0].house){
               this.setData({
                 houseStatus: false
               });
