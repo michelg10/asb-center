@@ -118,6 +118,19 @@ Component({
         // Format the date to a string using the specified options
         return date.toLocaleString('en-US', options); // Change 'en-US' to your desired locale
       },
+      convertUnixTimeToMin(unixTime: number): string {
+        const date = new Date(unixTime * 1000);
+        const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            //second: '2-digit',
+            hour12: false
+        };
+        return date.toLocaleString('en-US', options);
+      },
       adminButtonTapped: async function(){
         if (this.data.allowValidation){
           wx.navigateTo({
@@ -321,8 +334,8 @@ Component({
           allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          houseStartDisplay: this.convertUnixTime(this.data.houseStart),
-          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
+          houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
           perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
           suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
           promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
@@ -526,8 +539,8 @@ Component({
           allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          houseStartDisplay: this.convertUnixTime(this.data.houseStart),
-          houseEndDisplay: this.convertUnixTime(this.data.houseEnd),
+          houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
+          houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
           perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
           suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
           promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),

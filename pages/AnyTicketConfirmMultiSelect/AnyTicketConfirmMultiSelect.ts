@@ -192,6 +192,18 @@ Component({
                 }
               }
               if (allowHouseFinal) {
+                const guestIds: string[] = [
+                  ...this.data.selectedTableGuests.map(s => s.id),
+                  ...this.data.studentData.map(s => s.id)
+                ];
+                await wx.cloud.callFunction({
+                  name: "AnyTicketSetStudentData",
+                  data: {
+                    type: "houseModifyTable",
+                    tableId: this.data.selectedTable+1,
+                    guests: guestIds
+                  }
+                })
                 for(let i=0;i<this.data.studentData.length;i++){
                   // console.log(this.data.studentData[i].id);
                   // let checkStudent = await this.data.db.collection("PromStudentData").where({
@@ -219,18 +231,6 @@ Component({
                     })
                   // }
                 }
-                const guestIds: string[] = [
-                  ...this.data.selectedTableGuests.map(s => s.id),
-                  ...this.data.studentData.map(s => s.id)
-                ];
-                await wx.cloud.callFunction({
-                  name: "AnyTicketSetStudentData",
-                  data: {
-                    type: "houseModifyTable",
-                    tableId: this.data.selectedTable+1,
-                    guests: guestIds
-                  }
-                })
                 wx.hideLoading();
                 wx.navigateBack();
               }

@@ -473,16 +473,15 @@ Component({
               wx.hideLoading();
             } else {
               if (this.data.house) {
-                this.displayStudentsInSameHouse();
+                await this.displayStudentsInSameHouse();
                 this.setData({
                   houseStatus: true,
                   // houseNumber: checkHouse.data[0].house
                 });
                 wx.hideLoading();
+              } else {
+                wx.hideLoading();
               }
-              wx.hideLoading();
-            } if (!this.data.house){
-              wx.hideLoading();
             }
           // }
         })

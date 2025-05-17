@@ -25,7 +25,8 @@
         <view id="any-ticket-event-option-row" wx:if="{{!hideHouse}}">
           <view id="event-option-full" bindtap="houseTap">
             <text>Click to Sign-Up for Table Groups!</text>
-            <view id="date-label">Available From {{houseStartDisplay}} Until {{houseEndDisplay}}</view>
+            <view id="date-label">Available From {{houseStartDisplay}}</view>
+            <view id="date-label">Until {{houseEndDisplay}}</view>
             <view id="event-option-restrict-label" wx:if="{{!allowHouse}}">Restricted</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/house.png"></image>
           </view>

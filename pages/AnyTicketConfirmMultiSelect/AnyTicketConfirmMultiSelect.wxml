@@ -15,7 +15,10 @@
     </block>
   </view>
   <text class="subheading-text">Select Table</text>
-  <text class="sub-text">Click on a table to view its group members. Table 1 is located closest to the stage (front of the cruize), and Table 20 is located closest to the entrance (back of the cruize). Sign-ups are offered on a first come, first served basis!</text>
+  <text class="sub-text">Please view the seating chart below, and click on the corresponding table number in the scroll menu to select and view its group members. Sign-ups are offered on a first come, first served basis!</text>
+  <view class="seating-arrangement-container">
+    <image id="seating-arrangement" src="/pages/AnyTicketConfirmMultiSelect/seating.png"></image>
+  </view>
   <scroll-view scroll-y="true" class="scroll-container">
     <view class="student-list-main-container" id="multi-select-student-list-main-container">
       <block wx:for="{{tableGroups}}" wx:key="tableId">

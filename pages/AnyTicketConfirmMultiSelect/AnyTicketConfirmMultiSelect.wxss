@@ -48,7 +48,7 @@
   flex-direction: column;
 }
 .scroll-container {
-  height: 250px;
+  height: 275px;
 }
 #multi-select-student-list-main-container {
   background-color: var(--subcontainer-background);
@@ -65,4 +65,12 @@
 .full-warning-text {
   color: #D81717;
   font-weight: bold;
+}
+.seating-arrangement-container {
+  text-align: center;
+  margin-bottom: 10px;
+}
+#seating-arrangement {
+  width: 280px;
+  height: 400px;
 }

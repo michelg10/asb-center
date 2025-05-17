@@ -18,36 +18,36 @@ exports.main = async (event, context) => {
     });
       return;
     }
-    else if (event.type === "dinner"){
-      await db.collection('PromStudentData').add({
-        data: {
-          userId: event.userId,
-          dinnerOption: event.dinnerOption
-        }
-    });
-      return;
-    }
-    else if (event.type === "submitConsent"){
-      await db.collection('PromStudentData').where({
-        userId: event.userId,
-      }).update({
-        data: {
-          consent: event.consent,
-          consentData: event.consentData
-        }
-    });
-      return;
-    }
-    else if (event.type === "submitConsentNew"){
-      await db.collection('PromStudentData').add({
-        data: {
-          userId: event.userId,
-          consent: event.consent,
-          consentData: event.consentData
-        }
-    });
-      return;
-    }
+    // else if (event.type === "dinner"){
+    //   await db.collection('PromStudentData').add({
+    //     data: {
+    //       userId: event.userId,
+    //       dinnerOption: event.dinnerOption
+    //     }
+    // });
+    //   return;
+    // }
+    // else if (event.type === "submitConsent"){
+    //   await db.collection('PromStudentData').where({
+    //     userId: event.userId,
+    //   }).update({
+    //     data: {
+    //       consent: event.consent,
+    //       consentData: event.consentData
+    //     }
+    // });
+    //   return;
+    // }
+    // else if (event.type === "submitConsentNew"){
+    //   await db.collection('PromStudentData').add({
+    //     data: {
+    //       userId: event.userId,
+    //       consent: event.consent,
+    //       consentData: event.consentData
+    //     }
+    // });
+    //   return;
+    // }
     else if (event.type === "submitMusic"){
       await db.collection('PromMusic').add({
         data: {
@@ -80,7 +80,8 @@ exports.main = async (event, context) => {
       await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
-          house: true
+          house: true,
+          timestamp: Date.now()
         }
       });
       /*await db.collection('PromDeadlines').where({
@@ -97,7 +98,8 @@ exports.main = async (event, context) => {
         tableId: event.tableId
       }).update({
         data: {
-          guests: event.guests
+          guests: event.guests,
+          timestamp: Date.now()
         }
       });
       return;
