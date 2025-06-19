@@ -9,7 +9,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "dinnerModify"){
-      await db.collection('PromStudentData').where({
+      await db.collection('TedXStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -19,7 +19,7 @@ exports.main = async (event, context) => {
       return;
     }
     // else if (event.type === "dinner"){
-    //   await db.collection('PromStudentData').add({
+    //   await db.collection('TedXStudentData').add({
     //     data: {
     //       userId: event.userId,
     //       dinnerOption: event.dinnerOption
@@ -28,7 +28,7 @@ exports.main = async (event, context) => {
     //   return;
     // }
     // else if (event.type === "submitConsent"){
-    //   await db.collection('PromStudentData').where({
+    //   await db.collection('TedXStudentData').where({
     //     userId: event.userId,
     //   }).update({
     //     data: {
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
     //   return;
     // }
     // else if (event.type === "submitConsentNew"){
-    //   await db.collection('PromStudentData').add({
+    //   await db.collection('TedXStudentData').add({
     //     data: {
     //       userId: event.userId,
     //       consent: event.consent,
@@ -60,7 +60,7 @@ exports.main = async (event, context) => {
       return;
     }
     /*else if (event.type === "houseModify"){
-      await db.collection('PromStudentData').where({
+      await db.collection('TedXStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -77,7 +77,7 @@ exports.main = async (event, context) => {
       return;
     }*/
     else if (event.type === "houseAdd"){
-      await db.collection('PromStudentData').add({
+      await db.collection('TedXStudentData').add({
         data: {
           userId: event.userId,
           house: true,

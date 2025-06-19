@@ -277,7 +277,7 @@ Component({
             });
           }
         }
-        // let getConsentStatus = await this.data.db.collection("PromStudentData").where({
+        // let getConsentStatus = await this.data.db.collection("TedXStudentData").where({
         //   userId: this.data.userData.student?.id,
         // }).get();
         // if(getConsentStatus.data.length!==0){
@@ -330,8 +330,8 @@ Component({
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          allowPreOptions: this.data.allowPrompose && this.data.allowPerf,
-          allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
+          allowPreOptions: this.data.allowPrompose || this.data.allowPerf,
+          allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
           houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
@@ -382,7 +382,7 @@ Component({
               userData: data,
           });
           if (this.data.userData.student){
-            this.data.db.collection("PromTickets").where({
+            this.data.db.collection("TedXTickets").where({
               userId: this.data.userData.student.id,
             }).get().then((res) => {
               if (res.data.length > 0) {
@@ -403,7 +403,7 @@ Component({
               }
               else {
                 if (this.data.userData.student){
-                  this.data.db.collection("PromTickets").where({
+                  this.data.db.collection("TedXTickets").where({
                     userId: this.data.userData.student.id.concat("LOST"),
                   }).get().then((res) => {
                     if (res.data.length > 0) {
@@ -503,7 +503,7 @@ Component({
           ticketEnd: getTicketDeadline?.endTime,
           eventEnd: getEventDeadline?.endTime
         });
-        // let getConsentStatus = await this.data.db.collection("PromStudentData").where({
+        // let getConsentStatus = await this.data.db.collection("TedXStudentData").where({
         //   userId: this.data.userData.student?.id,
         // }).get();
         // if(getConsentStatus.data.length!==0){
@@ -535,8 +535,8 @@ Component({
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          allowPreOptions: this.data.allowPrompose && this.data.allowPerf,
-          allowLateOptions: this.data.allowMusic && this.data.allowSuggestions,
+          allowPreOptions: this.data.allowPrompose || this.data.allowPerf,
+          allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
           // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           // mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
           houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
@@ -604,7 +604,7 @@ Component({
           for (let i=0;i<this.data.holderTicketId.length;i++) {
             qrCodeData.push(this.data.holderTicketId.charCodeAt(i));
           }
-          let accessCodeContents=generateQrCode("ticketCode", "PM25", qrCodeData);
+          let accessCodeContents=generateQrCode("ticketCode", "TX25", qrCodeData);
           if (accessCodeContents !== this.data.codeLastGen) {
             let myCreateQRCode = createQRCode.bind(this);
             if (isDarkTheme()) {

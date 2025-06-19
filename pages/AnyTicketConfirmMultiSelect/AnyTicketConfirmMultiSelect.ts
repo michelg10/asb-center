@@ -161,7 +161,7 @@ Component({
               return;
             } else {
               for(let i=0;i<this.data.studentData.length;i++){
-                let checkStudent = await this.data.db.collection("PromStudentData").where({
+                let checkStudent = await this.data.db.collection("TedXStudentData").where({
                   userId: this.data.studentData[i].id,
                 }).get();
                 if (checkStudent){
@@ -206,7 +206,7 @@ Component({
                 })
                 for(let i=0;i<this.data.studentData.length;i++){
                   // console.log(this.data.studentData[i].id);
-                  // let checkStudent = await this.data.db.collection("PromStudentData").where({
+                  // let checkStudent = await this.data.db.collection("TedXStudentData").where({
                   //   userId: this.data.studentData[i].id,
                   // }).get();
                   // if (checkStudent && checkStudent.data.length!==0){

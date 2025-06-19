@@ -72,6 +72,9 @@
 .status-Issued {
   color: #36B909;
 }
+.link-text{
+  color: #3180E9;
+}
 #clear-button {
   background-color: #D2E3FA;
   margin-top: 26px;

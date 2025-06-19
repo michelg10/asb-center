@@ -57,9 +57,18 @@ Component({
           userId: data,
         }).get();
         if (checkAdmin.data.length === 0) {
-          console.log("Current user is not admin!");
-          wx.navigateBack();
-          return;
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, you currently do not have access to this event.",
+            showCancel: false,
+            confirmText: "Return",
+            success: (res) => {
+              if (res.confirm) {
+                wx.navigateBack();
+                return;
+              }
+            }
+          })
         }
         this.setData({
           adminStatus: {
@@ -109,7 +118,7 @@ Component({
         let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, this.data.inputCodeData);
         if (parseCodeData!=="invalid") {
           if(parseCodeData[0]==="ticketCode"){
-            let checkTicket = await this.data.db.collection("PromTickets").where({
+            let checkTicket = await this.data.db.collection("TedXTickets").where({
               ticketId: parseCodeData[1],
             }).get();
             let checkTicketHolder = await this.data.db.collection("studentData").where({

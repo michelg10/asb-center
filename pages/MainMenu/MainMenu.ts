@@ -216,6 +216,23 @@ Component({
               }
           })
       }
+      if (eventClickedId === "TEDX2025") {
+        if (this.data.userData.globalAdminName !== null) {
+          wx.navigateTo({
+            url: '/pages/AnyTicketCheckTicket/AnyTicketCheckTicket',
+            success: (res) => {
+              res.eventChannel.emit('myId', this.data.userData.id);
+            }
+          })
+        } else {
+          wx.showModal({
+            title: "Access Denied",
+            content: "Sorry, you currently do not have access to this event.",
+            showCancel: false,
+            confirmText: "Dismiss",
+          })
+        }
+      }
       if (eventClickedId === "personalCode") {
         wx.navigateTo({
           url: '/pages/PersonalCode/PersonalCode',

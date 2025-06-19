@@ -2,7 +2,8 @@
   <text class="big-title-text">Admin</text>
   <text class="heading-text">Validate Tickets</text>
   <view id="ticket-option-subheading">
-    <text>After scanning a ticket with this function, the ticket will be marked as used and is not reversible. Only scan tickets upon the participant's entry, and the corresponding ticket info will be displayed.</text>
+    <text>After scanning a ticket with this function, the ticket will be marked as used and is not reversible. Only scan tickets upon the participant's entry, and the corresponding ticket info will be displayed. Laptop users please </text>
+    <text class="link-text" bindtap="stationClicked">navigate to station mode.</text>
   </view>
   <view class="count-view-container" bindtap="updateCount">
     <view class="issued-count">

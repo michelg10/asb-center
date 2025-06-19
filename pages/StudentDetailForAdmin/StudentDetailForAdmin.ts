@@ -142,10 +142,10 @@ Component({
             });
         },
         onUpdateStatus: async function() {
-          let checkAnyTicketStatus = await this.data.db.collection("PromTickets").where({
+          let checkAnyTicketStatus = await this.data.db.collection("TedXTickets").where({
             userId: this.data.publicUserData.studentId,
           }).get();
-          let checkLostTicketStatus = await this.data.db.collection("PromTickets").where({
+          let checkLostTicketStatus = await this.data.db.collection("TedXTickets").where({
             userId: this.data.publicUserData.studentId.concat("LOST"),
           }).get();
           if (checkAnyTicketStatus.data.length === 0){
@@ -176,7 +176,7 @@ Component({
           }
         },
         // onUpdateDinner: async function(){
-        //   let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
+        //   let checkDinnerStatus = await this.data.db.collection("TedXStudentData").where({
         //     userId: this.data.publicUserData.studentId,
         //   }).get();
         //   if (checkDinnerStatus.data.length === 0 || checkDinnerStatus.data[0].dinnerOption===undefined){
@@ -246,7 +246,7 @@ Component({
               if (parseCodeData!=="invalid"){
                 if(parseCodeData[0]==="ticketCode"){
                   //Valid code format, check if already issued
-                  let checkTicketStatus = await this.data.db.collection("PromTickets").where({
+                  let checkTicketStatus = await this.data.db.collection("TedXTickets").where({
                     ticketId: parseCodeData[1],
                   }).get();
                   if(checkTicketStatus.data[0].status==="Available"){
@@ -298,7 +298,7 @@ Component({
                   title: "Loading...",
                   mask: true,
                 });
-                let getAvailableTickets = await this.data.db.collection("PromTickets").where({
+                let getAvailableTickets = await this.data.db.collection("TedXTickets").where({
                   status: 'Available',
                 }).limit(1).get();
                 await wx.cloud.callFunction({
@@ -366,7 +366,7 @@ Component({
           });
         },
         // onSaveDinner: async function(){
-        //   let checkMeal = await this.data.db.collection("PromStudentData").where({
+        //   let checkMeal = await this.data.db.collection("TedXStudentData").where({
         //     userId: this.data.publicUserData.studentId,
         //   }).get();
         //   if(checkMeal.data.length===0){
@@ -443,7 +443,7 @@ Component({
         onLoad: async function() {
             this.setData({
                 anyOrderName: "Elfin Express",
-                anyTicketName: "PROM 2025"
+                anyTicketName: "TEDx Youth 2025"
             });
             this.data.db = wx.cloud.database();
             this.data.updateOrderCallBusy = false;
@@ -478,11 +478,11 @@ Component({
                             studentGrade: res[1] as number,
                             studentClass: res[2] as number
                         });
-                        if (this.data.studentGrade === 12) {
-                          this.setData({
-                            displayAnyTicket: true
-                          })
-                        } // Grade limiting factor for PROM 25, remember to disable for other events
+                        // if (this.data.studentGrade === 12) {
+                        //   this.setData({
+                        //     displayAnyTicket: true
+                        //   })
+                        // } // Grade limiting factor for PROM 25, remember to disable for other events
                     }
                 });
                 this.data.cacheSingleton = CacheSingleton.getInstance();
@@ -518,13 +518,13 @@ Component({
                     adminName: checkAdmin.data[0].adminName,
                   }
                   });
-                let checkAnyTicketStatus = await this.data.db.collection("PromTickets").where({
+                let checkAnyTicketStatus = await this.data.db.collection("TedXTickets").where({
                   userId: userData.studentId,
                 }).get();
-                let checkLostTicketStatus = await this.data.db.collection("PromTickets").where({
+                let checkLostTicketStatus = await this.data.db.collection("TedXTickets").where({
                   userId: userData.studentId.concat("LOST"),
                 }).get();
-                // let checkDinnerStatus = await this.data.db.collection("PromStudentData").where({
+                // let checkDinnerStatus = await this.data.db.collection("TedXStudentData").where({
                 //   userId: userData.studentId,
                 // }).get();
                 if (checkAnyTicketStatus.data.length === 0){
