@@ -1,6 +1,7 @@
 <!--pages/ConfigureAdmin/ConfigureAdmin.wxml-->
 <view id="configure-admin-master-container">
   <text class="big-title-text">Configure Admin</text>
+  <text id="persona-detail-id-text">{{userId}}</text>
   <view id="configure-admin-container">
     <view class="admin-configure-row" bindtap="adminTap">
       <text class="admin-configure-title">Admin</text>
@@ -21,6 +22,11 @@
       <view class="admin-configure-row" bindtap="assignNewAdminTap">
         <text class="admin-configure-title">Assign new admins</text>
         <image class="admin-configure-toggle" src="/icons/selector{{canAddAdmin ? '-selected' : ''}}.svg">
+        </image>
+      </view>
+      <view class="admin-configure-row" bindtap="suspendTap">
+        <text class="admin-configure-title">Suspend admin previliges</text>
+        <image class="admin-configure-toggle" src="/icons/selector{{suspended ? '-selected' : ''}}.svg">
         </image>
       </view>
       <view class="admin-configure-row">

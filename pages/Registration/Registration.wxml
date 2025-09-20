@@ -1,7 +1,13 @@
 <!--pages/Registration/Registration.wxml-->
 <view id="registration-container">
+    <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+        <image src="/icons/chevron-right.svg" class="back-image"></image>
+    </view>
     <text class="big-title-text" id="registration-big-title">Registration</text>
-    <text class="big-title-sub-text" id="registration-big-title-sub">Search and select who you are. This cannot be changed.</text>
+    <text class="big-title-sub-text" id="registration-big-title-sub">
+    Registration opens from {{startTimeDisplay}} to {{endTimeDisplay}}.
+    Search and select who you are. This cannot be changed.
+    </text>
     <view id="registration-list-search-container">
         <image src="../../icons/search.svg" id="registration-search-image"></image>
         <input type="text" id="registration-search-textfield" placeholder="Search" bindinput="handleSearchBoxChange" placeholder-class="registration-search-textfield-placeholder" />
@@ -27,6 +33,6 @@
     </view>
     <view id="registration-skip-container">
         <text id="registration-skip-text" bindtap="skipRegistration">Skip registration</text>
-        <text class="subtext" id="registration-skip-subtext">Registration is required to participate in most events, such as Sports Meet and Spring Formal.</text>
+        <text class="subtext" id="registration-skip-subtext">Registration is required to participate in most events, such as Sports Carnival.</text>
     </view>
 </view>

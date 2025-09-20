@@ -64,6 +64,17 @@ Component({
               })
             })
         },
+        backButtonTapped: function() {
+          wx.vibrateShort({
+            type: "light"
+          });
+          wx.navigateBack();
+        },
+        buttonTapVibrate: function() {
+          wx.vibrateShort({
+            type: "medium"
+          });
+        },
         nameInputChanged: function(x: any) {
             this.setData({
                 name: x.detail.value,
@@ -85,6 +96,9 @@ Component({
             });
         },
         changeLanguage: function() {
+            wx.vibrateShort({
+              type: "medium"
+            });
             let nextLang;
             if (this.data.language === "en") {
                 nextLang = "ch";
@@ -114,6 +128,9 @@ Component({
           }
 
             if (canSubmit) {
+                wx.vibrateShort({
+                  type: "medium"
+                });
                 console.log("Successfully Submitted");
                 this.data.allowSubmission = false;
                 await wx.cloud.callFunction({
@@ -133,6 +150,9 @@ Component({
             }
         },
         adminButtonTapped: function() {
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/SuggestionsBoxAdminPanel/SuggestionsBoxAdminPanel",
             success: (res) => {

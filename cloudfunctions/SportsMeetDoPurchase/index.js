@@ -43,6 +43,7 @@ exports.main = async (event, context) => {
     };
   }
   let userStudentId = fetchUserId.data[0].studentId;
+  let userOpenId = fetchUserId.data[0].userId;
   let eventData = res[2].result.data;
 
   // stage 2: fetch student grade information
@@ -224,6 +225,46 @@ exports.main = async (event, context) => {
       status: "failure",
       reason: `User balance insufficient (trying to use ${totalStamps}-${totalTransacted}=${totalStamps-totalTransacted}<${itemCost})`
     };
+  }
+  // send service message
+  try {
+    const date = new Date(Date.now());
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        // second: '2-digit',
+        hour12: false,
+    };
+    let dateDisplay = date.toLocaleString('zh-CN', options);
+    await cloud.openapi.subscribeMessage.send({
+        "touser": userOpenId,
+        "page": 'pages/MainMenu/MainMenu',
+        "lang": 'en_US',
+        "data": {
+          "time1": {
+            "value": dateDisplay
+          },
+          "thing4": {
+            "value": `-${String(itemCost)}`
+          },
+          "thing5": {
+            "value": itemName
+          },
+          "thing9": {
+            "value": issuerName
+          },
+          "thing6": {
+            "value": '积分兑换成功，感谢您的支持！'
+          }
+        },
+        "templateId": 'RU3_lesMwqL3aUZl5RXQa51GYV2JzqH94-FkKmeScu8',
+        "miniprogramState": 'formal'
+      })
+  } catch (err) {
+    console.log(err)
   }
   await db.collection(`SportsMeetTransactionLog${userGrade}`).add({
     data: {

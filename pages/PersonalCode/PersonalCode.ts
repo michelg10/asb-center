@@ -58,6 +58,17 @@ Component({
         );
       });
     },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
     recomputeCode: function() {
       if (this.data.viewVisible) {
         let qrCodeData=[];
@@ -91,6 +102,9 @@ Component({
       clearInterval(this.data.recomputeCaller);
     },
     adminButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
       wx.navigateTo({
         url: "/pages/StudentChoose/StudentChoose",
         success: (res) => {

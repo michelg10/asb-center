@@ -161,7 +161,7 @@ exports.main = async (event, context) => {
                                 batchPushMap.get(`SportsMeetLeaderboardProcessed${userDataInformation[j].student.grade}`).push(leaderboardObj);
                             }
                             updatedStudentsMap.set(userDataInformation[j]._id, j);
-                        } else if (eventCollectionInformation[i].id === "SportsMeet2024") {
+                        } else if (eventCollectionInformation[i].id === "SportsMeet2025") {
                           let secureCodeString = "";
                           while (true) {
                               secureCodeString = "";
@@ -170,7 +170,7 @@ exports.main = async (event, context) => {
                               }
                               let checkIfSecureCodeStringDuplicate = await db.collection("userData").where({
                                   info: {
-                                      SportsMeet2024Data: {
+                                      SportsMeet2025Data: {
                                           secureCodeString: secureCodeString,
                                       },
                                   },

@@ -52,6 +52,7 @@ exports.main = async (event, context) => {
   }
 
   studentId = grabUserStudentId.data[0].studentId;
+  userOpenId = grabUserStudentId.data[0].userId;
 
   tasks = [];
 
@@ -90,6 +91,7 @@ exports.main = async (event, context) => {
       rankLeaderboard = eventData[i].rankLeaderboard;
       allowStamps = eventData[i].allowStamps;
       eventName = eventData[i].name;
+      eventStampForExperience = eventData[i].stampForExperience;
     }
   }
   if (rankLeaderboard === undefined) {
@@ -124,6 +126,47 @@ exports.main = async (event, context) => {
       timeStamp: Date.now(),
     }
   }));
+  // send service message
+  try {
+    const date = new Date(Date.now());
+    const options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        // second: '2-digit',
+        hour12: false,
+    };
+    let dateDisplay = date.toLocaleString('zh-CN', options);
+    await cloud.openapi.subscribeMessage.send({
+        "touser": userOpenId,
+        "page": 'pages/MainMenu/MainMenu',
+        "lang": 'en_US',
+        "data": {
+          "time1": {
+            "value": dateDisplay
+          },
+          "thing4": {
+            "value": allowStamps ? `+${String(stampValue)}` : `+${String(eventStampForExperience)}`
+          },
+          "thing5": {
+            "value": eventName
+          },
+          "thing9": {
+            "value": adminName
+          },
+          "thing6": {
+            "value": '活动积分已添加，感谢您的参与！'
+          }
+        },
+        "templateId": 'RU3_lesMwqL3aUZl5RXQa51GYV2JzqH94-FkKmeScu8',
+        "miniprogramState": 'formal'
+      })
+  } catch (err) {
+    console.log(err)
+  }
+
   if (rankLeaderboard) {
     // fetch the computed leaderboard
     tasks.push(db.collection(`SportsMeetLeaderboardProcessed${studentGrade}`).where({

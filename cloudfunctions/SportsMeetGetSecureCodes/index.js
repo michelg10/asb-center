@@ -14,7 +14,7 @@ exports.main = async (event, context) => {
   let getAccountIdForUser = await(db.collection("userData")).where({
     userId: wxContext.OPENID,
   }).get();
-  if (getAccountIdForUser.data.length===0) {
+  if (getAccountIdForUser.data.length===0) { // not registered or automated activity
     return {
       status: "forbidden",
     };
@@ -28,6 +28,11 @@ exports.main = async (event, context) => {
       status: "forbidden",
     };
   }
+  if (adminCheckResult.data.length > 0 && adminCheckResult.data[0].suspended) {
+    return {
+      status: "suspended",
+    };
+  }
   // authorized. now get everything
   let dbResult = await cloud.callFunction({
     name: "fetchAllCollections",
@@ -35,7 +40,7 @@ exports.main = async (event, context) => {
       collectionName: "userData",
       whereClause: {
         info: {
-          SportsMeet2024Data: {
+          SportsMeet2025Data: {
             joined: true,
           }
         }
@@ -46,7 +51,7 @@ exports.main = async (event, context) => {
   for (let i=0;i<dbResult.result.data.length;i++) {
     rturn.push({
       id: dbResult.result.data[i]._id,
-      code: dbResult.result.data[i].info.SportsMeet2024Data.secureCodeString,
+      code: dbResult.result.data[i].info.SportsMeet2025Data.secureCodeString,
     });
   }
   return {

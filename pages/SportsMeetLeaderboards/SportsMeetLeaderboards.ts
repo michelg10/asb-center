@@ -164,7 +164,7 @@ Component({
     },
     savePins: function() {
       wx.setStorage({
-        key: "SportsMeet2024LeaderboardPins",
+        key: "SportsMeet2025LeaderboardPins",
         data: this.data.pins,
       })
     },
@@ -188,7 +188,7 @@ Component({
         console.log(data);
         if (data) {
           wx.getStorage({
-            key: 'SportsMeet2024LeaderboardPins',
+            key: 'SportsMeet2025LeaderboardPins',
             success: (res) => {
               this.setData({
                 pinsDisabled: false,

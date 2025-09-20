@@ -68,6 +68,8 @@ interface componentDataInterface {
   myId: string,
   adminStatus: AdminStatusType,
   accountIsPseudo: boolean,
+  otherAccountId: string | null,
+  allowAdminAdd: boolean,
   userId: string,
   db: DB.Database,
   events: SMEventType[],
@@ -351,14 +353,54 @@ Component({
       this.updateCanAfford();
     },
     configureAdminClick: function() {
-      wx.navigateTo({
-        url: '/pages/ConfigureAdmin/ConfigureAdmin',
-        success: (res) => {
-          res.eventChannel.emit('userId', this.data.userId);
+      if (this.data.accountIsPseudo && !this.data.allowAdminAdd){
+        wx.showModal({
+          title: 'Invalid Operation',
+          content: 'You are attempting to perform this action on a multi-link pseudo account. Contact admin for clarification details.',
+          showCancel: false,
+          confirmText: 'Dismiss'
+        })
+      } else {
+        if (this.data.accountIsPseudo){
+          let lastName = '';
+          let nickname = '';
+          if (this.data.userData.student.englishName.includes(",")) {
+            lastName = this.data.userData.student.englishName.split(",")[0].trim();
+            nickname = `${this.data.userData.student.nickname} ${lastName}`;
+          } else {
+            nickname = this.data.userData.student.nickname;
+          }
+          wx.navigateTo({
+            url: '/pages/ConfigureAdmin/ConfigureAdmin',
+            success: (res) => {
+              res.eventChannel.emit('userId', this.data.otherAccountId);
+              res.eventChannel.emit('nickname', nickname);
+            }
+          })
+        } else {
+          let lastName = '';
+          let nickname = '';
+          if (this.data.userData.student.englishName.includes(",")) {
+            lastName = this.data.userData.student.englishName.split(",")[0].trim();
+            nickname = `${this.data.userData.student.nickname} ${lastName}`;
+          } else {
+            nickname = this.data.userData.student.nickname;
+          }
+          wx.navigateTo({
+            url: '/pages/ConfigureAdmin/ConfigureAdmin',
+            success: (res) => {
+              res.eventChannel.emit('userId', this.data.userId);
+              res.eventChannel.emit('nickname', nickname);
+            }
+          })
         }
-      })
+      }
     },
     onLoad: async function() {
+      wx.showLoading({
+        title: "Loading...",
+        mask: true,
+      });
       this.data.cacheSingleton = CacheSingleton.getInstance();
       const eventChannel = this.getOpenerEventChannel();
       this.setData({
@@ -375,7 +417,7 @@ Component({
       });
       this.data.db = wx.cloud.database();
       this.data.userOpenId = await this.data.cacheSingleton.fetchUserOpenId();
-      this.data.db.collection("userData").where({
+      await this.data.db.collection("userData").where({
         "userId": this.data.userOpenId,
       }).get().then((res) => {
         if (res.data.length === 0) {
@@ -389,8 +431,33 @@ Component({
         this.data.db.collection("SportsMeetAdmin").where({
           adminId: res.data[0]._id,
         }).get().then((adminRes) => {
-          if (res.data.length === 0) {
-            console.log("Current user is not admin!");
+          if (adminRes.data.length === 0) {
+            wx.hideLoading();
+            wx.showModal({
+              title: 'Access Denied',
+              content: 'Your account is not authorized to access Sports Carnival admin panel.',
+              showCancel: false,
+              confirmText: 'Dismiss',
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  wx.navigateBack();
+                }
+              }
+            })
+          }
+          if (adminRes.data.length > 0 && adminRes.data[0].suspended) {
+            wx.hideLoading();
+            wx.showModal({
+              title: 'Access Suspended',
+              content: "Your account's admin previlage to access Sports Carnival admin panel is currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.",
+              showCancel: false,
+              confirmText: 'Dismiss',
+              success: (modalRes) => {
+                if (modalRes.confirm) {
+                  wx.navigateBack();
+                }
+              }
+            })
           }
           this.setData({
             adminStatus: {
@@ -400,7 +467,8 @@ Component({
               canDoPurchase: adminRes.data[0].canDoPurchase,
               canAddAdmin: adminRes.data[0].canAddAdmin,
               name: adminRes.data[0].name,
-            }
+            },
+            allowAdminAdd: adminRes.data[0].canAddAdmin
           });
         });
       });
@@ -416,21 +484,23 @@ Component({
         }).then(async (res) => {
             console.log(res);
           if (res === undefined) {
+            wx.hideLoading();
             wx.navigateBack();
           }
           let studentResult:UserDataType = (res.result as AnyObject).data;
           if (studentResult as any === {}) {
             console.log("Student result is empty");
+            wx.hideLoading();
             wx.navigateBack();
           }
           this.setData({
             userData: studentResult,
             accountIsPseudo: studentResult.student.pseudoId === this.data.userId
           });
-          let otherAccountId: null | string = null;
+          this.data.otherAccountId = null;
           if (!this.data.accountIsPseudo) {
             // tally up other activity logs and exchange logs
-            otherAccountId=this.data.userData.student.pseudoId;
+            this.data.otherAccountId = this.data.userData.student.pseudoId;
           } else {
             let accountsNumber = await wx.cloud.callFunction({
               name: "associatedAccountsNumber",
@@ -446,7 +516,8 @@ Component({
                 purchaseButtonClass: "purchase-button-cannot-buy",
                 purchaseHintClass: "button-feedback-warn-text",
                 purchaseHintText: `Purchase not permitted with a multi-link pseudo account`,
-                userBalanceString: "Multi-Account Block"
+                userBalanceString: "Multi-Account Block",
+                allowAdminAdd: false
               })
             }
             if (this.data.otherAccounts === 1) {
@@ -455,12 +526,19 @@ Component({
               if (accountsList[0]._id === studentResult.student.pseudoId) {
                 accountIndex = 1;
               }
-              otherAccountId = accountsList[accountIndex]._id;
+              this.data.otherAccountId = accountsList[accountIndex]._id;
+            }
+            if (this.data.otherAccounts === 0) {
+              this.setData({
+                allowAdminAdd: false
+              })
             }
           }
-          if (otherAccountId !== null) { // if this account is a pseudo account, this would be counting the stamps from the corresponding wechat account. if this account is a main account, this would be counting the stamps from the corresponding pseudo account
+          console.log("Other Account ID: ", this.data.otherAccountId);
+          if (this.data.otherAccountId !== null) { // if this account is a pseudo account, this would be counting the stamps from the corresponding wechat account. if this account is a main account, this would be counting the stamps from the corresponding pseudo account
+            console.log("Counting stamps from other account")
             allCollectionsData(this.data.db, `SportsMeetStampLog${studentResult.student.grade}`, {
-              userId: otherAccountId,
+              userId: this.data.otherAccountId,
             }).then((res) => {
               let newOtherAccountLogs: LogType[] = res.data as any[];
               for (let i=0;i<newOtherAccountLogs.length;i++) {
@@ -477,7 +555,7 @@ Component({
               this.recomputeTotalStampInfo();
             });
             allCollectionsData(this.data.db, `SportsMeetTransactionLog${studentResult.student.grade}`, {
-              userId: otherAccountId,
+              userId: this.data.otherAccountId,
             }).then((res2) => {
               let newUsedOtherAccountStamps=0;
               for (let i=0;i<res2.data.length;i++) {
@@ -543,7 +621,7 @@ Component({
         })
       });
       // fetch event, item database
-      allCollectionsData(this.data.db, "SportsMeetEvents").then((res) => {
+      await allCollectionsData(this.data.db, "SportsMeetEvents").then((res) => {
         let events: SMEventType[] = [];
         let data = res.data;
         for (let i=0;i<data.length;i++) {
@@ -562,7 +640,7 @@ Component({
         });
         this.recomputeTotalStampInfo();
       });
-      allCollectionsData(this.data.db, "SportsMeetItems").then((res) => {
+      await allCollectionsData(this.data.db, "SportsMeetItems").then((res) => {
         let items: SMItemsType[] = [];
         let data = res.data;
         for (let i=0;i<data.length;i++) {
@@ -579,7 +657,7 @@ Component({
         });
         this.updateCanAfford();
       });
-      this.data.db.collection("userData").where({
+      await this.data.db.collection("userData").where({
         userId: this.data.userOpenId,
       }).get().then((res) => {
         this.data.db.collection("SportsMeetAdmin").where({
@@ -599,6 +677,7 @@ Component({
           });
         })
       });
+      wx.hideLoading();
     },
     onUnload: function() {
       this.data.logWatcher.close();

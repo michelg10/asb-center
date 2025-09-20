@@ -108,11 +108,28 @@ Component({
    */
   methods: {
     adminButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.requestSubscribeMessage({
+        tmplIds: ['EaZhkxxp1LaCulPWys7nLWWbwVxur0F_7oWgO0KG3Jw', 'tlnosM16T4q1OGOtVnBjEjD4vthnnKBYMlm-ujFIG5I'],
+      })
       wx.navigateTo({
         url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
         success: (res) => {
           res.eventChannel.emit("myId", this.data.userData.id);
         }
+      });
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
       });
     },
     leaderboardButtonTapped: function(x: any) {
@@ -582,7 +599,7 @@ Component({
     },
     recomputeCode: function() {
       if (this.data.viewVisible) {
-        let accessCodeContents=generatePreviewCode("secureCode", this.data.previewInfo.previewData.userCode, "SM24");
+        let accessCodeContents=generatePreviewCode("secureCode", this.data.previewInfo.previewData.userCode, "SM25");
         if (accessCodeContents !== this.data.codeLastGen) {
           let myCreateQRCode = createQRCode.bind(this);
           if (isDarkTheme()) {

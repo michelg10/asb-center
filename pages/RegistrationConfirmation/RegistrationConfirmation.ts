@@ -25,6 +25,17 @@ Component({
         });
       });
     },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
     handleGInput: function(x: any) {
       this.data.gInput = x.detail.value;
     },

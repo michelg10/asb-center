@@ -1,5 +1,8 @@
 <!--pages/RegistrationConfirmation.wxml-->
 <view id="registrationconfirm-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <view id="registrationconfirm-top-container">
     <text class="big-title-text" id="registrationconfirm-big-title">Confirm Registration</text>
     <view id="registrationconfirm-info-container">
@@ -11,10 +14,10 @@
         <text class="registrationconfirm-info-row-label">English Name</text>
         <text class="registrationconfirm-info-row-data">{{studentData.englishName}}</text>
       </view>
-      <view class="registrationconfirm-info-row">
+      <!-- <view class="registrationconfirm-info-row">
         <text class="registrationconfirm-info-row-label">Chinese Name</text>
         <text class="registrationconfirm-info-row-data">{{studentData.chineseName}}</text>
-      </view>
+      </view> -->
       <view class="registrationconfirm-info-row">
         <text class="registrationconfirm-info-row-label">Class</text>
         <text class="registrationconfirm-info-row-data">{{studentData.studentGrade+'-'+studentData.studentClass}}</text>

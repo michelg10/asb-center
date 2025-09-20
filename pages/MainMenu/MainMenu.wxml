@@ -27,7 +27,7 @@
 <view id="main-menu-container">
   <view id="main-menu-top-container">
     <text class="big-title-text">ASB Center</text>
-    <view id="main-menu-top-scan-button-container" bindtap="scanButtonClick" bindlongpress="stationModeClick">
+    <view id="main-menu-top-scan-button-container" bindtap="scanButtonClick" bindtouchstart="scanButtonClickStart">
       <image src="../../icons/scan.svg" id="main-menu-top-scan-button-image"></image>
     </view>
   </view>
@@ -38,13 +38,23 @@
     <template is="eventsList" data="{{ ...{listData: servicesData, listTitle: 'Services'} }}"></template>
   </view>
   <view id="main-menu-footer">
-    <text class="main-menu-registration-information" wx:if="{{userData.student !== null}}">Registered as {{userData.student.name}} {{userData.student.grade}}-{{userData.student.class}}</text>
+    <text class="main-menu-registration-information" wx:if="{{userData.student !== null}}" bindtap="footerRegInfoTap">Registered as {{userData.student.name}} {{userData.student.grade}}-{{userData.student.class}}</text>
     <view id="main-menu-registration-ask" wx:if="{{userData.student === null}}">
-      <text class="main-menu-registration-information">Not registered</text>
-      <text id="main-menu-registration-button" bindtap="handleRegister">Register now...</text>
+      <text class="main-menu-registration-information" bindtap="registrationTimeQuery">Not registered</text>
+      <text id="main-menu-registration-button" bindtap="handleRegister" wx:if="{{allowRegistration}}">Register now...</text>
     </view>
   </view>
-  <view id="version-footer">
-    Version 4.3.5
+  <view id="version-footer" bindtap="footerCreditsTap" bindlongpress="stationModeClick">
+    Version 4.4.0
+  </view>
+  <view id="station-mode-main-container" wx:if="{{showStationMode}}">
+    <text class="heading-text">Station Mode</text>
+    <view id="station-mode-subheading">
+      <text>Station mode is designed for laptop users with physical QR code scanners. Admins using phones should use the scan button on the top of this page.
+      Configure your physical QR code scanner to return a newline after scanned data, and ensure your IME is set to English.</text>
+    </view>
+    <view class="student-list-search-container">
+      <input class="student-search-textfield" placeholder="Scan Code..." placeholder-class="student-search-textfield-placeholder" bindconfirm="confirmStationModeInput" value="{{inputCodeData}}"/>
+    </view>
   </view>
 </view>

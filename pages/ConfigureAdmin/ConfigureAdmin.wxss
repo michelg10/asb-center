@@ -46,3 +46,10 @@
 #add-configure-button {
   margin-bottom: 10px;
 }
+#persona-detail-id-text {
+  color: var(--secondary);
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 8px;
+  display: flex;
+}

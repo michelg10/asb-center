@@ -9,6 +9,10 @@ interface componentDataInterface {
   db: DB.Database;
   matchingIndexes: number[];
   skipBeenTapped: boolean;
+  startTime: number;
+  endTime: number;
+  startTimeDisplay: string;
+  endTimeDisplay: string;
 };
 Component({
   /**
@@ -37,15 +41,69 @@ Component({
         studentData: tmpStudentData,
       });
     },
-    onLoad: function() {
-      this.data.skipBeenTapped=false;
+    onLoad: async function() {
+      wx.showLoading({
+        title: "Loading...",
+        mask: true,
+      });
+      this.data.skipBeenTapped = false;
       this.data.db = wx.cloud.database();
+      let deadlineRes = await this.data.db.collection("config").where({
+        key: 'registration'
+      }).get();
+      let currentTime = Date.now()/1000;
       this.setData({
         scrollViewHeight: wx.getSystemInfoSync().windowHeight-340-122,
         matchingIndexes: [],
+        startTime: deadlineRes.data[0].startTime,
+        endTime: deadlineRes.data[0].endTime,
+        startTimeDisplay: this.convertUnixTimeToMin(deadlineRes.data[0].startTime),
+        endTimeDisplay: this.convertUnixTimeToMin(deadlineRes.data[0].endTime)
       }); // 340px from the bottom, 122px from the top
-      this.loadData();
-
+      if (!(this.data.startTime <= currentTime && currentTime <= this.data.endTime)) {
+        wx.hideLoading();
+        wx.showModal({
+          title: "Access Denied",
+          content: `Registration starts on ${this.data.startTimeDisplay} and ends on ${this.data.endTimeDisplay}. If you have any concerns, please contact the ASB.`,
+          showCancel: false,
+          confirmText: "Dismiss",
+          success: (modalRes) => {
+            if (modalRes.confirm) {
+              wx.reLaunch({
+                url: "/pages/MainMenu/MainMenu"
+              });
+            };
+          }
+        });
+      };
+      await this.loadData();
+      wx.hideLoading();
+    },
+    convertUnixTimeToMin(unixTime: number): string {
+      const date = new Date(unixTime * 1000);
+      const options: Intl.DateTimeFormatOptions = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          //second: '2-digit',
+          hour12: false
+      };
+      return date.toLocaleString('en-US', options);
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.reLaunch({
+        url: "/pages/MainMenu/MainMenu"
+      });
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
     },
     handlePersonChoose: function(e: any) {
       let chosenId=e.currentTarget.dataset.chosenid;

@@ -1,7 +1,10 @@
 <view id="personal-code-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+      <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <view id="personal-code-heading-container">
     <text class="big-title-text">Personal Code</text>
-    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindtouchstart="buttonTapVibrate">
       <image src="/icons/bolt.svg" class="admin-image"></image>
     </view>
   </view>

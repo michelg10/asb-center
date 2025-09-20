@@ -1,21 +1,27 @@
 <!--pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxml-->
 <view id="sports-meet-admin-panel-container">
   <text class="big-title-text">Admin</text>
-  <view class="admin-panel-full-width-button-container" bindtap="homeroomPointsTap">
+  <!-- <view class="admin-panel-full-width-button-container" bindtap="homeroomPointsTap">
     <text>Homeroom points...</text>
+  </view> -->
+  <view id="search-pseudo-accounts-header">
+    <text class="heading-text">Search Pseudo-Accounts</text>
   </view>
-  <view id="search-pseudo-accounts-header"><text class="heading-text">Search Pseudo-Accounts</text></view>
   <view id="search-pseudo-accounts-subheading">
-    <text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account. To begin, scan the participant's student ID or search and select their name.</text>
+    <text>Pseudo-accounts are for participants without phones. This is not an alternative way to access a WeChat-based account. To begin, search and select the participant's name or</text>
+    <text class="link-text" bindtap="handleSearchBoxScan"> scan their student ID card</text>
+    <text> within the search bar below. \n Note: To scan a participant's Sports Carnival ID Code, please navigate to the</text>
+    <text class="link-text" bindtap="navMainMenu"> main page.</text>
   </view>
-  <view class="admin-panel-full-width-button-container" bindtap="handleSearchBoxScan">
+  <!-- <view class="admin-panel-full-width-button-container" bindtap="handleSearchBoxScan">
     <text>Scan student ID...</text>
     <image src="../../icons/scan.svg" class="student-scan-image"></image>
-  </view>
+  </view> -->
   <view class="student-list-container">
     <view class="student-list-search-container">
       <image src="../../icons/search.svg" class="student-search-image"></image>  
       <input type="text" class="student-search-textfield" placeholder="Search Students..." bindinput="handleSearchBoxChange" placeholder-class="student-search-textfield-placeholder"/>
+      <image src="../../icons/scan.svg" class="student-scan-image" bindtap="handleSearchBoxScan"></image>
     </view>
     <view class="student-list-main-container">
       <block wx:for="{{matchingIndexes}}" wx:key="*this">
@@ -31,8 +37,20 @@
       </block>
     </view>
   </view>
+  <view id="search-pseudo-accounts-header">
+    <text class="heading-text">Advanced Operations</text>
+  </view>
+  <view id="search-pseudo-accounts-subheading">
+    <text>Select Multiple: This function allows you to add the same activity log to multiple participants at once through searching their pseudo-accounts or scanning their student ID card.</text>
+  </view>
   <view class="admin-panel-full-width-button-container" id="select-multiple-container" bindtap="selectMultipleTap" wx:if="{{multiselectEnabled}}">
     <text>Select multiple...</text>
+  </view>
+  <view id="search-pseudo-accounts-subheading">
+    <text>Configure Batch Add Activity Log: This function allows you to add the same activity log to multiple participants by selecting an activity and scanning each participant's Sports Carnival ID Code.</text>
+  </view>
+  <view class="admin-panel-full-width-button-container" bindtap="configureBatchScan">
+    <text>Configure batch add activity log...</text>
   </view>
   <view class="past-logs-container">
     <view class="logs-heading-text-container"><text class="heading-text">My Activity logs</text></view>

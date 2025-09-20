@@ -4,7 +4,7 @@
 @import "imageStyles.wxss";
 #sports-meet-container {
   padding: 0 16px;
-  padding-top: 10px;
+  padding-top: 110px;
   padding-bottom: 80px;
   background-color: var(--page-background);
 }
@@ -216,7 +216,7 @@
 }
 #sports-meet-competitive-leaderboards-grid {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 50% auto;
   width: 100%;
   grid-column-gap: 8px;
 }

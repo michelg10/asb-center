@@ -604,7 +604,7 @@ Component({
           for (let i=0;i<this.data.holderTicketId.length;i++) {
             qrCodeData.push(this.data.holderTicketId.charCodeAt(i));
           }
-          let accessCodeContents=generateQrCode("ticketCode", "TX25", qrCodeData);
+          let accessCodeContents=generateQrCode("ticketCode", "inputTicketEventId25", qrCodeData);
           if (accessCodeContents !== this.data.codeLastGen) {
             let myCreateQRCode = createQRCode.bind(this);
             if (isDarkTheme()) {

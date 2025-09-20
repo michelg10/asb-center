@@ -5,7 +5,7 @@ import { getTimeDifference, getUnixTime, withinRange, extendNumberToLengthString
 import { createQRCode, darkContainerColor, lightContainerColor, PreviewEnum, StudentDataType, UserDataType } from '../../utils/common';
 import allCollectionsData from '../../utils/allCollectionsData';
 import { generatePreviewCode } from '../../utils/generatePreviewCode';
-import { sportsMeetGetSecureCodes } from '../../utils/SportsMeetFunctions';
+import { sportsMeetForceGetSecureCodes, sportsMeetGetSecureCodes } from '../../utils/SportsMeetFunctions';
 import { handleCode } from '../../utils/handleCode';
 import { isDarkTheme } from '../../utils/isDarkTheme';
 import CacheSingleton from '../../classes/CacheSingleton';
@@ -26,6 +26,13 @@ interface componentDataInterface {
   pastEventsData: Array<DisplayRow>;
   servicesData: Array<DisplayRow>;
   lastUpdateTime: string;
+  registrationStart: number;
+  registrationEnd: number;
+  registrationStartDisplay: string;
+  registrationEndDisplay: string;
+  allowRegistration: boolean;
+  showStationMode: boolean;
+  inputCodeData: string;
 
   // UI-independent variables
   db: DB.Database;
@@ -78,6 +85,7 @@ Component({
               })
             }
           }
+          let currentTime = Date.now()/1000;
           if (userData.length > 0) {
             let userObject: UserDataType = { id: userData[0]._id as string, student: null, info: userData[0].info, compactId: userData[0].compactId, globalAdminName: null };
             if (userData[0].studentId !== undefined) {
@@ -88,6 +96,21 @@ Component({
                 let studentDataObject: StudentDataType = { id: studentData.data[0]._id as string, name: studentData.data[0].nickname, grade: studentData.data[0].grade, class: studentData.data[0].class, pseudoId: studentData.data[0].pseudoId };
                 userObject.student = studentDataObject;
               }
+            } else if (this.data.registrationStart <= currentTime && currentTime <= this.data.registrationEnd) {
+              wx.showModal({
+                title: 'Registration Needed',
+                content: 'Registration is required to participate in most events, such as Sports Carnival. Do you want to register now?',
+                cancelText: 'Back',
+                confirmText: 'Continue',
+                success: (res) => {
+                  if (res.confirm) {
+                    wx.redirectTo({
+                      url: '/pages/Registration/Registration'
+                    })
+                    return;
+                  }
+                }
+              })
             }
             this.setData({
               userData: userObject,
@@ -123,6 +146,14 @@ Component({
         masterEventsData: newEventsDb,
       });
     },
+    scanButtonClickStart: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+      wx.requestSubscribeMessage({
+        tmplIds: ['EaZhkxxp1LaCulPWys7nLWWbwVxur0F_7oWgO0KG3Jw', 'tlnosM16T4q1OGOtVnBjEjD4vthnnKBYMlm-ujFIG5I'],
+      })
+    },
     scanButtonClick: function () {
       // wx.navigateTo({
       //   url: '/pages/SportsMeet2021PersonaDetail/SportsMeet2021PersonaDetail',
@@ -132,6 +163,9 @@ Component({
       // });
       //   handleCode(this, "asC;1;type-userCode;dat-6-TUlDSEVM");
       //   return;
+      wx.vibrateShort({
+        type: "light"
+      });
       wx.scanCode({
         onlyFromCamera: true,
         success: (res) => {
@@ -143,20 +177,42 @@ Component({
       });
     },
     stationModeClick: function() {
-      wx.navigateTo({
-        url: "/pages/StationMode/StationMode",
-        success: (res) => {
-          res.eventChannel.emit('data', this.data.userData.globalAdminName);
-        }
-      });
+      if (this.data.userData.globalAdminName !== null) {
+        wx.vibrateShort({
+          type: "medium"
+        });
+        this.setData({
+          showStationMode: !this.data.showStationMode
+        })
+      }
     },
     sportsMeetFetchSecureCodes: async function() {
       return await sportsMeetGetSecureCodes(this);
     },
+    sportsMeetForceFetchSecureCodes: async function() {
+      return await sportsMeetForceGetSecureCodes(this);
+    },
     handleRegister: function () {
-      wx.redirectTo({
-        url: '/pages/Registration/Registration'
-      });
+      let currentTime = Date.now()/1000
+      if (this.data.registrationStart <= currentTime && currentTime <= this.data.registrationEnd) {
+        wx.redirectTo({
+          url: '/pages/Registration/Registration'
+        });
+      } else {
+        wx.showModal({
+          title: "Access Denied",
+          content: `Registration starts on ${this.data.registrationStartDisplay} and ends on ${this.data.registrationEndDisplay}. If you have any concerns, please contact the ASB.`,
+          showCancel: false,
+          confirmText: "Dismiss",
+          success: (modalRes) => {
+            if (modalRes.confirm) {
+              wx.reLaunch({
+                url: "/pages/MainMenu/MainMenu"
+              });
+            };
+          }
+        });
+      }
     },
     handleEventRowClick: function (x: any) {
       let eventClickedId = x.currentTarget.dataset.id;
@@ -164,13 +220,15 @@ Component({
       if (!shouldJump) {
         return;
       }
-      if (eventClickedId === "SportsMeet2024") {
-        console.log("SM2024 Clicked");
+      if (eventClickedId === "SportsMeet2025") {
+        wx.requestSubscribeMessage({
+          tmplIds: ['RU3_lesMwqL3aUZl5RXQa51GYV2JzqH94-FkKmeScu8', 'FQNj2-ixlWfb7AU1B4JKowvNigs2-5F7M2aODrp7gKw', 'b3a3kDwZkBLKcTPYcJNQuAXLiE5v6ilu5cWZC9dMSfI'],
+        })
         wx.navigateTo({
           url: '/pages/SportsMeet/SportsMeet',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', 'SportsMeet2024');
+            res.eventChannel.emit('eventId', 'SportsMeet2025');
             res.eventChannel.emit('eventInfo', this.data.masterEventsData.find((val) => {
               return val.id === eventClickedId;
             }));
@@ -254,13 +312,8 @@ Component({
           wx.showModal({
             title: "Access Denied",
             content: "Sorry, this suggestions box is for G11-12 only and requires registration. Please first complete registration and try again.",
-            cancelText: "Back",
-            confirmText: "Continue",
-            success: () => {
-              wx.redirectTo({
-                url: '/pages/Registration/Registration'
-              });
-            }
+            showCancel: false,
+            confirmText: "Dismiss"
           });
         } else if (this.data.userData.globalAdminName !== null) {
           wx.navigateTo({
@@ -317,13 +370,24 @@ Component({
         }
       }*/
     },
-    onLoad: function () {
+    onLoad: async function () {
       wx.cloud.init();
       this.data.db = wx.cloud.database();
       this.data.previewGenerator = [];
       this.data.previewLastGen = new Map();
       this.data.viewVisible = true;
       this.data.cacheSingleton = CacheSingleton.initialize(this.data.db);
+      let deadlineRes = await this.data.db.collection("config").where({
+        key: 'registration'
+      }).get();
+      let currentTime = Date.now()/1000;
+      this.setData({
+        registrationStart: deadlineRes.data[0].startTime,
+        registrationEnd: deadlineRes.data[0].endTime,
+        registrationStartDisplay: this.convertUnixTimeToMin(deadlineRes.data[0].startTime),
+        registrationEndDisplay: this.convertUnixTimeToMin(deadlineRes.data[0].endTime),
+        allowRegistration: deadlineRes.data[0].startTime <= currentTime && currentTime <= deadlineRes.data[0].endTime
+      })
       this.fetchServerData().then(() => {
         // initialize views and start the auto refresh cycle.
         this.recomputeData(false);
@@ -335,7 +399,7 @@ Component({
       });
       let newServiceData = new Array<DisplayRow>();
       newServiceData.push(new DisplayRow("Personal Code", "", true, "personalCode", null));
-      newServiceData.push(new DisplayRow("Suggestions Box", "", true, "suggestionsBox", null));
+      newServiceData.push(new DisplayRow("Suggestions Box (G11-12)", "", true, "suggestionsBox", null));
       // newServiceData.push(new DisplayRow("PROM 2025 Suggestions", "", true, "PM25Idea", null));
       this.setData({
         servicesData: newServiceData
@@ -344,7 +408,7 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5 * 1000 * 60);
-      /*const eventChannel = this.getOpenerEventChannel();
+      const eventChannel = this.getOpenerEventChannel();
       if(typeof eventChannel.on === 'function') {
         wx.navigateBack({
           delta: 1
@@ -353,7 +417,28 @@ Component({
           console.log(data)
           handleCode(this, data);
         });
-      }*/
+      }
+    },
+    convertUnixTimeToMin(unixTime: number): string {
+      const date = new Date(unixTime * 1000);
+      const options: Intl.DateTimeFormatOptions = {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          //second: '2-digit',
+          hour12: false
+      };
+      return date.toLocaleString('en-US', options);
+    },
+    registrationTimeQuery: function() {
+      wx.showModal({
+        title: "Not Within Registration Timeframe",
+        content: `Registration starts on ${this.data.registrationStartDisplay} and ends on ${this.data.registrationEndDisplay}. If you have any concerns, please contact the ASB.`,
+        showCancel: false,
+        confirmText: "Dismiss"
+      });
     },
     recomputeData: function (incremental: boolean) {
       //console.log("Tick at time", getUnixTime());
@@ -430,8 +515,8 @@ Component({
           if (newPreviewGenerator[i].previewMode === "secureCodePreview") {
               let qrCodeId = "err";
               switch (newPreviewGenerator[i].eventId) {
-                  case "SportsMeet2024":
-                      qrCodeId = "SM24";
+                  case "SportsMeet2025":
+                      qrCodeId = "SM25";
               }
             let accessCodeContents = generatePreviewCode("secureCode", newPreviewGenerator[i].previewData.userCode, qrCodeId);
             if (accessCodeContents !== this.data.previewLastGen.get(newPreviewGenerator[i].previewPort)) {
@@ -454,9 +539,28 @@ Component({
     },
     onShow: function () {
       this.data.viewVisible = true;
+      this.setData({
+        inputCodeData: '',
+      });
     },
     onHide: function () {
       this.data.viewVisible = false;
+    },
+    confirmStationModeInput: async function(x: any) {
+      this.setData({
+        inputCodeData: x.detail.value,
+      });
+      if (this.data.inputCodeData !== '') {
+        wx.showLoading({
+          title: "Loading...",
+          mask: true,
+        });
+        await handleCode(this, this.data.inputCodeData);
+        this.setData({
+          inputCodeData: '',
+        });
+        wx.hideLoading();
+      }
     },
     displayRowDiff: function (a: Array<DisplayRow>, b: Array<DisplayRow>) {
       if (a === undefined && b === undefined) {
@@ -472,6 +576,22 @@ Component({
         }
       }
       return false;
+    },
+    footerRegInfoTap: function () {
+      wx.showModal({
+        title: 'Note',
+        content: 'Your registration is permanent and cannot be changed. The ASB is not responsible for any problems caused by choosing a false identity. If you have any concerns, please contact the ASB.',
+        showCancel: false,
+        confirmText: 'Dismiss'
+      })
+    },
+    footerCreditsTap: function () {
+      wx.showModal({
+        title: 'ASB Center Credits',
+        content: "Founder: Michel Guo '23\nMaintaining Developer: Michael Yu '26",
+        showCancel: false,
+        confirmText: 'Dismiss',
+      })
     }
   },
 })

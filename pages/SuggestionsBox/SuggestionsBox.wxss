@@ -5,7 +5,7 @@
 @import "./SBTitleChineseBackgroundStyle.wxss";
 
 #main-container {
-    padding-top: 10px;
+    padding-top: 110px;
     padding-left: 16px;
     padding-right: 16px;
     background-position: center;
@@ -144,11 +144,18 @@
     justify-content: center;
     background-color: #D2DFF8;
     color: #010E29;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     border-radius: 22px;
     position: fixed;
     left: 15px;
     bottom: 15px;
     z-index: 9999;
+    filter: opacity(0.8);
+}
+
+#language-choose:active {
+  filter: opacity(0.5);
+  transform: scale(1.5);
 }
 
 #submission-complete-container {

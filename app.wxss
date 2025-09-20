@@ -24,7 +24,6 @@ text, input {
   font-size: 15px;
   line-height: 18px;
 }
-
 .admin-button {
   width: 41px;
   height: 41px;
@@ -32,14 +31,55 @@ text, input {
   align-items: center;
   justify-content: center;
   background-color: var(--subcontainer-background);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  filter: opacity(0.8);
+  transition: transform 0.2s ease;
   border-radius: 50%;
+  z-index: 9999;
+}
+.admin-button:active {
+  filter: opacity(0.5);
+  transform: scale(1.5);
 }
 .admin-image {
   height: 20px;
   width: 17px;
 }
+.back-button {
+  position: fixed;
+  top: 53px;
+  left: 15px;
+  width: 41px;
+  height: 41px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 0 10px rgba(255, 255, 255, 0.1),
+    0 15px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(100px) saturate(150%) brightness(1.05);
+  transition: transform 0.2s ease;
+  filter: opacity(0.8);
+  z-index: 9999;
+}
+.back-button:active {
+  filter: opacity(0.5);
+  transform: scale(1.5);
+}
+.back-image {
+  height: 20px;
+  width: 17px;
+  transform: rotate(180deg);
+  filter: brightness(0);
+}
 @media (prefers-color-scheme: dark) {
   .admin-image {
     filter: invert();
+  }
+  .back-image {
+    filter: brightness(0) invert();
   }
 }

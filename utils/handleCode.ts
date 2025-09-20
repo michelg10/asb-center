@@ -88,7 +88,7 @@ export async function handleCode(obj: any, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="SM24") {
+  if (keyToValueMap.get("event")==="SM25") {
     if (keyToValueMap.get("type")==="secureCode") {
       let currentTime = getUnixTime();
       let secureCodesList:getSecureCodesReturnType = (await obj.sportsMeetFetchSecureCodes());
@@ -96,9 +96,42 @@ export async function handleCode(obj: any, x: string) {
         reportCodeScanError(`Your account is not authorized to scan Sports Carnival ID Codes.`);
         return;
       }
+      if (secureCodesList.status === "suspended") {
+        reportCodeScanError(`Your account's admin previlages to scan Sports Carnival ID Codes are currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.`);
+        return;
+      }
       let secureCodeVerification = verifySecureCode(keyToValueMap.get("dat") as number[], currentTime, secureCodesList.data);
       if (secureCodeVerification === null) {
-        reportCodeScanError(`This Sports Carnival ID Code is invalid.`);
+        // Attempt to cache secure codes list again if user registered after local cache
+        let updatedCurrentTime = getUnixTime();
+        let updatedSecureCodesList: getSecureCodesReturnType = (await obj.sportsMeetForceFetchSecureCodes());
+        if (updatedSecureCodesList.status === "forbidden") {
+          reportCodeScanError(`Your account is not authorized to scan Sports Carnival ID Codes.`);
+          return;
+        }
+        if (updatedSecureCodesList.status === "suspended") {
+          reportCodeScanError(`Your account's admin previlages to scan Sports Carnival ID Codes are currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.`);
+          return;
+        }
+        let newSecureCodeVerification = verifySecureCode(keyToValueMap.get("dat") as number[], updatedCurrentTime, updatedSecureCodesList.data);
+        if (newSecureCodeVerification === null) {
+          reportCodeScanError(`This Sports Carnival ID Code is invalid.`);
+          return;
+        }
+        if (newSecureCodeVerification === obj.data.userData.id && obj.data.userData.compactId !== 'MICHAEL') {
+          reportCodeScanError(`Your account is not authorized to scan your own Sports Carnival ID Code.`);
+          return;
+        }
+        wx.navigateTo({
+          url: '/pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail',
+          success: (res) => {
+            res.eventChannel.emit('userId', newSecureCodeVerification);
+          }
+        });
+        return;
+      }
+      if (secureCodeVerification === obj.data.userData.id && obj.data.userData.compactId !== 'MICHAEL') {
+        reportCodeScanError(`Your account is not authorized to scan your own Sports Carnival ID Code.`);
         return;
       }
       // navigate to the persona detail page
@@ -113,7 +146,7 @@ export async function handleCode(obj: any, x: string) {
       reportCodeScanError(`This Sports Carnival ID Code is of unknown type ${keyToValueMap.get("type")}.`);
     }
   }
-  else if (keyToValueMap.get("event")==="TX25") {
+  else if (keyToValueMap.get("event")==="inputTicketEventId25") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj.data.userData.globalAdminName !== null) {

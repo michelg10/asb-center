@@ -85,7 +85,7 @@ export async function handleAnyTicketCode(obj: string, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="TX25") {
+  if (keyToValueMap.get("event")==="inputTicketEventId25") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj !== null) {

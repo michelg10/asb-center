@@ -1,7 +1,10 @@
 <view id="main-container" class="sb-background-image-background-style {{hasBeenSubmitted ? 'main-container-fullscreen' : ''}}">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+      <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
     <view id="suggestions-box-heading-container">
         <text class="big-title-text">Suggestions Box</text>
-        <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+        <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindtouchstart="buttonTapVibrate">
           <image src="/icons/bolt.svg" class="admin-image"></image>
         </view>
     </view>
@@ -12,15 +15,15 @@
         <text id="submissions-box-text-disclaimer">{{(language === 'ch' ? '每一份建议不一定都能开花结果，但一定不会有声音石沉大海。' : 'We cannot guarantee that all suggestions will be fulfilled - but we can guarantee that they will be heard by the administration.')}}</text>
         <view class="question">
             <text class="question-label">{{(language === 'ch' ? '名字（选填）' : 'Name (optional)')}}</text>
-            <input class="question-input" value="{{name}}" bindinput="nameInputChanged" />
+            <input class="question-input" value="{{name}}" bindinput="nameInputChanged" bindtap="buttonTapVibrate" />
         </view>
         <view class="question">
             <text class="question-label">{{language === 'ch' ? '联系方式（选填）' : 'Contact Information (optional)'}}</text>
-            <input class="question-input" value="{{contactInformation}}" bindinput="contactInformationChanged" />
+            <input class="question-input" value="{{contactInformation}}" bindinput="contactInformationChanged" bindtap="buttonTapVibrate" />
         </view>
         <view class="question">
             <text class="question-label">{{language === 'ch' ? '你的年级' : 'Your Grade'}}</text>
-            <picker class="question-input" mode="selector" range="{{gradeOptions}}" value="{{grade}}" bindchange="gradeChanged">
+            <picker class="question-input" mode="selector" range="{{gradeOptions}}" value="{{grade}}" bindchange="gradeChanged" bindtap="buttonTapVibrate">
               <view class="question-select">
                 {{gradeOptions[grade]}}
                 <image src="../../icons/chevron-down.svg" class="selectorIcon"></image>
@@ -29,7 +32,7 @@
         </view>
         <view class="question">
             <text class="question-label">{{language === 'ch' ? '你的建议' : 'Your Suggestion'}}</text>
-            <textarea class="question-textarea" value="{{suggestion}}" maxlength="-1" bindinput="suggestionChanged" ></textarea>
+            <textarea class="question-textarea" value="{{suggestion}}" maxlength="-1" bindinput="suggestionChanged" bindtap="buttonTapVibrate" ></textarea>
         </view>
         <view id="submit-button-{{suggestion === '' || grade == 0 ? 'inactive' : 'active'}}" class="submit-button" bindtap="submitButtonTapped">{{language === 'ch' ? '提交' : 'Submit'}}</view>
     </block>
@@ -41,4 +44,11 @@
         <view id="flex-layout-container"></view>
     </block>
 </view>
-<view id="language-choose" bindtap="changeLanguage">{{language === 'en' ? "Eng" : "中"}}</view>
+<view id="language-choose" bindtap="changeLanguage" bindtouchstart="buttonTapVibrate">{{language === 'en' ? "Eng" : "中"}}</view>
+<svg width="0" height="0">
+  <filter id="liquid-glass">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+    <feTurbulence type="turbulence" baseFrequency="0.05 0.05" numOctaves="2" result="noise"/>
+    <feDisplacementMap in="blur" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
