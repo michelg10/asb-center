@@ -50,6 +50,7 @@ exports.main = async (event, context) => {
       minute: '2-digit',
       // second: '2-digit',
       hour12: false,
+      timeZone: 'Asia/Shanghai'
   };
   let dateDisplay = date.toLocaleString('zh-CN', options);
   if (currentlyIsAdmin) {
@@ -63,6 +64,7 @@ exports.main = async (event, context) => {
       canDoPurchase: event.canDoPurchase,
       suspended: event.suspended,
       name: event.name,
+      chance: 1
     };
     if (currentlyIsAdmin) {
       if (event.suspended) {

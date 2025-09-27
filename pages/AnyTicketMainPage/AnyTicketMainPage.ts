@@ -113,10 +113,11 @@ Component({
             minute: '2-digit',
             second: '2-digit',
             hour12: false // Change to true for 12-hour format*/
+            timeZone: 'Asia/Shanghai'
         };
 
         // Format the date to a string using the specified options
-        return date.toLocaleString('en-US', options); // Change 'en-US' to your desired locale
+        return date.toLocaleString('zh-CN', options); // Change 'en-US' to your desired locale
       },
       convertUnixTimeToMin(unixTime: number): string {
         const date = new Date(unixTime * 1000);
@@ -127,9 +128,10 @@ Component({
             hour: '2-digit',
             minute: '2-digit',
             //second: '2-digit',
-            hour12: false
+            hour12: false,
+            timeZone: 'Asia/Shanghai'
         };
-        return date.toLocaleString('en-US', options);
+        return date.toLocaleString('zh-CN', options);
       },
       adminButtonTapped: async function(){
         if (this.data.allowValidation){

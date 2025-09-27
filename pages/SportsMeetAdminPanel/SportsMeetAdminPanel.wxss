@@ -3,9 +3,15 @@
 @import "/styles/SportsMeetLogs.wxss";
 #sports-meet-admin-panel-container {
   padding: 0 16px;
-  padding-top: 10px;
+  padding-top: 110px;
   padding-bottom: 80px;
   background-color: var(--page-background);
+}
+#sports-meet-admin-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
 }
 .admin-panel-full-width-button-container {
   margin-top: 12px;

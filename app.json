@@ -16,6 +16,7 @@
     "pages/GuessTheBaby/GuessTheBaby",
     "pages/SportsMeet/SportsMeet",
     "pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
+    "pages/SportsMeetApproval/SportsMeetApproval",
     "pages/SportsMeetConfirmMultiSelect/SportsMeetConfirmMultiSelect",
     "pages/SportsMeetHomeroomAdmin/SportsMeetHomeroomAdmin",
     "pages/SportsMeetLeaderboards/SportsMeetLeaderboards",

@@ -1,6 +1,14 @@
 <!--pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxml-->
 <view id="sports-meet-admin-panel-container">
-  <text class="big-title-text">Admin</text>
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
+  <view id="sports-meet-admin-panel-heading">
+    <text class="big-title-text">Admin</text>
+    <view wx:if="{{showAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindtouchstart="buttonTapVibrate">
+      <image src="/icons/bolt.svg" class="admin-image"></image>
+    </view>
+  </view>
   <!-- <view class="admin-panel-full-width-button-container" bindtap="homeroomPointsTap">
     <text>Homeroom points...</text>
   </view> -->
@@ -46,12 +54,12 @@
   <view class="admin-panel-full-width-button-container" id="select-multiple-container" bindtap="selectMultipleTap" wx:if="{{multiselectEnabled}}">
     <text>Select multiple...</text>
   </view>
-  <view id="search-pseudo-accounts-subheading">
+  <!-- <view id="search-pseudo-accounts-subheading">
     <text>Configure Batch Add Activity Log: This function allows you to add the same activity log to multiple participants by selecting an activity and scanning each participant's Sports Carnival ID Code.</text>
   </view>
   <view class="admin-panel-full-width-button-container" bindtap="configureBatchScan">
     <text>Configure batch add activity log...</text>
-  </view>
+  </view> -->
   <view class="past-logs-container">
     <view class="logs-heading-text-container"><text class="heading-text">My Activity logs</text></view>
     <view class="logs-delete-error" wx:if="{{pastLogDeletionError !== '' && pastLogDeletionError !== undefined}}"><text>{{pastLogDeletionError}}</text></view>

@@ -23,6 +23,7 @@ type componentDataInterface = {
   isWaiting: boolean,
   showSearch: boolean,
   showScan: boolean,
+  showAdmin: boolean
 };
 Component({
   /**
@@ -110,38 +111,41 @@ Component({
       const eventChannel = this.getOpenerEventChannel();
       eventChannel.on('myId', (data) => {
         this.data.myId = data;
-        this.data.db.collection("SportsMeetAdmin").where({
-          adminId: data,
-        }).get().then((res) => {
-          if (res.data.length === 0) {
-            wx.hideLoading();
-            wx.showModal({
-              title: 'Access Denied',
-              content: 'Your account is not authorized to access Sports Carnival admin panel.',
-              showCancel: false,
-              confirmText: 'Dismiss',
-              success: (modalRes) => {
-                if (modalRes.confirm) {
-                  wx.navigateBack();
-                }
-              }
-            })
-          }
-          if (res.data.length > 0 && res.data[0].suspended) {
-            wx.hideLoading();
-            wx.showModal({
-              title: 'Access Suspended',
-              content: "Your account's admin previlage to access Sports Carnival admin panel is currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.",
-              showCancel: false,
-              confirmText: 'Dismiss',
-              success: (modalRes) => {
-                if (modalRes.confirm) {
-                  wx.navigateBack();
-                }
-              }
-            })
-          }
-        })
+        // this.data.db.collection("SportsMeetAdmin").where({
+        //   adminId: data,
+        // }).get().then((res) => {
+        //   if (res.data.length === 0) {
+        //     wx.hideLoading();
+        //     wx.showModal({
+        //       title: 'Access Denied',
+        //       content: 'Your account is not authorized to access Sports Carnival admin panel.',
+        //       showCancel: false,
+        //       confirmText: 'Dismiss',
+        //       success: (modalRes) => {
+        //         if (modalRes.confirm) {
+        //           wx.navigateBack();
+        //         }
+        //       }
+        //     })
+        //   }
+        //   if (res.data.length > 0 && res.data[0].suspended) {
+        //     wx.hideLoading();
+        //     wx.showModal({
+        //       title: 'Access Suspended',
+        //       content: "Your account's admin previlage to access Sports Carnival admin panel is currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.",
+        //       showCancel: false,
+        //       confirmText: 'Dismiss',
+        //       success: (modalRes) => {
+        //         if (modalRes.confirm) {
+        //           wx.navigateBack();
+        //         }
+        //       }
+        //     })
+        //   }
+        //   this.setData({
+        //     showAdmin: res.data[0].canAddAdmin
+        //   })
+        // })
         for (let i=0;i<grades.length;i++) {
           allCollectionsData(this.data.db, `SportsMeetTransactionLog${grades[i]}`, {
             issuerId: this.data.myId,
@@ -214,6 +218,65 @@ Component({
         });
       });
       wx.hideLoading();
+    },
+    onShow: async function() {
+      await this.data.db.collection("SportsMeetAdmin").where({
+        adminId: this.data.myId,
+      }).get().then((res) => {
+        if (res.data.length === 0) {
+          wx.showModal({
+            title: 'Access Denied',
+            content: 'Your account is not authorized to access Sports Carnival admin panel.',
+            showCancel: false,
+            confirmText: 'Dismiss',
+            success: (modalRes) => {
+              if (modalRes.confirm) {
+                wx.navigateBack();
+              }
+            }
+          })
+        }
+        if (res.data.length > 0 && res.data[0].suspended) {
+          wx.showModal({
+            title: 'Access Suspended',
+            content: "Your account's admin previlage to access Sports Carnival admin panel is currently suspended by the system due to suspicious activity. Please contact the system administrator for clarification details.",
+            showCancel: false,
+            confirmText: 'Dismiss',
+            success: (modalRes) => {
+              if (modalRes.confirm) {
+                wx.navigateBack();
+              }
+            }
+          })
+        }
+        this.setData({
+          showAdmin: res.data[0].canAddAdmin
+        })
+      });
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.reLaunch({
+        url: "/pages/MainMenu/MainMenu"
+      });
+    },
+    adminButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.requestSubscribeMessage({
+        tmplIds: ['DdJ1P80P0pOf8sAcE_aZbaiNgBXAz-v4Qt1Mofvc4XA'],
+      })
+      wx.navigateTo({
+        url: '/pages/SportsMeetApproval/SportsMeetApproval'
+      })
     },
     generateLogs: function() {
       for (let i=0;i<this.data.indivGradesLogs.length;i++) {

@@ -41,9 +41,9 @@ Component({
           });
         });
         this.data.cacheSingleton = CacheSingleton.getInstance();
-        this.setData({
-          suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
-        });
+        // this.setData({
+        //   suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
+        // });
       },
       resolveSuggestionLog: function(x: any) {
         if (this.data.isWaiting) {
@@ -64,10 +64,10 @@ Component({
                   logId: this.data.suggestions[x.currentTarget.dataset.itemindex].logId,
                 }
               }).then(async () => {
-                await this.data.cacheSingleton.getAnyEventIdeaLogs();
-                this.setData({
-                  suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
-                })
+                // await this.data.cacheSingleton.getAnyEventIdeaLogs();
+                // this.setData({
+                //   suggestions: await this.data.cacheSingleton.fetchAnyEventIdeaLogs(),
+                // })
               })
             }
           }

@@ -47,8 +47,37 @@
   background-color: #D2E3FA;
   border-radius: 12px;
 }
+.log-block-approve-button {
+  height: 24px;
+  width: 65px;
+  display: flex;
+  margin-right: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: #98fa6b;
+  border-radius: 12px;
+}
+.log-block-deny-button {
+  height: 24px;
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffaaaa;
+  border-radius: 12px;
+}
 .log-block-resolve-button text {
   color: var(--link);
+  font-size: 13px;
+  font-weight: 500;
+}
+.log-block-approve-button text {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 500;
+}
+.log-block-deny-button text {
+  color: var(--warn);
   font-size: 13px;
   font-weight: 500;
 }

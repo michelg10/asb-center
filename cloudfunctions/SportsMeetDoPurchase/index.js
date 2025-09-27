@@ -237,6 +237,7 @@ exports.main = async (event, context) => {
         minute: '2-digit',
         // second: '2-digit',
         hour12: false,
+        timeZone: 'Asia/Shanghai'
     };
     let dateDisplay = date.toLocaleString('zh-CN', options);
     await cloud.openapi.subscribeMessage.send({

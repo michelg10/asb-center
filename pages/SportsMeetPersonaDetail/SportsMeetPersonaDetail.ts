@@ -245,6 +245,10 @@ Component({
     addActivityLog: function() {
       if (this.data.isWaiting) return;
       this.data.isWaiting = true;
+      wx.showLoading({
+        title: "Loading...",
+        mask: true,
+      });
       wx.cloud.callFunction({
         name: "SportsMeetAddActivityLog",
         data: {
@@ -254,13 +258,29 @@ Component({
           pointValue: this.data.pointValue,
         }
       }).then((res) => {
-        this.data.isWaiting=false;
+        this.data.isWaiting = false;
+        wx.hideLoading()
         let logAddFeedback = "";
         let result: any = res.result;
         let logAddClass = "";
         if (result.status === "success") {
           logAddFeedback = `Added log (${Math.floor(Math.random()*100000)})`;
           logAddClass = "button-feedback-success-text";
+        } else if (result.status === "suspicious") {
+          this.data.isWaiting = true;
+          logAddFeedback = result.reason;
+          logAddClass = "button-feedback-warn-text";
+          wx.showModal({
+            title: "Suspicious Activity",
+            content: "Suspicious activity has been detected by the system. Please ensure you are not giving false stamps. Your action is being verified by the system administrator before it can be credited to the student.",
+            showCancel: false,
+            confirmText: "Dismiss",
+            success: (res) => {
+              if (res.confirm){
+                wx.navigateBack();
+              }
+            }
+          })
         } else {
           logAddFeedback = result.reason;
           logAddClass = "button-feedback-warn-text";
@@ -678,6 +698,19 @@ Component({
         })
       });
       wx.hideLoading();
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.reLaunch({
+        url: "/pages/MainMenu/MainMenu"
+      });
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
     },
     onUnload: function() {
       this.data.logWatcher.close();

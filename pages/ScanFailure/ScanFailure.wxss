@@ -8,10 +8,12 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  background-color: var(--page-background);
 }
 #scanfailure-title {
   text-align: center;
   padding-bottom: 13px;
+  padding-top: 80px;
   margin: 0 64px;
 }
 #scanfailure-caption {

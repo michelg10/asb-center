@@ -88,9 +88,10 @@ Component({
           hour: '2-digit',
           minute: '2-digit',
           //second: '2-digit',
-          hour12: false
+          hour12: false,
+          timeZone: 'Asia/Shanghai'
       };
-      return date.toLocaleString('en-US', options);
+      return date.toLocaleString('zh-CN', options);
     },
     backButtonTapped: function() {
       wx.vibrateShort({

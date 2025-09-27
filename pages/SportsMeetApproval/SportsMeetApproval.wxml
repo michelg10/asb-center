@@ -1,0 +1,31 @@
+<!--pages/SportsMeetApproval/SportsMeetApproval.wxml-->
+<view id="main-page-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
+  <text class="big-title-text">Pending Activity Logs</text>
+  <view class="logs-list">
+    <block wx:for="{{logs}}" wx:key="_id">
+    <view wx:if="{{index!==0}}" class="log-separator"></view>
+    <view class="logs-block">
+      <view class="logs-block-up">
+        <view class="logs-block-left">
+          <text class="logs-block-heading">{{item.issuerName}}</text>
+          <text class="logs-block-subtext" user-select="true">to {{item.studentNickname}}</text>
+        </view>
+        <view class="logs-block-right">
+          <view class="log-block-approve-button" data-itemindex="{{index}}" bindtap="approveLog">
+            <text>Approve</text>
+          </view>
+          <view class="log-block-deny-button" data-itemindex="{{index}}" bindtap="denyLog">
+            <text>Deny</text>
+          </view>
+        </view>
+      </view>
+      <view class="logs-block-down">
+          <text class="logs-block-heading" user-select="true">Event: {{item.eventName}} \n Stamps: {{item.stampNumber}} \n Reason: {{item.reason}}</text>
+      </view>
+      </view>
+    </block>
+  </view>
+</view>

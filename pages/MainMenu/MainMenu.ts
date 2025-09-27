@@ -168,9 +168,14 @@ Component({
       });
       wx.scanCode({
         onlyFromCamera: true,
-        success: (res) => {
+        success: async (res) => {
           console.log(res);
-          handleCode(this, res.result);
+          wx.showLoading({
+            title: "Loading...",
+            mask: true,
+          });
+          await handleCode(this, res.result);
+          wx.hideLoading();
         }, fail(res) {
           console.error(res);
         }
@@ -408,7 +413,7 @@ Component({
       setInterval(() => {
         this.data.previewLastGen = new Map();
       }, 5 * 1000 * 60);
-      const eventChannel = this.getOpenerEventChannel();
+      /*const eventChannel = this.getOpenerEventChannel();
       if(typeof eventChannel.on === 'function') {
         wx.navigateBack({
           delta: 1
@@ -417,7 +422,7 @@ Component({
           console.log(data)
           handleCode(this, data);
         });
-      }
+      }*/
     },
     convertUnixTimeToMin(unixTime: number): string {
       const date = new Date(unixTime * 1000);
@@ -428,9 +433,10 @@ Component({
           hour: '2-digit',
           minute: '2-digit',
           //second: '2-digit',
-          hour12: false
+          hour12: false,
+          timeZone: 'Asia/Shanghai'
       };
-      return date.toLocaleString('en-US', options);
+      return date.toLocaleString('zh-CN', options);
     },
     registrationTimeQuery: function() {
       wx.showModal({
