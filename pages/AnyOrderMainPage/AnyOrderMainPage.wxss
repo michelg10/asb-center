@@ -1,6 +1,6 @@
 /* pages/AnyOrderMainPage/AnyOrderMainPage.wxss */
-@import "imageStyles.wxss";
-@import "ImageIconStyles.wxss";
+/* @import "imageStyles.wxss";
+@import "ImageIconStyles.wxss"; */
 @import "/styles/listSelection.wxss";
 #AnyOrderMainPageContainer {
     padding-top: 10px;

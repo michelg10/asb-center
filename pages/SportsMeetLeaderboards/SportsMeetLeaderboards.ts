@@ -239,6 +239,17 @@ Component({
         this.rerank();
       });
     },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
     onUnload: function() {
       const eventChannel = this.getOpenerEventChannel();
       eventChannel.emit("pageClose");

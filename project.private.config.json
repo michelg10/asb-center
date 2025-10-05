@@ -1,0 +1,7 @@
+{
+    "setting": {
+        "bigPackageSizeSupport": false,
+        "preloadBackgroundData": false
+    },
+    "libVersion": "3.10.0"
+}

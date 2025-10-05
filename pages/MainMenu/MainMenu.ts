@@ -208,14 +208,7 @@ Component({
           title: "Access Denied",
           content: `Registration starts on ${this.data.registrationStartDisplay} and ends on ${this.data.registrationEndDisplay}. If you have any concerns, please contact the ASB.`,
           showCancel: false,
-          confirmText: "Dismiss",
-          success: (modalRes) => {
-            if (modalRes.confirm) {
-              wx.reLaunch({
-                url: "/pages/MainMenu/MainMenu"
-              });
-            };
-          }
+          confirmText: "Dismiss"
         });
       }
     },

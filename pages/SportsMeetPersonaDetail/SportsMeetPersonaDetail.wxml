@@ -72,17 +72,31 @@
     <view wx:if="{{purchaseHintText!==undefined && purchaseHintText!==''}}" class="button-feedback">
       <text class="{{purchaseHintClass}}">{{purchaseHintText}}</text>
     </view>
-    <!-- <view class="description-header">
-      <text class="heading-text">Transfer Participant Stamps</text>
-    </view>
-    <view class="description-subheading">
-      <text>This function allows you to transfer one participant's stamps to another participant.
-      Note: Transferred stamps are ONLY for gift exchange.
-      </text>
-    </view>
-    <view class="admin-panel-full-width-button-container" bindtap="stampTransfer">
-      <text>Transfer participant stamps...</text>
-    </view> -->
+    <block wx:if="{{!accountIsPseudo}}">
+      <view class="description-header" bindlongpress="toggleStationMode">
+        <text class="heading-text">Transfer Participant Stamps</text>
+      </view>
+      <view class="description-subheading">
+        <text>This function allows you to transfer one participant's stamps to another participant by scanning the receiver's Sports Carnival ID Code.
+        Note: Transferred stamps are ONLY for gift exchange and does not affect either participants' stamps for CAS requirements.
+        </text>
+      </view>
+      <view class="activity-log-row">
+        <text class="activity-log-row-title">
+          Stamps
+        </text>
+        <input class="activity-log-row-input" type="number" value="{{transferValue}}" bindinput="transferValueBind"/>
+      </view>
+      <view class="student-list-search-container" wx:if="{{displayStationMode}}">
+        <input class="student-search-textfield" placeholder="Scan Code..." placeholder-class="student-search-textfield-placeholder" bindconfirm="confirmStationModeInput" value="{{inputCodeData}}"/>
+      </view>
+      <view class="button" bindtap="stampTransfer" id="{{transferButtonClass}}" wx:else>
+        <text class="button-text">Transfer</text>
+      </view>
+      <view wx:if="{{transferHintText!==undefined && transferHintText!==''}}" class="button-feedback">
+        <text class="{{transferHintClass}}">{{transferHintText}}</text>
+      </view>
+    </block>
   </view>
   <view class="past-logs-container">
     <view class="logs-heading-text-container"><text class="heading-text">Past Activity logs</text></view>

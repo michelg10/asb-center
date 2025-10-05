@@ -1,7 +1,10 @@
 import { gNumber } from "../../classes/gNumber";
 import { Student } from "../../classes/student";
 import allCollectionsData from "../../utils/allCollectionsData";
+import { UserDataType } from "../../utils/common";
 import { cutStringToSearchTokens } from "../../utils/cutStringToSearchTokens";
+import { handleSecureCode } from "../../utils/handleSecureCode";
+import { sportsMeetGetSecureCodes } from "../../utils/SportsMeetFunctions";
 import { LogType, PurchaseLogType } from "../SportsMeetPersonaDetail/SportsMeetPersonaDetail";
 
 // pages/SportsMeetAdminPanel/SportsMeetAdminPanel.ts
@@ -20,10 +23,28 @@ type componentDataInterface = {
   exchangeLogDeletionError: string,
   indivGradesLogs: LogType[][],
   indivGradesPurchaseLogs: PurchaseLogType[][],
+  userData: UserDataType,
+  events: SMEventType[],
+  selectedEventIndex: number,
+  eventSelectorOpen: boolean,
+  stampValue: number,
+  pointValue: number,
+  logAddFeedback: string,
+  logAddFeedbackClass: string,
+  inputCodeData: string,
+  displayStationMode: boolean,
   isWaiting: boolean,
   showSearch: boolean,
   showScan: boolean,
   showAdmin: boolean
+};
+export type SMEventType = {
+  wxId: string,
+  allowStamps: boolean;
+  id: string,
+  name: string,
+  rankLeaderboard: boolean,
+  stampForExperience: number,
 };
 Component({
   /**
@@ -102,6 +123,142 @@ Component({
         this.data.isWaiting = false;
       })
     },
+    mainSelectorClicked: function() {
+      if (this.data.eventSelectorOpen) {
+        this.setData({
+          eventSelectorOpen: false,
+        });
+      } else {
+        this.setData({
+          eventSelectorOpen: true,
+        });
+      }
+    },
+    toggleStationMode: function() {
+      this.setData({
+        displayStationMode: !this.data.displayStationMode
+      })
+    },
+    addActivityLog: function() {
+      if (this.data.isWaiting) return;
+      wx.scanCode({
+        onlyFromCamera: true,
+        success: async (res) => {
+          wx.showLoading({
+            title: "Loading...",
+            mask: true,
+          });
+          let secureCodeRes = await handleSecureCode(this, res.result);
+          this.data.isWaiting = true;
+          wx.cloud.callFunction({
+            name: "SportsMeetAddActivityLog",
+            data: {
+              userId: secureCodeRes,
+              eventId: this.data.events[this.data.selectedEventIndex].id,
+              stampValue: this.data.stampValue,
+              pointValue: this.data.pointValue,
+            }
+          }).then((res) => {
+            this.data.isWaiting = false;
+            wx.hideLoading()
+            let logAddFeedback = "";
+            let result: any = res.result;
+            let logAddClass = "";
+            if (result.status === "success") {
+              logAddFeedback = `Added log (${Math.floor(Math.random()*100000)})`;
+              logAddClass = "button-feedback-success-text";
+            } else if (result.status === "suspicious") {
+              this.data.isWaiting = true;
+              logAddFeedback = result.reason;
+              logAddClass = "button-feedback-warn-text";
+              wx.showModal({
+                title: "Suspicious Activity",
+                content: "Suspicious activity has been detected by the system. Please ensure you are not giving false stamps. Your action is being verified by the system administrator before it can be credited to the student.",
+                showCancel: false,
+                confirmText: "Dismiss",
+                success: (res) => {
+                  if (res.confirm){
+                    wx.navigateBack();
+                  }
+                }
+              })
+            } else {
+              logAddFeedback = result.reason;
+              logAddClass = "button-feedback-warn-text";
+            }
+            this.setData({
+              logAddFeedback: logAddFeedback,
+              logAddFeedbackClass: logAddClass,
+            });
+          });
+          wx.hideLoading();
+        }, fail(res) {
+          console.error(res);
+        }
+      });
+    },
+    confirmStationModeInput: async function(x: any) {
+      this.setData({
+        inputCodeData: x.detail.value,
+      });
+      if (this.data.inputCodeData !== '') {
+        if (this.data.isWaiting) return;
+        wx.showLoading({
+          title: "Loading...",
+          mask: true,
+        });
+        this.data.isWaiting = true;
+        let secureCodeRes = await handleSecureCode(this, this.data.inputCodeData);
+        this.setData({
+          inputCodeData: '',
+        });
+        wx.cloud.callFunction({
+          name: "SportsMeetAddActivityLog",
+          data: {
+            userId: secureCodeRes,
+            eventId: this.data.events[this.data.selectedEventIndex].id,
+            stampValue: this.data.stampValue,
+            pointValue: this.data.pointValue,
+          }
+        }).then((res) => {
+          this.data.isWaiting = false;
+          wx.hideLoading()
+          let logAddFeedback = "";
+          let result: any = res.result;
+          let logAddClass = "";
+          if (result.status === "success") {
+            logAddFeedback = `Added log (${Math.floor(Math.random()*100000)})`;
+            logAddClass = "button-feedback-success-text";
+          } else if (result.status === "suspicious") {
+            this.data.isWaiting = true;
+            logAddFeedback = result.reason;
+            logAddClass = "button-feedback-warn-text";
+            wx.showModal({
+              title: "Suspicious Activity",
+              content: "Suspicious activity has been detected by the system. Please ensure you are not giving false stamps. Your action is being verified by the system administrator before it can be credited to the student.",
+              showCancel: false,
+              confirmText: "Dismiss",
+              success: (res) => {
+                if (res.confirm){
+                  wx.navigateBack();
+                }
+              }
+            })
+          } else {
+            logAddFeedback = result.reason;
+            logAddClass = "button-feedback-warn-text";
+          }
+          this.setData({
+            logAddFeedback: logAddFeedback,
+            logAddFeedbackClass: logAddClass,
+          });
+        });
+        wx.hideLoading();
+      }
+    },
+    sportsMeetFetchSecureCodes: async function() {
+      return await sportsMeetGetSecureCodes(this);
+    },
     onLoad: async function() {
       wx.showLoading({
         title: "Loading...",
@@ -109,8 +266,9 @@ Component({
       });
       this.data.db = wx.cloud.database();
       const eventChannel = this.getOpenerEventChannel();
-      eventChannel.on('myId', (data) => {
-        this.data.myId = data;
+      eventChannel.on('userData', (data: UserDataType) => {
+        this.data.userData = data;
+        this.data.myId = data.id;
         // this.data.db.collection("SportsMeetAdmin").where({
         //   adminId: data,
         // }).get().then((res) => {
@@ -217,6 +375,27 @@ Component({
           showSearch: false,
         });
       });
+      await allCollectionsData(this.data.db, "SportsMeetEvents").then((res) => {
+        let events: SMEventType[] = [];
+        let data = res.data;
+        for (let i=0;i<data.length;i++) {
+          events.push({
+            wxId: data[i]._id as string,
+            allowStamps: data[i].allowStamps,
+            id: data[i].id,
+            name: data[i].name,
+            rankLeaderboard: data[i].rankLeaderboard,
+            stampForExperience: data[i].stampForExperience
+          });
+        }
+        this.setData({
+          events: events,
+          selectedEventIndex: 0,
+          eventSelectorOpen: false,
+          stampValue: 0,
+          pointValue: 0,
+        });
+      });
       wx.hideLoading();
     },
     onShow: async function() {
@@ -254,6 +433,38 @@ Component({
         })
       });
     },
+    handleActivityOptionClick: function(x:any) {
+      let optionClickedIndex = x.currentTarget.dataset.itemindex;
+      this.setData({
+        selectedEventIndex: optionClickedIndex,
+        eventSelectorOpen: false,
+        stampValue: 0,
+        pointValue: 0,
+      });
+    },
+    stampValueBind: function(x:any) {
+      let textFieldValue:string = x.detail.value;
+      let value: number = Number.parseInt(textFieldValue);
+      if (value===NaN) {
+        value=0;
+      }
+      this.setData({
+        stampValue: value,
+      })
+    },
+    pointValueBind: function(x:any) {
+      let textFieldValue:string = x.detail.value;
+      let value: number = Number.parseInt(textFieldValue);
+      if (value===NaN) {
+        value=0;
+      }
+      if (value<0) {
+        value=0;
+      }
+      this.setData({
+        pointValue: value,
+      })
+    },
     buttonTapVibrate: function() {
       wx.vibrateShort({
         type: "medium"
@@ -263,9 +474,7 @@ Component({
       wx.vibrateShort({
         type: "light"
       });
-      wx.reLaunch({
-        url: "/pages/MainMenu/MainMenu"
-      });
+      wx.navigateBack();
     },
     adminButtonTapped: function() {
       wx.vibrateShort({
@@ -275,7 +484,10 @@ Component({
         tmplIds: ['DdJ1P80P0pOf8sAcE_aZbaiNgBXAz-v4Qt1Mofvc4XA'],
       })
       wx.navigateTo({
-        url: '/pages/SportsMeetApproval/SportsMeetApproval'
+        url: '/pages/SportsMeetApproval/SportsMeetApproval',
+        success: (res) => {
+          res.eventChannel.emit('canAddAdmin', this.data.showAdmin);
+        }
       })
     },
     generateLogs: function() {

@@ -97,5 +97,11 @@
 }
 .log-resolved-text {
   text-align: right;
+  font-weight: bold;
   color: var(--green);
+}
+.log-warn-text {
+  text-align: right;
+  font-weight: bold;
+  color: var(--warn);
 }

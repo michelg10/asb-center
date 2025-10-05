@@ -29,6 +29,17 @@ Component({
         });
       });
     },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
     confirmClicked: function() {
       if (this.data.studentData.length === 1){
         console.log("Only 1 Person Selected in Multi-Select Mode");

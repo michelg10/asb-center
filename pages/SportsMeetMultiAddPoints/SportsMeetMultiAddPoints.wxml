@@ -1,5 +1,8 @@
 <!--pages/SportsMeet2021MultiAddPoints/SportsMeet2021MultiAddPoints.wxml-->
 <view id="multi-add-points-log-main-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <text class="big-title-text">Add Log</text>
   <text class="big-title-sub-text">{{studentData.length}} student{{studentData.length === 1 ? '' : 's'}}</text>
   <view id="log-activity-container" wx:if="{{selectedEventIndex !== undefined}}">

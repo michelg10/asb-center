@@ -117,7 +117,7 @@ Component({
       wx.navigateTo({
         url: "/pages/SportsMeetAdminPanel/SportsMeetAdminPanel",
         success: (res) => {
-          res.eventChannel.emit("myId", this.data.userData.id);
+          res.eventChannel.emit("userData", this.data.userData);
         }
       });
     },
@@ -132,6 +132,14 @@ Component({
         type: "medium"
       });
     },
+    activityDescriptionsTapped: function() {
+      wx.requestSubscribeMessage({
+        tmplIds: ['RU3_lesMwqL3aUZl5RXQa51GYV2JzqH94-FkKmeScu8', 'FQNj2-ixlWfb7AU1B4JKowvNigs2-5F7M2aODrp7gKw', 'b3a3kDwZkBLKcTPYcJNQuAXLiE5v6ilu5cWZC9dMSfI'],
+      });
+      wx.navigateTo({
+        url: "/pages/SportsMeetActivities/SportsMeetActivities",
+      });
+    },
     leaderboardButtonTapped: function(x: any) {
       let showSearch: boolean;
       let title: string;
@@ -141,7 +149,9 @@ Component({
       let pointProperty: string;
       let nameProperty: string;
       let doubleBoundary: number;
-
+      wx.requestSubscribeMessage({
+        tmplIds: ['RU3_lesMwqL3aUZl5RXQa51GYV2JzqH94-FkKmeScu8', 'FQNj2-ixlWfb7AU1B4JKowvNigs2-5F7M2aODrp7gKw', 'b3a3kDwZkBLKcTPYcJNQuAXLiE5v6ilu5cWZC9dMSfI'],
+      })
       if (x.currentTarget.dataset.index !== -1) {
         let tapped=this.data.leaderboardEvents[x.currentTarget.dataset.index];
         showSearch = true;

@@ -1,0 +1,100 @@
+<!--pages/SportsMeetActivities/SportsMeetActivities.wxml-->
+<view id="SMActivitiesMainView">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
+  <text class="big-title-text">Activity Descriptions</text>
+  <view id="SMActivityTypeView">
+    <text class="heading-text">Group Activities</text>
+  </view>
+  <text class="desc-text">• Earn 5 stamps (1 sticker) for completing with a time above average.
+    • Otherwise earn 3 stamps for completing with an average time.
+    • Otherwise earn 1 stamp for participating.
+    • Specific timeframes will be announced on the event day.
+  </text>
+  <text class="heading-text">Super Wheeler 风火轮</text>
+  <view id="SMActivityView" bindtap="superWheeler">
+    <image id="SMActivityImage" src="{{imageUrls[0]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 5-10 students roll a super wheeler belt across the field.
+    • Participants will be timed. The super wheeler belt must completely cross the finish line to qualify as a successful completion.
+  </text>
+  <text class="heading-text">Caterpillar Dash 毛毛虫</text>
+  <view id="SMActivityView" bindtap="caterpillarDash">
+    <image id="SMActivityImage" src="{{imageUrls[1]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 6 students ride an inflatable caterpillar across the field and back.
+    • Participants will be timed. The caterpillar must go around the cone and fully cross the finish line to qualify as a successful completion.
+    • If a team member falls out of the caterpillar or is left behind, the team would have to restart from the starting line.
+  </text>
+  <text class="heading-text">Three Legged Race 两人三足</text>
+  <view id="SMActivityView" bindtap="threeLeggedRace">
+    <image id="SMActivityImage" src="{{imageUrls[2]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 2 students will have one leg tied together and try to walk across the field.
+    • Participants will be timed. If the bandana loosens and falls off, the team would have to restart from the starting line.
+  </text>
+  <view id="SMActivityTypeView">
+    <text class="heading-text">Small Activities</text>
+  </view>
+  <text class="desc-text">• Earn 2 stamps for winning or meeting the benchmark.
+    • Otherwise earn 1 stamp for participating.
+  </text>
+  <text class="heading-text">Limbo 障碍杆</text>
+  <view id="SMActivityView" bindtap="limbo">
+    <image id="SMActivityImage" src="{{imageUrls[3]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 2-5 students compete and try to limbo under the stick by bending backwards. The stick is lowered each round.
+    • A participant gets disqualified if they touch the stick or fall to the ground. The last person remaining wins!
+  </text>
+  <text class="heading-text">Arm Wrestling 扳手腕</text>
+  <view id="SMActivityView" bindtap="armWrestling">
+    <image id="SMActivityImage" src="{{imageUrls[4]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 4 students compete in arm wrestling in two pairs of 1v1.
+    • The winners of these two pairs compete once more to determine the final winner.
+  </text>
+  <text class="heading-text">Snatch That Cone 抢杯子</text>
+  <view id="SMActivityView" bindtap="snatchThatCone">
+    <image id="SMActivityImage" src="{{imageUrls[5]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 4 students compete in two pairs of 1v1.
+    • A colour will be yelled out, and whoever first snatches the cone of that color earns a point. The person with the most points after all cones have been snatched wins the round!
+    • If a participant snatches the wrong cone or otherwise makes a mistake, the opponent earns a point.
+    • The winners of these two pairs compete once more to determine the final winner.
+  </text>
+  <text class="heading-text">Cup Pong 杯子乒乓球</text>
+  <view id="SMActivityView" bindtap="cupPong">
+    <image id="SMActivityImageVertical" src="{{imageUrls[6]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Each person gets 3 ping-pong balls and tries to aim them at the 6 cups placed in a triangle.
+  • If the participant crosses the marked line when throwing the ball, it would not count.
+  • The ball must bounce once and only once before landing in the cup to count. Participants must score all three balls to meet the benchmark.
+  </text>
+  <text class="heading-text">Ring Toss 套圈子</text>
+  <view id="SMActivityView" bindtap="ringToss">
+    <image id="SMActivityImage" src="{{imageUrls[7]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Each person gets 3 rings and tries to toss them at the 6 cones placed in a triangle.
+  • If the participant crosses the marked line when tossing the ring, it would not count.
+  • Participants must score all three rings to meet the benchmark.
+  </text>
+  <text class="heading-text">Musical Chairs 抢椅子</text>
+  <view id="SMActivityView" bindtap="musicalChairs">
+    <image id="SMActivityImage" src="{{imageUrls[8]}}" wx:if="{{imageUrls.length !== 0}}" />
+    <text class="link-text">Click to see it in action!</text>
+  </view>
+  <text class="desc-text">• Groups of 4 students compete in a round of musical chairs.
+    • Participants run circles around the three chairs until the music stops, where they then have to quickly sit in an empty chair. A chair is removed each round.
+    • If a participant sits down before the music stops or otherwise makes a mistake, they are disqualified immediately.
+    • A participant also gets disqualified if they did not get a chair to sit in after the music stops. The last person remaining wins!
+  </text>
+</view>

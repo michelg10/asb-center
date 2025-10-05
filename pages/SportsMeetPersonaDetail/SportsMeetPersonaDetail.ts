@@ -1,5 +1,7 @@
 import CacheSingleton from "../../classes/CacheSingleton";
 import allCollectionsData from "../../utils/allCollectionsData";
+import { handleSecureCode } from "../../utils/handleSecureCode";
+import { sportsMeetGetSecureCodes } from "../../utils/SportsMeetFunctions";
 
 export type SMEventType = {
   wxId: string,
@@ -86,6 +88,7 @@ interface componentDataInterface {
   otherAccountLogs: LogType[] | null,
   stampValue: number,
   pointValue: number,
+  transferValue: number,
   isWaiting: boolean,
   logAddFeedback: string,
   logAddFeedbackClass: string,
@@ -98,12 +101,19 @@ interface componentDataInterface {
   purchaseButtonClass: string,
   purchaseHintText: string,
   purchaseHintClass: string,
+  transferButtonClass: string,
+  transferHintText: string,
+  transferHintClass: string,
   pastLogDeletionError: string,
   exchangeLogDeletionError: string,
   userBalanceString: string,
   otherAccounts: number | null,
   cacheSingleton: CacheSingleton,
   userOpenId: string | undefined,
+  maxStampCount: number,
+  stampCountNotified: boolean,
+  inputCodeData: string,
+  displayStationMode: boolean,
 }
 
 Component({
@@ -145,6 +155,17 @@ Component({
       this.setData({
         pointValue: value,
       })
+    },
+    transferValueBind: function(x: any) {
+      let textFieldValue: string = x.detail.value;
+      let value: number = Number.parseInt(textFieldValue);
+      if (value === NaN) {
+        value = 5;
+      }
+      this.setData({
+        transferValue: value,
+      })
+      this.updateCanAfford();
     },
     deleteActivityLog: function(x: any) {
       if (this.data.isWaiting) {
@@ -196,8 +217,8 @@ Component({
         this.data.isWaiting = false;
       })
     },
-    updateCanAfford: function() {
-      if (this.data.otherAccounts!>1) {
+    updateCanAfford: async function() {
+      if (this.data.otherAccounts !> 1) {
         return;
       }
       if (this.data.selectedPurchaseItemIndex === undefined || this.data.selectedPurchaseItemIndex === -1) {
@@ -207,6 +228,40 @@ Component({
         return;
       }
       let totalBalance = this.data.totalStamps+(this.data.totalOtherAccountStamps === null ? 0 : this.data.totalOtherAccountStamps);
+      if (totalBalance >= this.data.maxStampCount && !this.data.stampCountNotified) {
+        this.data.stampCountNotified = true;
+        await this.data.db.collection("SportsMeetStampLogSuspicious").where({
+          userId: this.data.userData.studentId,
+        }).get().then(async (res) => {
+          if (res.data.length === 0) {
+            await wx.cloud.callFunction({
+              name: "SportsMeetAddSuspiciousPerson",
+              data: {
+                type: 'add',
+                issuerId: this.data.adminStatus.adminId,
+                issuerName: this.data.adminStatus.name,
+                userId: this.data.userData.studentId,
+                stampNumber: totalBalance,
+                studentNickname: this.data.userData.student.nickname
+              }
+            })
+            this.data.stampCountNotified = false;
+          } else if (res.data[0].stampNumber !== totalBalance) {
+            await wx.cloud.callFunction({
+              name: "SportsMeetAddSuspiciousPerson",
+              data: {
+                type: 'update',
+                issuerId: this.data.adminStatus.adminId,
+                issuerName: this.data.adminStatus.name,
+                userId: this.data.userData.studentId,
+                stampNumber: totalBalance,
+                studentNickname: this.data.userData.student.nickname
+              }
+            })
+            this.data.stampCountNotified = false;
+          }
+        });
+      }
       let totalSpent = this.data.usedStamps+(this.data.usedOtherAccountStamps === null ? 0 :this.data.usedOtherAccountStamps);
       this.setData({
         userBalanceString: `${totalBalance-totalSpent} stamps (total ${this.data.totalStamps}${this.data.totalOtherAccountStamps === null ? "" : ("+"+this.data.totalOtherAccountStamps)}, spent ${this.data.usedStamps}${this.data.usedOtherAccountStamps === null ? "" : ("+"+this.data.usedOtherAccountStamps)})`
@@ -224,6 +279,74 @@ Component({
           purchaseHintText: "User balance insufficient",
         });
       }
+      if (this.data.transferValue <= totalBalance - totalSpent) {
+        this.setData({
+          transferButtonClass: "purchase-button-can-buy",
+          transferHintClass: "",
+          transferHintText: "",
+        });
+      } else {
+        this.setData({
+          transferButtonClass: "purchase-button-cannot-buy",
+          transferHintClass: "button-feedback-warn-text",
+          transferHintText: "User balance insufficient",
+        });
+      }
+      if (this.data.transferValue <= 0) {
+        this.setData({
+          transferButtonClass: "purchase-button-cannot-buy",
+          transferHintClass: "button-feedback-warn-text",
+          transferHintText: "Stamp transfer not permitted with value 0",
+        });
+      }
+    },
+    sportsMeetFetchSecureCodes: async function() {
+      return await sportsMeetGetSecureCodes(this);
+    },
+    confirmStationModeInput: async function(x: any) {
+      this.setData({
+        inputCodeData: x.detail.value,
+      });
+      if (this.data.inputCodeData !== '' && this.data.transferValue !== 0 && this.data.transferButtonClass !== "purchase-button-cannot-buy") {
+        if (this.data.isWaiting) return;
+        wx.showLoading({
+          title: "Loading...",
+          mask: true,
+        });
+        this.data.isWaiting = true;
+        let secureCodeRes = await handleSecureCode(this, this.data.inputCodeData);
+        this.setData({
+          inputCodeData: '',
+        });
+        wx.cloud.callFunction({
+          name: "SportsMeetTransferStamps",
+          data: {
+            userId: this.data.userId,
+            receiverId: secureCodeRes,
+            itemCost: this.data.transferValue
+          }
+        }).then((res) => {
+          this.data.isWaiting = false;
+          let result: any = res.result;
+          if (result.status === "success") {
+            this.setData({
+              transferHintText: `Transfer successful (${Math.floor(Math.random()*100000)})`,
+              transferHintClass: "button-feedback-success-text",
+            });
+          } else {
+            this.setData({
+              transferHintText: result.reason,
+              transferHintClass: "button-feedback-warn-text",
+            });
+          }
+        })
+        wx.hideLoading();
+      }
+    },
+    toggleStationMode: function() {
+      this.setData({
+        displayStationMode: !this.data.displayStationMode
+      })
     },
     handleActivityOptionClick: function(x:any) {
       let optionClickedIndex=x.currentTarget.dataset.itemindex;
@@ -428,6 +551,7 @@ Component({
         eventSelectorOpen: false,
         stampValue: 0,
         pointValue: 0,
+        transferValue: 0,
         purchaseSelectContainerClass: "main-select-container",
         purchaseSelectorOpen: false,
         logs: [],
@@ -502,7 +626,6 @@ Component({
             userId: data,
           }
         }).then(async (res) => {
-            console.log(res);
           if (res === undefined) {
             wx.hideLoading();
             wx.navigateBack();
@@ -536,6 +659,9 @@ Component({
                 purchaseButtonClass: "purchase-button-cannot-buy",
                 purchaseHintClass: "button-feedback-warn-text",
                 purchaseHintText: `Purchase not permitted with a multi-link pseudo account`,
+                transferButtonClass: "purchase-button-cannot-buy",
+                transferHintClass: "button-feedback-warn-text",
+                transferHintText: `Stamp transfer not permitted with a multi-link pseudo account`,
                 userBalanceString: "Multi-Account Block",
                 allowAdminAdd: false
               })
@@ -554,7 +680,6 @@ Component({
               })
             }
           }
-          console.log("Other Account ID: ", this.data.otherAccountId);
           if (this.data.otherAccountId !== null) { // if this account is a pseudo account, this would be counting the stamps from the corresponding wechat account. if this account is a main account, this would be counting the stamps from the corresponding pseudo account
             console.log("Counting stamps from other account")
             allCollectionsData(this.data.db, `SportsMeetStampLog${studentResult.student.grade}`, {
@@ -697,20 +822,70 @@ Component({
           });
         })
       });
+      await this.data.db.collection("SportsMeetConfig").where({
+        key: "maxStamp",
+      }).get().then((res) => {
+        if (res.data.length > 0) {
+          this.setData({
+            maxStampCount: res.data[0].value
+          })
+        }
+      });
       wx.hideLoading();
     },
     backButtonTapped: function() {
       wx.vibrateShort({
         type: "light"
       });
-      wx.reLaunch({
-        url: "/pages/MainMenu/MainMenu"
-      });
+      wx.navigateBack();
     },
     buttonTapVibrate: function() {
       wx.vibrateShort({
         type: "medium"
       });
+    },
+    stampTransfer: function() {
+      if (this.data.isWaiting) {
+        return;
+      }
+      if (this.data.transferValue !== 0 && this.data.transferButtonClass !== "purchase-button-cannot-buy") {
+        wx.scanCode({
+          onlyFromCamera: true,
+          success: async (res) => {
+            wx.showLoading({
+              title: "Loading...",
+              mask: true,
+            });
+            let secureCodeRes = await handleSecureCode(this, res.result);
+            this.data.isWaiting = true;
+            wx.cloud.callFunction({
+              name: "SportsMeetTransferStamps",
+              data: {
+                userId: this.data.userId,
+                receiverId: secureCodeRes,
+                itemCost: this.data.transferValue
+              }
+            }).then((res) => {
+              this.data.isWaiting = false;
+              let result: any = res.result;
+              if (result.status === "success") {
+                this.setData({
+                  transferHintText: `Transfer successful (${Math.floor(Math.random()*100000)})`,
+                  transferHintClass: "button-feedback-success-text",
+                });
+              } else {
+                this.setData({
+                  transferHintText: result.reason,
+                  transferHintClass: "button-feedback-warn-text",
+                });
+              }
+            })
+            wx.hideLoading();
+          }, fail(res) {
+            console.error(res);
+          }
+        });
+      }
     },
     onUnload: function() {
       this.data.logWatcher.close();

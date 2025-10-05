@@ -9,6 +9,17 @@ let db = cloud.database();
 
 // required trigger "0 */5 * * * * *" have been disabled for cost reasons
 
+// Helper method to process async tasks in batches to avoid rate limits
+async function runBatchedUpdates(tasks, batchSize = 20, delay = 100) {
+  for (let i = 0; i < tasks.length; i += batchSize) {
+    const batch = tasks.slice(i, i + batchSize);
+    await Promise.all(batch); // run one batch in parallel
+    if (delay > 0) {
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}
+
 // 云函数入口函数
 exports.main = async (event, context) => {
   console.log("Autorank routine - rank regular leaderboards");
@@ -29,14 +40,14 @@ exports.main = async (event, context) => {
       }
     }))
   }
-  for (let i=0;i<grades.length;i++) {
+  /*for (let i=0;i<grades.length;i++) {
     tasks.push(cloud.callFunction({
       name: "fetchAllCollections",
       data: {
         collectionName: `SportsMeetHomeroomProcessed${grades[i]}`,
       }
     }));
-  }
+  }*/
   let res=await Promise.all(tasks);
   let eventNameList = [];
   for (let i=0;i<res[0].result.data.length;i++) {
@@ -87,16 +98,28 @@ exports.main = async (event, context) => {
     for (let j=0;j<gradesComputedLeaderboardList[i].length;j++) {
       let leaderboardUpdateObj = {};
       for (let k=0;k<eventNameList.length;k++) {
-        leaderboardUpdateObj[`studentLastRank${eventNameList[k]}`]=gradesComputedLeaderboardList[i][j][`studentLastRank${eventNameList[k]}`];
-        leaderboardUpdateObj[`studentSoonLastRank${eventNameList[k]}`]=gradesComputedLeaderboardList[i][j][`studentSoonLastRank${eventNameList[k]}`];
+        const lastRankKey = `studentLastRank${eventNameList[k]}`;
+        const soonLastRankKey = `studentSoonLastRank${eventNameList[k]}`;
+        const prevRank = gradesComputedLeaderboardList[i][j][lastRankKey];
+        const newRank = gradesComputedLeaderboardList[i][j][soonLastRankKey];
+        // only update if rank changed
+        if (prevRank !== newRank) {
+          leaderboardUpdateObj[lastRankKey] = prevRank;
+          leaderboardUpdateObj[soonLastRankKey] = newRank;
+        }
       }
-      tasks.push(db.collection(`SportsMeetLeaderboardProcessed${grades[i]}`).doc(gradesComputedLeaderboardList[i][j]._id).update({
-        data: leaderboardUpdateObj
-      }));
+      // only push update if there's something to change
+      if (Object.keys(leaderboardUpdateObj).length > 0) {
+        tasks.push(
+          db.collection(`SportsMeetLeaderboardProcessed${grades[i]}`)
+            .doc(gradesComputedLeaderboardList[i][j]._id)
+            .update({ data: leaderboardUpdateObj })
+        );
+      }
     }
   }
 
-  console.log("Autorank routine - rank homeroom leaderboards");
+  /* console.log("Autorank routine - rank homeroom leaderboards");
   // go through homeroom processed
 
   let gradesComputedHomeroomList=[];
@@ -142,6 +165,7 @@ exports.main = async (event, context) => {
         data: leaderboardUpdateObj
       }));
     }
-  }
-  await Promise.all(tasks);
+  }*/
+  
+  await runBatchedUpdates(tasks, 20, 50);
 }

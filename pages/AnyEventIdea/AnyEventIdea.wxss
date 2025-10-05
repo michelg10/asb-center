@@ -1,6 +1,6 @@
 /* pages/SuggestionsBox/SuggestionsBox.wxss */
-@import "./SBBackgroundImageBackgroundStyle.wxss";
-@import "./SBCheckmarkBackgroundStyle.wxss";
+/* @import "./SBBackgroundImageBackgroundStyle.wxss";
+@import "./SBCheckmarkBackgroundStyle.wxss"; */
 
 #main-container {
     padding-top: 10px;

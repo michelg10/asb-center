@@ -1,5 +1,8 @@
 <!--pages/SportsMeetLeaderboards/SportsMeetLeaderboards.wxml-->
 <view id="leaderboards-container-main" class="leaderboardsBackgroundImage">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <text class="big-title-text leaderboard-bigtexts" id="leaderboard-title">{{title}}</text>
   <view id="pinned-container" wx:if="{{pinsDisplay.length>0}}">
     <view id="pinned-container-title">

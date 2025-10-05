@@ -67,15 +67,22 @@
     <canvas type="2d" class="secure-code-canvas" id="SportsMeetInnerPreviewPort"></canvas>
     <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\n'+eventInfo.preview.caption}}</text>
   </view>
-  <!-- view id="sports-meet-leaderboard-container">
+  <view id="sports-meet-leaderboard-container">
+    <text class="heading-text" id="sports-meet-leaderboard-heading">Activity Descriptions</text>
+    <view class="sports-meet-leaderboard-block generalBackgroundStyle" bindtap="activityDescriptionsTapped">
+      <text class="sports-meet-leaderboard-block-heading">Group & Small Activities</text>
+      <text class="sports-meet-leaderboard-block-text">Click to learn more</text>
+    </view>
+  </view>
+  <view id="sports-meet-leaderboard-container">
     <text class="heading-text" id="sports-meet-leaderboard-heading">Leaderboards</text>
-    <template is="leaderboard-block" data="{{ ...{imageSrc: 'overall', blockTitle: 'Overall Stamps', blockText: 'Ranked '+myHomeroomRank, index: -1} }}"></template>
+    <!-- <template is="leaderboard-block" data="{{ ...{imageSrc: 'overall', blockTitle: 'Overall Stamps', blockText: 'Ranked '+myHomeroomRank, index: -1} }}"></template> -->
     <view id="sports-meet-competitive-leaderboards-grid">
       <block wx:for="{{leaderboardEvents}}" wx:key="id">
         <template is="leaderboard-block" data="{{ ...{imageSrc: item.id, blockTitle: item.name, blockText: 'Ranked '+item.myRank, index: index} }}"></template>
       </block>
     </view>
-  </view -->
+  </view>
   <view id="sports-meet-my-logs-container" wx:if="{{mergedLogs.length !== 0}}">
     <text class="heading-text" id="sports-meet-my-logs-heading">My Logs</text>
     <view id="sports-meet-my-logs-inner-container">

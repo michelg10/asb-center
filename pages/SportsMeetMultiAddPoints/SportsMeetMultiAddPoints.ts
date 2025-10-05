@@ -149,6 +149,17 @@ Component({
           selectedEventIndex: 0,
         });
       });
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
     }
   }
 })

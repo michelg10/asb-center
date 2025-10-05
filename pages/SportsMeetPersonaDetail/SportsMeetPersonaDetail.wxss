@@ -2,6 +2,7 @@
 @import "/styles/options-container.wxss";
 @import "/styles/button.wxss";
 @import "/styles/SportsMeetLogs.wxss";
+@import "/styles/studentContainer.wxss";
 #persona-detail-id-text {
   color: var(--secondary);
   font-weight: bold;

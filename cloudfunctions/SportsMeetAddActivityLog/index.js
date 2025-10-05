@@ -123,9 +123,10 @@ exports.main = async (event, context) => {
   // anticheat algorithm
   let configData = result[3].result.data;
   let lastLogData = await db.collection(`SportsMeetStampLog${studentGrade}`).where({
-    userId: event.userId
+    userId: event.userId,
+    issuerId: callerId
   }).orderBy('timeStamp', 'desc').limit(1).get();
-  let minStampInterval = configData.find(item => item.key === "minStampInterval").value;
+  let minStampInterval = configData.find(item => item.key === "minStampInterval").value * 1000;
   let immunity = configData.find(item => item.key === "immunity").value;
   let isImmune = immunity.includes(callerId);
   let maxSingleStamp = configData.find(item => item.key === "maxSingleStamp").value;
@@ -158,9 +159,10 @@ exports.main = async (event, context) => {
       susReason = "操作不在活动时间范围内";
     }
     // check if last log is within min interval
-    if (lastLogData.data.length !== 0 && (currentTime - lastLogData.data[0].timeStamp) < minStampInterval) {
+    if (lastLogData.data.length !== 0 && (Date.now() - lastLogData.data[0].timeStamp) < minStampInterval) {
       suspicious = true;
       susReason = "操作时间间隔小于最少间隔";
+      console.log((Date.now() - lastLogData.data[0].timeStamp) / 1000);
     }
     if (suspicious) {
       await db.collection("SportsMeetStampLogSuspicious").add({

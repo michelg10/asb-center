@@ -1,6 +1,8 @@
 /* pages/SportsMeetAdminPanel/SportsMeetAdminPanel.wxss */
 @import "/styles/studentContainer.wxss";
 @import "/styles/SportsMeetLogs.wxss";
+@import "/styles/options-container.wxss";
+@import "/styles/button.wxss";
 #sports-meet-admin-panel-container {
   padding: 0 16px;
   padding-top: 110px;
@@ -55,4 +57,17 @@
 }
 .link-text{
   color: #3180E9;
+}
+#activity-select-container {
+  margin: 15px 0;
+}
+#add-activity-log-button {
+  background-color: #D2E3FA;
+  margin-top: 15px;
+}
+#add-activity-log-button text {
+  color: #3180E9;
+}
+#log-activity-container {
+  margin-bottom: 20px;
 }

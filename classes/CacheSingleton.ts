@@ -44,24 +44,24 @@ class CacheSingleton {
         return this.#studentData!;
     }
 
-    async getTeacherImages(totalImages: number, rerenderCallback: () => any) {
+    async getImageUrls(imageNames: string[], rerenderCallback: () => any) {
         if (this.#imageUrls !== undefined) {
             rerenderCallback();
             return;
         }
-        this.#imageUrls = Array(totalImages);
-        for (let i=1;i<=totalImages;i++) {
+        this.#imageUrls = Array(imageNames.length);
+        for (let i = 0; i < imageNames.length; i++) {
             wx.cloud.downloadFile({
-                fileID: `cloud://asb-center-7gixak2a33f2f3e5.6173-asb-center-7gixak2a33f2f3e5-1307575779/BabyPictures/${i}.jpg`
+                fileID: `cloud://asc-5gg4yr483fce21b4.6173-asc-5gg4yr483fce21b4-1307575779/SportsMeetActivityImages/${imageNames[i]}.JPG`
             }).then((res) => {
-                this.#imageUrls![i-1] = res.tempFilePath;
+                this.#imageUrls![i] = res.tempFilePath;
                 rerenderCallback();
             })
         }
     }
 
     fetchImageUrls(): string[] {
-        return this.#imageUrls!;
+      return this.#imageUrls!;
     }
 
     async fetchUserOpenId(): Promise<string> {

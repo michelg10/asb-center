@@ -45,7 +45,7 @@
     </view>
   </view>
   <view id="version-footer" bindtap="footerCreditsTap" bindlongpress="stationModeClick">
-    Version 4.4.1
+    Version 4.4.2
   </view>
   <view id="station-mode-main-container" wx:if="{{showStationMode}}">
     <text class="heading-text">Station Mode</text>

@@ -1,0 +1,40 @@
+/* pages/SportsMeetActivities/SportsMeetActivities.wxss */
+#SMActivitiesMainView {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  padding-top: 110px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  background-color: var(--page-background);
+}
+#SMActivityTypeView {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+  align-items: center;
+}
+#SMActivityView {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#SMActivityImage {
+  padding: 10px;
+  width: 100%;
+}
+#SMActivityImageVertical {
+  padding: 10px;
+  width: 50%;
+}
+.link-text {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--link);
+}
+.desc-text {
+  padding-left: 20px;
+  padding-bottom: 10px;
+  font-size: 18px;
+}
