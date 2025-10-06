@@ -35,7 +35,17 @@ Component({
             this.buildDisplayInformation();
           })
         } else {
-          this.buildDisplayInformation();
+          wx.showModal({
+            title: "Failed to Display Images",
+            content: "Sorry, due to network traffic restrictions, we are unable to display activity images during this time. Please refer to activity video descriptions or check back at a later time. Thank you for understanding.",
+            showCancel: false,
+            confirmText: "Dismiss",
+            success: (res) => {
+              if (res.confirm) {
+                this.buildDisplayInformation();
+              }
+            }
+          })
         }
       });
     },
