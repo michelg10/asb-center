@@ -236,13 +236,14 @@ Component({
           }
         });
       }
-      if (eventClickedId === "Prom2025") {
+      if (eventClickedId === "Circuscape2025") {
+        console.log("Circuscape");
         wx.navigateTo({
           url: '/pages/AnyTicketMainPage/AnyTicketMainPage',
           success: (res) => {
             res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventId', "Prom2025");
-            res.eventChannel.emit('eventName', "PROM 2025");
+            res.eventChannel.emit('eventId', "Circuscape2025");
+            res.eventChannel.emit('eventName', "Circuscape 2025");
           }
         })
       }

@@ -10,9 +10,9 @@
     </block>
     <block wx:else>
       <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
-        <!-- <image id="any-ticket-ticket" src="/pages/AnyTicketMainPage/SF25T.jpg"></image> -->
+        <image id="any-ticket-ticket" src="/pages/AnyTicketMainPage/ticket.png"></image>
         <text class="subheading-text">Purchased Event Ticket</text>
-        <view id="ticket-code-code-container">
+        <!--view id="ticket-code-code-container">
           <view class="secure-code-preview-container">
             <view id="ticket-display-title">
               <text>Your {{eventName}}\nEvent Ticket</text>
@@ -21,7 +21,7 @@
             <canvas type="2d" class="secure-code-canvas" id="ticketcodecanvas"></canvas>
             <text class="secure-code-preview-caption" style="text-align: center">{{(lastUpdateTime===undefined ? 'Updating...' : 'Updated '+lastUpdateTime)+'\nPlease present this digital event ticket for entry to PROM 2025.\nDo not share your digital event ticket.'}}</text>
           </view>
-        </view>
+        </view-->
         <view id="any-ticket-event-option-row" wx:if="{{!hideHouse}}">
           <view id="event-option-full" bindtap="houseTap">
             <text>Click to Sign-Up for Table Groups!</text>
