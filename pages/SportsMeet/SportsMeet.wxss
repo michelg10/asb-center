@@ -1,7 +1,7 @@
 /* pages/SportsMeet.wxss */
 @import "../../global-colors.wxss";
 @import "../MainMenu/MainMenu.wxss";
-@import "imageStyles.wxss";
+/* @import "imageStyles.wxss"; */
 #sports-meet-container {
   padding: 0 16px;
   padding-top: 110px;

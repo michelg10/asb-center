@@ -61,6 +61,17 @@ Component({
             })
             wx.hideLoading();
         },
+        backButtonTapped: function() {
+          wx.vibrateShort({
+            type: "light"
+          });
+          wx.navigateBack();
+        },
+        buttonTapVibrate: function() {
+          wx.vibrateShort({
+            type: "medium"
+          });
+        },
         doSearch: function(e: any) {
             if (this.data.studentData === undefined) {
                 return;

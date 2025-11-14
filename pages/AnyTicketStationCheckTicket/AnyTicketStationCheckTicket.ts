@@ -82,6 +82,17 @@ Component({
       })
       this.updateCount();
     },
+    backButtonTapped: function() {
+      wx.vibrateShort({
+        type: "light"
+      });
+      wx.navigateBack();
+    },
+    buttonTapVibrate: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
+    },
     updateCount: async function() {
       wx.showLoading({
         title: "Updating...",
@@ -118,7 +129,7 @@ Component({
         let parseCodeData = await handleAnyTicketCode(this.data.adminStatus.adminName, this.data.inputCodeData);
         if (parseCodeData!=="invalid") {
           if(parseCodeData[0]==="ticketCode"){
-            let checkTicket = await this.data.db.collection("TedXTickets").where({
+            let checkTicket = await this.data.db.collection("CircuscapeTickets").where({
               ticketId: parseCodeData[1],
             }).get();
             let checkTicketHolder = await this.data.db.collection("studentData").where({

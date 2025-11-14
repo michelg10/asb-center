@@ -344,6 +344,9 @@ Component({
       }
     },
     toggleStationMode: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
       this.setData({
         displayStationMode: !this.data.displayStationMode
       })

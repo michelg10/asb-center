@@ -135,6 +135,9 @@ Component({
       }
     },
     toggleStationMode: function() {
+      wx.vibrateShort({
+        type: "medium"
+      });
       this.setData({
         displayStationMode: !this.data.displayStationMode
       })
@@ -202,16 +205,17 @@ Component({
         inputCodeData: x.detail.value,
       });
       if (this.data.inputCodeData !== '') {
-        if (this.data.isWaiting) return;
+        /* if (this.data.isWaiting) return;
         wx.showLoading({
           title: "Loading...",
           mask: true,
         });
-        this.data.isWaiting = true;
-        let secureCodeRes = await handleSecureCode(this, this.data.inputCodeData);
+        this.data.isWaiting = true; */
+        let inputData = this.data.inputCodeData;
         this.setData({
           inputCodeData: '',
         });
+        let secureCodeRes = await handleSecureCode(this, inputData);
         wx.cloud.callFunction({
           name: "SportsMeetAddActivityLog",
           data: {

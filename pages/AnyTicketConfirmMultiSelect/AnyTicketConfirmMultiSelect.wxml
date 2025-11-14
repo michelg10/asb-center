@@ -1,4 +1,7 @@
 <view id="confirm-multi-select-main-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <text class="big-title-text">{{eventName}}</text>
   <view class="date-text">Ends: {{dueDate}}</view>
   <view class="heading-text">Table Groups Sign-Up</view>

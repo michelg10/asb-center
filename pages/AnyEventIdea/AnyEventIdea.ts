@@ -41,7 +41,7 @@ Component({
                 name: "",
                 contactInformation: "",
                 grade: 0,
-                gradeOptions: ['Please Select 请选择...','Theme 主题', 'Food and Beverage 饮食', 'Dress Code 着装需求', 'General Idea or Suggestion 其他想法与建议'],
+                gradeOptions: ['Please Select 请选择...','Activity 活动', 'General Idea or Suggestion 其他想法与建议'],
                 suggestion: "",
                 language: "en",
                 allowSubmission: true,
@@ -69,6 +69,17 @@ Component({
                 eventName: data,
               });
             });
+        },
+        backButtonTapped: function() {
+          wx.vibrateShort({
+            type: "light"
+          });
+          wx.navigateBack();
+        },
+        buttonTapVibrate: function() {
+          wx.vibrateShort({
+            type: "medium"
+          });
         },
         nameInputChanged: function(x: any) {
             this.setData({

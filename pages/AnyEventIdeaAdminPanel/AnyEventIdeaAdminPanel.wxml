@@ -1,4 +1,7 @@
 <view id="SuggestionsBoxAdminMainView">
+    <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+      <image src="/icons/chevron-right.svg" class="back-image"></image>
+    </view>
     <view id="SuggestionsBoxAdminMainViewHeader">
         <text class="big-title-text">Admin</text>
     </view>

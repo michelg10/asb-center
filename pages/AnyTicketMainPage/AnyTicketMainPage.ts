@@ -151,32 +151,32 @@ Component({
           })
         }
       },
-      // consentFormTap: function(){
-      //   if(this.data.allowConsent && !this.data.consentDone){
-      //     wx.navigateTo({
-      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-      //       success: (res) => {
-      //         res.eventChannel.emit("eventName", this.data.eventName);
-      //         res.eventChannel.emit("option", "consent");
-      //         res.eventChannel.emit("dueDate", this.data.consentEndDisplay);
-      //         res.eventChannel.emit("userData", this.data.userData);
-      //       }
-      //     });
-      //   }
-      // },
-      // mealOptionTap: function(){
-      //   if(this.data.allowMeal){
-      //     wx.navigateTo({
-      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-      //       success: (res) => {
-      //         res.eventChannel.emit("eventName", this.data.eventName);
-      //         res.eventChannel.emit("option", "meal");
-      //         res.eventChannel.emit("dueDate", this.data.mealEndDisplay);
-      //         res.eventChannel.emit("userData", this.data.userData);
-      //       }
-      //     });
-      //   }
-      // },
+      consentFormTap: function(){
+        if(this.data.allowConsent && !this.data.consentDone){
+          wx.navigateTo({
+            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+            success: (res) => {
+              res.eventChannel.emit("eventName", this.data.eventName);
+              res.eventChannel.emit("option", "consent");
+              res.eventChannel.emit("dueDate", this.data.consentEndDisplay);
+              res.eventChannel.emit("userData", this.data.userData);
+            }
+          });
+        }
+      },
+      mealOptionTap: function(){
+        if(this.data.allowMeal){
+          wx.navigateTo({
+            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+            success: (res) => {
+              res.eventChannel.emit("eventName", this.data.eventName);
+              res.eventChannel.emit("option", "meal");
+              res.eventChannel.emit("dueDate", this.data.mealEndDisplay);
+              res.eventChannel.emit("userData", this.data.userData);
+            }
+          });
+        }
+      },
       houseTap: function(){
         if(this.data.allowHouse){
           wx.navigateTo({
@@ -267,10 +267,10 @@ Component({
         let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
         // let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
         let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
-        let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+        // let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
         let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
         let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
-        if (!getHouseDeadline || !getMusicDeadline || !getTicketDeadline || !getEventDeadline || !checkErrorMsg|| !getConsentDeadline|| !getMealDeadline){
+        if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getConsentDeadline || !getMealDeadline){
           this.setData({
             errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
           });
@@ -281,26 +281,26 @@ Component({
             });
           }
         }
-        let getConsentStatus = await this.data.db.collection("CircuscapeStudentData").where({
-          userId: this.data.userData.student?.id,
-        }).get();
-        if(getConsentStatus.data.length!==0){
-          if(getConsentStatus.data[0].consent){
-            this.setData({
-              consentDone: true
-            })
-          }
-          else{
-            this.setData({
-              consentDone: false
-            })
-          }
-        }
-        else{
+        if(this.data.userData && this.data.userData.student) {
+          let getConsentStatus = await this.data.db.collection("CircuscapeStudentData").where({
+            userId: this.data.userData.student.id,
+          }).get();
+          if(getConsentStatus.data.length!==0) {
+            if(getConsentStatus.data[0].consent) {
+              this.setData({
+                consentDone: true
+              })
+            } else {
+              this.setData({
+                consentDone: false
+              })
+            };
+          };
+        } else {
           this.setData({
             consentDone: false
           })
-        }
+        };
         this.setData({
           consentStart: getConsentDeadline?.startTime,
           mealStart: getMealDeadline?.startTime,
@@ -309,7 +309,7 @@ Component({
           suggestionsStart: getSuggestionsDeadline?.startTime,
           // promposeStart: getPromposeDeadline?.startTime,
           musicStart: getMusicDeadline?.startTime,
-          ticketStart: getTicketDeadline?.startTime,
+          // ticketStart: getTicketDeadline?.startTime,
           eventStart: getEventDeadline?.startTime,
           consentEnd: getConsentDeadline?.endTime,
           mealEnd: getMealDeadline?.endTime,
@@ -319,7 +319,7 @@ Component({
           suggestionsEnd: getSuggestionsDeadline?.endTime,
           // promposeEnd: getPromposeDeadline?.endTime,
           musicEnd: getMusicDeadline?.endTime,
-          ticketEnd: getTicketDeadline?.endTime,
+          // ticketEnd: getTicketDeadline?.endTime,
           eventEnd: getEventDeadline?.endTime
         });
         this.setData({
@@ -347,6 +347,17 @@ Component({
           // ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
           // ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
         })
+      },
+      backButtonTapped: function() {
+        wx.vibrateShort({
+          type: "light"
+        });
+        wx.navigateBack();
+      },
+      buttonTapVibrate: function() {
+        wx.vibrateShort({
+          type: "medium"
+        });
       },
       reloadUpcomingEventList: function() {
         let date = new Date();
@@ -381,32 +392,31 @@ Component({
         this.data.db = wx.cloud.database();
         this.data.viewVisible = true;
         const eventChannel = this.getOpenerEventChannel();
-        eventChannel.on('userData', (data: UserDataType) => {
+        eventChannel.on('userData', async (data: UserDataType) => {
           this.setData({
-              userData: data,
+            userData: data,
           });
-          if (this.data.userData.student){
+          if (this.data.userData.student) {
             this.data.db.collection("CircuscapeTickets").where({
               userId: this.data.userData.student.id,
             }).get().then((res) => {
-              if (res.data.length > 0) {
+              if(res.data.length > 0) {
                 this.setData({
                   holderStatus: true,
                   holderTicketId: res.data[0].ticketId
                 });
-                if (res.data[0].entry){
+                if(res.data[0].entry) {
                   this.setData({
                     ticketUsed: true
                   })
-                }
+                };
                 // setTimeout(
                 //   () => {
                 //     this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
                 //   }, 500
                 // );
-              }
-              else {
-                if (this.data.userData.student){
+              } else {
+                if (this.data.userData.student) {
                   this.data.db.collection("CircuscapeTickets").where({
                     userId: this.data.userData.student.id.concat("LOST"),
                   }).get().then((res) => {
@@ -414,7 +424,7 @@ Component({
                       this.setData({
                         holderLostStatus: true
                       });
-                    }
+                    };
                   })
                 } else {
                   wx.showModal({
@@ -423,11 +433,10 @@ Component({
                     showCancel: false,
                     confirmText: "Dismiss",
                   })
-                }
-              }
-            })
-          }
-          else{
+                };
+              };
+            });
+          } else {
             wx.showModal({
               title: "Not Registered",
               content: "You must complete registration to participate in this event.",
@@ -454,6 +463,92 @@ Component({
               }
             };
           })
+          let deadlineRes = await this.data.db.collection("CircuscapeDeadlines").get();
+          let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
+          // let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
+          let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
+          let getMealDeadline = deadlineRes.data.find(d => d.optionId === "meal");
+          let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
+          // let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
+          let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
+          // let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+          let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
+          let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
+          if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getConsentDeadline || !getMealDeadline){
+            this.setData({
+              errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
+            });
+          } else if (checkErrorMsg) {
+            if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
+              this.setData({
+                errorMessage: `Announcement from the ASB: \n${checkErrorMsg?.message}`,
+              });
+            }
+          }
+          this.setData({
+            consentStart: getConsentDeadline?.startTime,
+            mealStart: getMealDeadline?.startTime,
+            houseStart: getHouseDeadline?.startTime,
+            // perfStart: getPerfDeadline?.startTime,
+            suggestionsStart: getSuggestionsDeadline?.startTime,
+            // promposeStart: getPromposeDeadline?.startTime,
+            musicStart: getMusicDeadline?.startTime,
+            // ticketStart: getTicketDeadline?.startTime,
+            eventStart: getEventDeadline?.startTime,
+            consentEnd: getConsentDeadline?.endTime,
+            mealEnd: getMealDeadline?.endTime,
+            houseEnd: getHouseDeadline?.endTime,
+            hideHouse: getHouseDeadline?.hide,
+            // perfEnd: getPerfDeadline?.endTime,
+            suggestionsEnd: getSuggestionsDeadline?.endTime,
+            // promposeEnd: getPromposeDeadline?.endTime,
+            musicEnd: getMusicDeadline?.endTime,
+            // ticketEnd: getTicketDeadline?.endTime,
+            eventEnd: getEventDeadline?.endTime
+          });
+            let getConsentStatus = await this.data.db.collection("CircuscapeStudentData").where({
+              userId: this.data.userData.student?.id,
+            }).get();
+            if(getConsentStatus.data.length!==0) {
+              if(getConsentStatus.data[0].consent) {
+                this.setData({
+                  consentDone: true
+                })
+              } else {
+                this.setData({
+                  consentDone: false
+                })
+              };
+            } else {
+            this.setData({
+              consentDone: false
+            })
+          };
+          this.setData({
+            allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
+            allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
+            allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
+            // allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
+            allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
+            // allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
+            allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
+            // allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
+            allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
+          })
+          this.setData({
+            allowPreOptions: this.data.allowConsent || this.data.allowMeal,
+            allowLateOptions: this.data.allowMusic || this.data.allowHouse,
+            consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
+            mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
+            houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
+            houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
+            // perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
+            suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
+            // promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
+            musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
+            // ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
+            // ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
+          })
         });
         eventChannel.on('eventName', (data: String) => {
           this.setData({
@@ -465,96 +560,6 @@ Component({
               eventId: data,
           });
         });
-        let deadlineRes = await this.data.db.collection("CircuscapeDeadlines").get();
-        console.log(deadlineRes);
-
-        let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
-        // let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
-        let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
-        let getMealDeadline = deadlineRes.data.find(d => d.optionId === "meal");
-        let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
-        // let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
-        let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
-        let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
-        let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
-        let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
-        if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg|| !getConsentDeadline|| !getMealDeadline){
-          this.setData({
-            errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
-          });
-        } else if (checkErrorMsg) {
-          if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
-            this.setData({
-              errorMessage: `Announcement from the ASB: \n${checkErrorMsg?.message}`,
-            });
-          }
-        }
-        this.setData({
-          consentStart: getConsentDeadline?.startTime,
-          mealStart: getMealDeadline?.startTime,
-          houseStart: getHouseDeadline?.startTime,
-          // perfStart: getPerfDeadline?.startTime,
-          suggestionsStart: getSuggestionsDeadline?.startTime,
-          // promposeStart: getPromposeDeadline?.startTime,
-          musicStart: getMusicDeadline?.startTime,
-          ticketStart: getTicketDeadline?.startTime,
-          eventStart: getEventDeadline?.startTime,
-          consentEnd: getConsentDeadline?.endTime,
-          mealEnd: getMealDeadline?.endTime,
-          houseEnd: getHouseDeadline?.endTime,
-          hideHouse: getHouseDeadline?.hide,
-          // perfEnd: getPerfDeadline?.endTime,
-          suggestionsEnd: getSuggestionsDeadline?.endTime,
-          // promposeEnd: getPromposeDeadline?.endTime,
-          musicEnd: getMusicDeadline?.endTime,
-          ticketEnd: getTicketDeadline?.endTime,
-          eventEnd: getEventDeadline?.endTime
-        });
-        let getConsentStatus = await this.data.db.collection("CircuscapeStudentData").where({
-          userId: this.data.userData.student?.id,
-        }).get();
-        if(getConsentStatus.data.length!==0){
-          if(getConsentStatus.data[0].consent){
-            this.setData({
-              consentDone: true
-            })
-          }
-          else{
-            this.setData({
-              consentDone: false
-            })
-          }
-        }
-        else{
-          this.setData({
-            consentDone: false
-          })
-        }
-        this.setData({
-          allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
-          allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
-          allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
-          // allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
-          allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
-          // allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
-          allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
-          // allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
-          allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
-        })
-        this.setData({
-          allowPreOptions: this.data.allowConsent || this.data.allowMeal,
-          allowLateOptions: this.data.allowMusic || this.data.allowHouse,
-          consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
-          mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
-          houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
-          houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
-          // perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
-          suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
-          // promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
-          musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
-          // ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
-          // ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
-        })
         allCollectionsData(this.data.db, "CircuscapeTimetable").then((res) => {
           let newEventsList: EventsListItemType[] = [];
           for (let i=0;i<res.data.length;i++) {

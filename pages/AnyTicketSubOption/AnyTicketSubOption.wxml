@@ -1,18 +1,21 @@
 <view id="any-ticket-master-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <text class="big-title-text">{{eventName}}</text>
   <view class="date-text">Ends: {{dueDate}}</view>
   <view id="any-ticket-option-container" wx:if="{{consent}}">
     <view class="heading-text">Submit Consent Form</view>
     <view id="option-subheading">
-      <text>PROM 2025 告家长书</text>
+      <text>Circuscape 2025 告家长书</text>
       <text>家长您好:</text>
-      <text user-select="true">PROM 定于 2025 年 6 ⽉ 2 ⽇ (星期一) 晚上 17:00-21:30 在云锦公主号邮轮（黄浦江 十六铺一号 游船码头）举⾏，活动会提供晚餐。请学⽣与监护⼈⾃⾏负责回家交通安全，并请确保学⽣参与活动期间遵守上海中学国际部学生守则 (严禁饮酒等⾏为)。</text>
-      <text>上海中学国际部 2025 年 5 ⽉</text>
-      <text>PROM 2025 Parent Consent Form</text>
+      <text user-select="true">Circuscape 定于 2025 年 12 ⽉ 12 ⽇ (星期五) 下午 17:00-19:30 在国际部中兴楼举⾏，活动会提供晚餐，请家长协助监督学⽣注意安全。晚班校车将于当天 20:00 准时从学校上中路校门发车，如果您的孩⼦需要乘坐晚班校车，请在本页最下⽅勾选站点。请学⽣与监护⼈⾃⾏负责回家交通安全，并请确保学⽣参与活动期间遵守上海中学国际部学生守则 (严禁饮酒等⾏为)，承诺校车管理规定⽂明乘车。</text>
+      <text>上海中学国际部 2025 年 11 ⽉</text>
+      <text>Circuscape 2025 Parent Consent Form</text>
       <text>Dear parents:</text>
-      <text user-select="true">PROM 2025 is scheduled to be held on Monday, June 2nd 2025, from 17:00 to 21:30. The event will be held on the YunJing Princess Cruise Ship (Huangpu River 16-1 Dock) and dinner will be provided. Please assist in supervising your child’s safety and ensure that your child is not in violation of the SHSID Guidelines for Students (behaviors include, but are not limited to, drinking alcohol, are in violation and are strictly forbidden) during the event.</text>
+      <text user-select="true">Circuscape 2025 is scheduled to be held on Friday, December 12th 2025, from 17:00 to 19:30. The event will be held at SHSID Zhongxing Building and dinner will be provided. Please assist in supervising your child’s safety and ensure that your child is not in violation of the SHSID Guidelines for Students (behaviors include, but are not limited to, drinking alcohol, are in violation and are strictly forbidden) during the event. The late school bus will depart from campus at 20:00 from the Shangzhong Road school gate. Please select the destination at the bottom of this page if your child wishes to take the late bus service. Hence, you ensure that your child will strictly abide by the school’s regulations while taking the late bus.</text>
       <text>Shanghai High School International Divison</text>
-      <text>May 2025</text>
+      <text>November 2025</text>
       <text>输入学生电子签名 Input Student Signature</text>
       <view class="student-list-search-container">
         <input class="student-search-textfield" placeholder="学生签名 Student Signature" placeholder-class="student-search-textfield-placeholder" bindchange="handleStuInput"/>
@@ -38,7 +41,7 @@
       </view>
     </view>
   </view>
-  <!-- <view id="any-ticket-option-container" wx:if="{{meal}}">
+  <view id="any-ticket-option-container" wx:if="{{meal}}">
     <view class="heading-text">Browse Meal Options</view>
     <view class="status-{{mealSelectionClass}}">Current Saved Option: {{mealSelection}}</view>
     <view class="option-row" bindtap="cheeseTap">
@@ -47,7 +50,7 @@
         <image class="option-toggle" src="/icons/selector{{cheese ? '-selected' : ''}}.svg">
         </image>
       </view>
-      <view id="option-image" class="cheese-option"></view>
+      <image id="option-image" src="./cheese.png"></image>
     </view>
     <view class="option-row" bindtap="fishTap">
       <view class="option-header">
@@ -55,23 +58,23 @@
         <image class="option-toggle" src="/icons/selector{{fish ? '-selected' : ''}}.svg">
         </image>
       </view>
-      <view id="option-image" class="fish-option"></view>
+      <image id="option-image" src="./fish.png"></image>
     </view>
     <view class="button" id="add-submit-button">
       <view class="button" bindtap="onSaveDinner" id="submit-button">
         <text class="button-text">Save</text>
       </view>
     </view>
-  </view> -->
+  </view>
   <view id="any-ticket-option-container" wx:if="{{house}}">
-    <view class="heading-text">Table Groups Sign-Up</view>
+    <view class="heading-text">Escape Room Sign-Up</view>
     <view wx:if="{{!houseStatus}}">
       <view wx:if="{{allowHouse}}">
         <block wx:if="{{showStudentChoose}}">
         <view id="option-subheading">
-          <text>No Table Group</text>
+          <text>No Escape Room Group</text>
           <text>Search and select your group members below. Only participants holding a valid ticket will be displayed.</text>
-          <text>Your group size must be between {{houseMin}} to {{houseMax}} people. If you want to sign-up individually, directly click "Next".</text>
+          <text>Your group size must be between {{houseMin}} to {{houseMax}} people.</text>
         </view>
         <text class="big-title-sub-text" id="">{{totalSelected}}/{{houseMax}} guests selected</text>
       <view class="student-list-container" id="multi-select-student-list-container">
@@ -108,18 +111,19 @@
     </view>
     <view wx:else>
       <view id="option-subheading">
-          <text>No Table Group</text>
-          <text>We're sorry, sign-ups for table groups are currently full. If you have any concerns, please contact the ASB.</text>
+          <text>No Escape Room Group</text>
+          <text>We're sorry, sign-ups for the escape room is currently full. If you have any concerns, please contact the ASB.</text>
         </view>
     </view>
   </view>
   <view wx:else>
     <view id="option-subheading">
-      <text>Registered Table Group</text>
-      <text>You are registered in a table group, view your group members below. If you think this was a mistake, contact the ASB.</text>
+      <text>Registered Escape Room Group</text>
+      <text>You are registered for the escape room, view your group members below. If you think this was a mistake, contact the ASB.</text>
     </view>
     <view id="house-display-container">
-      <text class="subheading-text">Table #{{houseNumber}} Guests</text>
+      <!-- <text class="subheading-text">Table #{{houseNumber}} Guests</text> -->
+      <text class="subheading-text">Group Guests</text>
       <block wx:for="{{houseData}}" wx:key="id">
         <view class="student-select-container-block">
           <view class="student-select-left-block">

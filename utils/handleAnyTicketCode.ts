@@ -85,26 +85,26 @@ export async function handleAnyTicketCode(obj: string, x: string) {
   }
   
   // handle the code
-  if (keyToValueMap.get("event")==="inputTicketEventId25") {
+  if (keyToValueMap.get("event")==="CS25") {
     if (keyToValueMap.get("type")==="ticketCode") {
       let scannedTicketId = String.fromCharCode(...keyToValueMap.get("dat"));
       if (obj !== null) {
-        let getTicketData = await wx.cloud.database().collection("TedXTickets").where({
+        let getTicketData = await wx.cloud.database().collection("CircuscapeTickets").where({
           ticketId: scannedTicketId,
         }).get();
         if (getTicketData.data.length === 0) {
-          reportCodeScanError(`This TEDx Youth Ticket Code is invalid.`);
+          reportCodeScanError(`This Circuscape Ticket Code is invalid.`);
           return "invalid";
         }
         else {
           return ["ticketCode",scannedTicketId];
         }
       } else {
-        reportCodeScanError(`Your account is not authorized to scan TEDx Youth Ticket Codes.`);
+        reportCodeScanError(`Your account is not authorized to scan Circuscape Ticket Codes.`);
         return "invalid";
       }
     } else {
-      reportCodeScanError(`This TEDx Youth Code is of unknown type ${keyToValueMap.get("type")}.`);
+      reportCodeScanError(`This Circuscape Code is of unknown type ${keyToValueMap.get("type")}.`);
       return "invalid";
     }
   }

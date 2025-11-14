@@ -2,9 +2,9 @@
 #SuggestionsBoxAdminMainView {
     display: flex;
     flex-direction: column;
-    padding-top: 10px;
-    padding-bottom: 80px;
     padding: 0 16px;
+    padding-top: 110px;
+    padding-bottom: 80px;
     margin-bottom: 50px;
     min-height: 100vh;
     box-sizing: border-box;

@@ -10,7 +10,13 @@ db = cloud.database();
 
 /*
 Required trigger 
- "0 0 * * * * *"
+  "triggers": [
+    {
+      "name": "myTrigger",
+      "type": "timer",
+      "config": "0 0 * * * * *"
+    }
+  ]
 have been disabled for cost reasons
 */
 

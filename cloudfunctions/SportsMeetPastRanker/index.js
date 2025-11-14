@@ -7,7 +7,17 @@ cloud.init({
 
 let db = cloud.database();
 
-// required trigger "0 */5 * * * * *" have been disabled for cost reasons
+/*
+Required trigger
+  "triggers": [
+    {
+      "name": "myTrigger",
+      "type": "timer", */
+//      "config": "0 */5 * * * * *"
+/*    }
+  ]
+have been disabled for cost reasons
+*/
 
 // Helper method to process async tasks in batches to avoid rate limits
 async function runBatchedUpdates(tasks, batchSize = 20, delay = 100) {

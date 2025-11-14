@@ -237,7 +237,6 @@ Component({
         });
       }
       if (eventClickedId === "Circuscape2025") {
-        console.log("Circuscape");
         wx.navigateTo({
           url: '/pages/AnyTicketMainPage/AnyTicketMainPage',
           success: (res) => {

@@ -3,9 +3,9 @@
 #any-ticket-admin-panel-container {
   display: flex;
   flex-direction: column;
-  padding-top: 10px;
-  padding-bottom: 80px;
   padding: 0 16px;
+  padding-top: 110px;
+  padding-bottom: 80px;
   margin-bottom: 50px;
   min-height: 100vh;
   box-sizing: border-box;
@@ -51,7 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 13px;
+  margin-top: 15px;
 }
 .option-toggle {
   width: 24px;
@@ -62,7 +62,7 @@
 }
 #save-button {
   background-color: #D2E3FA;
-  margin-top: 26px;
+  margin-top: 50px;
 }
 #save-button text {
   color: #3180E9;

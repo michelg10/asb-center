@@ -1,4 +1,7 @@
 <view id="any-ticket-master-container">
+  <view class="back-button" bindtap="backButtonTapped" bindtouchstart="buttonTapVibrate">
+    <image src="/icons/chevron-right.svg" class="back-image"></image>
+  </view>
   <text class="big-title-text">Admin</text>
   <text class="heading-text">Validate Tickets</text>
   <view id="ticket-option-subheading">
