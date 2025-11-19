@@ -134,6 +134,9 @@ Component({
         return date.toLocaleString('zh-CN', options);
       },
       adminButtonTapped: async function(){
+        wx.vibrateShort({
+          type: "light"
+        });
         if (this.data.allowValidation){
           wx.navigateTo({
             url: "/pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
@@ -152,6 +155,9 @@ Component({
         }
       },
       consentFormTap: function(){
+        wx.vibrateShort({
+          type: "light"
+        });
         if(this.data.allowConsent && !this.data.consentDone){
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
@@ -165,6 +171,9 @@ Component({
         }
       },
       mealOptionTap: function(){
+        wx.vibrateShort({
+          type: "light"
+        });
         if(this.data.allowMeal){
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
@@ -178,6 +187,9 @@ Component({
         }
       },
       houseTap: function(){
+        wx.vibrateShort({
+          type: "light"
+        });
         if(this.data.allowHouse){
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
@@ -209,6 +221,9 @@ Component({
       //   }
       // },
       suggestionsTap: function() {
+        wx.vibrateShort({
+          type: "light"
+        });
         wx.navigateTo({
           url: '/pages/AnyEventIdea/AnyEventIdea',
           success: (res) => {
@@ -218,6 +233,9 @@ Component({
         })
       },
       musicRequestTap: function() {
+        wx.vibrateShort({
+          type: "light"
+        });
         if(this.data.allowMusic){
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
@@ -249,6 +267,9 @@ Component({
       //   }
       // },
       adminStationMode: function(){
+        wx.vibrateShort({
+          type: "light"
+        });
         if (this.data.canIssueTicketToGuest) {
           wx.navigateTo({
             url: "/pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
@@ -335,7 +356,7 @@ Component({
         })
         this.setData({
           allowPreOptions: this.data.allowConsent || this.data.allowMeal,
-          allowLateOptions: this.data.allowMusic || this.data.allowHouse,
+          allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
           consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
           houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
@@ -537,7 +558,7 @@ Component({
           })
           this.setData({
             allowPreOptions: this.data.allowConsent || this.data.allowMeal,
-            allowLateOptions: this.data.allowMusic || this.data.allowHouse,
+            allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
             consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
             mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
             houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),

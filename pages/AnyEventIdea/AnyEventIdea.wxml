@@ -4,7 +4,7 @@
 <view id="main-container" class="sb-background-image-background-style {{hasBeenSubmitted ? 'main-container-fullscreen' : ''}}">
   <view id="suggestions-box-heading-container">
     <text class="big-title-text" id="sb-title">{{eventName}}</text>
-    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped">
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindtouchstart="buttonTapVibrate">
       <image src="/icons/bolt.svg" class="admin-image"></image>
     </view>
   </view>
@@ -43,4 +43,4 @@
         <view id="flex-layout-container"></view>
     </block>
 </view>
-<view id="language-choose" bindtap="changeLanguage">{{language === 'en' ? "Eng" : "中"}}</view>
+<view id="language-choose" bindtap="changeLanguage" bindtouchstart="buttonTapVibrate">{{language === 'en' ? "Eng" : "中"}}</view>

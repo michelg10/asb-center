@@ -74,7 +74,7 @@ Component({
           groupLimit: res.data[0].limit
         });
       });
-      await this.updateFields();
+      // await this.updateFields();
       wx.hideLoading();
     },
     backButtonTapped: function() {
@@ -88,29 +88,29 @@ Component({
         type: "medium"
       });
     },
-    updateFields: async function(){
-      wx.showLoading({
-        title: "Loading...",
-        mask: true,
-      });
-      const tableRes = await allCollectionsData(this.data.db, "PromTables");
-      const rawTableData = tableRes.data;
-      const tableGroups: tableGroup[] = rawTableData.map((doc: any) => {
-        return {
-          tableId: doc.tableId,
-          limit: doc.limit,
-          guests: doc.guests
-        };
-      });
-      this.setData({
-        tableGroups,
-      });
-      let newTableSelect: boolean[] = this.data.tableGroups.map(() => false);
-      this.setData({
-        tableSelect: newTableSelect
-      });
-      wx.hideLoading();
-    },
+    // updateFields: async function(){
+    //   wx.showLoading({
+    //     title: "Loading...",
+    //     mask: true,
+    //   });
+    //   const tableRes = await allCollectionsData(this.data.db, "PromTables");
+    //   const rawTableData = tableRes.data;
+    //   const tableGroups: tableGroup[] = rawTableData.map((doc: any) => {
+    //     return {
+    //       tableId: doc.tableId,
+    //       limit: doc.limit,
+    //       guests: doc.guests
+    //     };
+    //   });
+    //   this.setData({
+    //     tableGroups,
+    //   });
+    //   let newTableSelect: boolean[] = this.data.tableGroups.map(() => false);
+    //   this.setData({
+    //     tableSelect: newTableSelect
+    //   });
+    //   wx.hideLoading();
+    // },
     handleTableChoose: function(x: any) {
       const item = x.currentTarget.dataset.chosenid;
       if (this.data.studentData.length + item.guests.length <= item.limit && item.guests.length < item.limit){
@@ -144,22 +144,26 @@ Component({
             wx.showLoading({
               title: "Loading...",
               mask: true,
-            });            
-            let checkGroupLimit = await this.data.db.collection("PromTables").where({
-              tableId: this.data.selectedTable + 1,
+            });
+            let checkGroupLimit = await this.data.db.collection("CircuscapeDeadlines").where({
+              optionId: "house",
             }).get();
-            if (checkGroupLimit.data[0].guests.length + this.data.studentData.length > checkGroupLimit.data[0].limit){
-              wx.showModal({
-                title: "Table Unavailable",
-                content: "We're sorry, this table is currently full or has insufficient capacity remaining.",
-                showCancel: false,
-                confirmText: "Dismiss"
-              });
-              allowHouseFinal = false;
-              await this.updateFields();
-              wx.hideLoading();
-              return;
-            } else if (this.data.studentData.length<this.data.sizeMin || this.data.studentData.length>this.data.sizeMax){
+            // let checkGroupLimit = await this.data.db.collection("PromTables").where({
+            //   tableId: this.data.selectedTable + 1,
+            // }).get();
+            // if (checkGroupLimit.data[0].guests.length + this.data.studentData.length > checkGroupLimit.data[0].limit){
+            //   wx.showModal({
+            //     title: "Table Unavailable",
+            //     content: "We're sorry, this table is currently full or has insufficient capacity remaining.",
+            //     showCancel: false,
+            //     confirmText: "Dismiss"
+            //   });
+            //   allowHouseFinal = false;
+            //   await this.updateFields();
+            //   wx.hideLoading();
+            //   return;
+            // } else 
+            if (this.data.studentData.length<this.data.sizeMin || this.data.studentData.length>this.data.sizeMax){
               wx.showModal({
                 title: "Invalid Selection",
                 content: `Your group size must be between ${this.data.sizeMin} to ${this.data.sizeMax} people.`,
@@ -186,7 +190,7 @@ Component({
                     let getStudentNickname = checkStudentName.data[0].nickname as string;
                     wx.showModal({
                       title: "Group Member Unavailable",
-                      content: `${getStudentNickname} is already in another table group.`,
+                      content: `${getStudentNickname} is already in another escape room group.`,
                       showCancel: false,
                       confirmText: "Return",
                       success: (res) => {
@@ -203,44 +207,44 @@ Component({
                 }
               }
               if (allowHouseFinal) {
-                const guestIds: string[] = [
-                  ...this.data.selectedTableGuests.map(s => s.id),
-                  ...this.data.studentData.map(s => s.id)
-                ];
-                await wx.cloud.callFunction({
-                  name: "AnyTicketSetStudentData",
-                  data: {
-                    type: "houseModifyTable",
-                    tableId: this.data.selectedTable+1,
-                    guests: guestIds
-                  }
-                })
+                // const guestIds: string[] = [
+                //   ...this.data.selectedTableGuests.map(s => s.id),
+                //   ...this.data.studentData.map(s => s.id)
+                // ];
+                // await wx.cloud.callFunction({
+                //   name: "AnyTicketSetStudentData",
+                //   data: {
+                //     type: "houseModifyTable",
+                //     tableId: this.data.selectedTable+1,
+                //     guests: guestIds
+                //   }
+                // })
                 for(let i=0;i<this.data.studentData.length;i++){
                   // console.log(this.data.studentData[i].id);
-                  // let checkStudent = await this.data.db.collection("CircuscapeStudentData").where({
-                  //   userId: this.data.studentData[i].id,
-                  // }).get();
-                  // if (checkStudent && checkStudent.data.length!==0){
-                  //   console.log("houseModify");
-                  //   await wx.cloud.callFunction({
-                  //     name: "AnyTicketSetStudentData",
-                  //     data: {
-                  //       type: "houseModify",
-                  //       userId: this.data.studentData[i].id,
-                  //       house: checkGroupLimit.data[0].current+1
-                  //     }
-                  //   })
-                  // }else{
+                  let checkStudent = await this.data.db.collection("CircuscapeStudentData").where({
+                    userId: this.data.studentData[i].id,
+                  }).get();
+                  if (checkStudent && checkStudent.data.length!==0){
+                    console.log("houseModify");
+                    await wx.cloud.callFunction({
+                      name: "AnyTicketSetStudentData",
+                      data: {
+                        type: "houseModify",
+                        userId: this.data.studentData[i].id,
+                        house: checkGroupLimit.data[0].current+1
+                      }
+                    })
+                  }else{
                     // console.log("houseAdd");
                     await wx.cloud.callFunction({
                       name: "AnyTicketSetStudentData",
                       data: {
                         type: "houseAdd",
                         userId: this.data.studentData[i].id,
-                        // house: checkGroupLimit.data[0].current+1,
+                        house: checkGroupLimit.data[0].current+1,
                       }
                     })
-                  // }
+                  }
                 }
                 wx.hideLoading();
                 wx.navigateBack();

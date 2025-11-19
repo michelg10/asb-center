@@ -4,7 +4,7 @@
   </view>
   <view id="any-ticket-heading-container">
     <text class="big-title-text">{{eventName}}</text>
-    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindlongpress="adminStationMode">
+    <view wx:if="{{isAdmin}}" class="admin-button" bindtap="adminButtonTapped" bindlongpress="adminStationMode" bindtouchstart="buttonTapVibrate">
       <image src="/icons/bolt.svg" class="admin-image"></image>
     </view>
   </view>
@@ -15,6 +15,7 @@
       <view id="any-ticket-display-container" wx:if="{{holderStatus}}">
         <image id="any-ticket-ticket" src="./ticket.png"></image>
         <text class="subheading-text">Purchased Event Ticket</text>
+        <text class="sub-text">Please present your physical event ticket for entry to Circuscape 2025.</text>
         <!--view id="ticket-code-code-container">
           <view class="secure-code-preview-container">
             <view id="ticket-display-title">
@@ -62,12 +63,12 @@
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/suggestions.png"></image>
           </view>
         </view> -->
-        <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
+        <view id="any-ticket-event-option-row" wx:if="{{!hideHouse}}">
           <view id="event-option-full" bindtap="houseTap">
             <text>Click to Sign-Up for the Escape Room!</text>
             <view id="date-label">Available From {{houseStartDisplay}}</view>
             <view id="date-label">Until {{houseEndDisplay}}</view>
-            <view id="event-option-restrict-label" wx:if="{{!allowPrompose}}">Restricted</view>
+            <view id="event-option-restrict-label" wx:if="{{!allowHouse}}">Restricted</view>
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/house.png"></image>
           </view>
         </view>

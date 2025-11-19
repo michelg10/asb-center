@@ -82,7 +82,8 @@ exports.main = async (event, context) => {
       await db.collection('CircuscapeStudentData').add({
         data: {
           userId: event.userId,
-          house: true,
+          // house: true,
+          house: event.house,
           timestamp: Date.now()
         }
       });

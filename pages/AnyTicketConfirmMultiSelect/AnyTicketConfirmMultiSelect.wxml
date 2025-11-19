@@ -4,8 +4,8 @@
   </view>
   <text class="big-title-text">{{eventName}}</text>
   <view class="date-text">Ends: {{dueDate}}</view>
-  <view class="heading-text">Table Groups Sign-Up</view>
-  <text class="subheading-text">Group Members</text>
+  <view class="heading-text">Escape Room Sign-Up</view>
+  <!-- <text class="subheading-text">Group Members</text> -->
   <text class="big-title-sub-text">{{studentData.length}}/{{sizeMax}} guests selected</text>
   <view id="selection-confirmation-list">
     <block wx:for="{{studentData}}" wx:key="id">
@@ -17,7 +17,7 @@
       </view>
     </block>
   </view>
-  <text class="subheading-text">Select Table</text>
+  <!-- <text class="subheading-text">Select Table</text>
   <text class="sub-text">Please view the seating chart below, and click on the corresponding table number in the scroll menu to select and view its group members. Sign-ups are offered on a first come, first served basis!</text>
   <view class="seating-arrangement-container">
     <image id="seating-arrangement" src="/pages/AnyTicketConfirmMultiSelect/seating.png"></image>
@@ -52,7 +52,7 @@
         </view>
       </block>
     </view>
-  </view>
+  </view> -->
   <view class="button" bindtap="confirmClicked" id="confirm-button">
     <text class="button-text">Confirm</text>
   </view>

@@ -35,7 +35,7 @@ type ComponentDataInterface = {
   userSelect: boolean[],
   matchingIndexes: number[],
   houseStatus: boolean,
-  houseNumber: number,
+  // houseNumber: number,
   allowHouse: boolean,
   showStudentChoose: boolean,
   houseMin: number,
@@ -547,79 +547,95 @@ Component({
         }
       },
       displayStudentsInSameHouse: async function() {
-        if (this.data.userData && this.data.userData.student){
-          wx.showLoading({
-            title: "Loading...",
-            mask: true,
-          });
-          const allStudentRes = await this.data.cacheSingleton.getStudentData();
-          const res = await this.data.db.collection("PromTables").where({
-            guests: this.data.db.command.elemMatch(this.data.db.command.eq(this.data.userData.student.id))
-          }).limit(1).get();
-          const tableDoc = res.data[0];
-          const guestIds: string[] = tableDoc.guests;
-          const allStudentData = allStudentRes;
-          const tmpStudentData: Student[] = [];
-          const matchingStudentDataIndexes: number[] = [];
-          for (let i = 0; i < guestIds.length; i++) {
-            const id = guestIds[i];
-            const match = allStudentData.find(stu => stu.id === id);
-            if (match) {
-              tmpStudentData.push(match);
-              matchingStudentDataIndexes.push(i);
+        wx.showLoading({
+          title: "Loading...",
+          mask: true,
+        });
+        // if (this.data.userData && this.data.userData.student){
+        //   wx.showLoading({
+        //     title: "Loading...",
+        //     mask: true,
+        //   });
+        //   const allStudentRes = await this.data.cacheSingleton.getStudentData();
+        //   // const res = await this.data.db.collection("PromTables").where({
+        //   //   guests: this.data.db.command.elemMatch(this.data.db.command.eq(this.data.userData.student.id))
+        //   // }).limit(1).get();
+        //   // const tableDoc = res.data[0];
+        //   // const guestIds: string[] = tableDoc.guests;
+        //   const allStudentData = allStudentRes;
+        //   const tmpStudentData: Student[] = [];
+        //   const matchingStudentDataIndexes: number[] = [];
+        //   // for (let i = 0; i < guestIds.length; i++) {
+        //   //   const id = guestIds[i];
+        //   //   const match = allStudentData.find(stu => stu.id === id);
+        //   //   if (match) {
+        //   //     tmpStudentData.push(match);
+        //   //     matchingStudentDataIndexes.push(i);
+        //   //   }
+        //   // }
+        //   this.setData({
+        //     houseData: tmpStudentData,
+        //     houseIndex: matchingStudentDataIndexes,
+        //     // houseNumber: res.data[0].tableId
+        //   });
+        //   wx.hideLoading();
+        // } else {
+        //   wx.showModal({
+        //     title: "Not Registered",
+        //     content: "You must complete registration to participate in this event.",
+        //     showCancel: false,
+        //     confirmText: "Dismiss",
+        //   })
+        // }
+        if(this.data.userData && this.data.userData.student) {
+          try {
+            let studentData = await this.data.db.collection("CircuscapeStudentData").where({
+              userId: this.data.userData.student?.id,
+            }).get();
+            let houseNumber = studentData.data[0].house;
+            let houseStudents = await this.data.db.collection("CircuscapeStudentData").where({
+              house: houseNumber,
+            }).get();
+            let matchingStudentDataIndexes: number[] = [];
+            let tmpStudentData: Student[] = [];
+            let promises = [];
+            for (let j = 0; j < houseStudents.data.length; j++) {
+              let studentPromise = this.data.db.collection("studentData").where({
+                _id: houseStudents.data[j].userId,
+              }).get().then((res) => {
+                tmpStudentData.push(new Student(
+                  res.data[0]._id as string,
+                  res.data[0].nickname,
+                  res.data[0].uniqueNickname,
+                  res.data[0].englishName,
+                  res.data[0].chineseName,
+                  res.data[0].grade,
+                  res.data[0].class,
+                  res.data[0].pseudoId
+                ));
+                matchingStudentDataIndexes.push(j);
+              });
+              promises.push(studentPromise);
             }
+            Promise.all(promises).then(() => {
+              this.setData({
+                houseData: tmpStudentData,
+                houseIndex: matchingStudentDataIndexes
+              });
+            });
+            wx.hideLoading();
+          } catch (error) {
+            wx.hideLoading();
+            console.error("Error retrieving house data:", error);
           }
-          this.setData({
-            houseData: tmpStudentData,
-            houseIndex: matchingStudentDataIndexes,
-            houseNumber: res.data[0].tableId
-          });
-          wx.hideLoading();
         } else {
+          wx.hideLoading();
           wx.showModal({
             title: "Not Registered",
             content: "You must complete registration to participate in this event.",
             showCancel: false,
             confirmText: "Dismiss",
           })
-        }
-        try {
-          let studentData = await this.data.db.collection("CircuscapeStudentData").where({
-            userId: this.data.userData.student?.id,
-          }).get();
-          let houseNumber = studentData.data[0].house;
-          let houseStudents = await this.data.db.collection("CircuscapeStudentData").where({
-            house: houseNumber,
-          }).get();
-          let matchingStudentDataIndexes: number[] = [];
-          let tmpStudentData: Student[] = [];
-          let promises = [];
-          for (let j = 0; j < houseStudents.data.length; j++) {
-            let studentPromise = this.data.db.collection("studentData").where({
-              _id: houseStudents.data[j].userId,
-            }).get().then((res) => {
-              tmpStudentData.push(new Student(
-                res.data[0]._id as string,
-                res.data[0].nickname,
-                res.data[0].uniqueNickname,
-                res.data[0].englishName,
-                res.data[0].chineseName,
-                res.data[0].grade,
-                res.data[0].class,
-                res.data[0].pseudoId
-              ));
-              matchingStudentDataIndexes.push(j);
-            });
-            promises.push(studentPromise);
-          }
-          Promise.all(promises).then(() => {
-            this.setData({
-              houseData: tmpStudentData,
-              houseIndex: matchingStudentDataIndexes
-            });
-          });
-        } catch (error) {
-          console.error("Error retrieving house data:", error);
         }
       },      
       cheeseTap: function(){
@@ -911,7 +927,7 @@ Component({
       else{
         wx.showModal({
           title: "Sign-Up Full",
-          content: "We're sorry, sign-ups for table groups are currently full.",
+          content: "We're sorry, sign-ups for the escape room are currently full.",
           showCancel: false,
           confirmText: "Dismiss"
         });

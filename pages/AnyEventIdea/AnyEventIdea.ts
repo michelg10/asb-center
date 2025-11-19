@@ -102,6 +102,9 @@ Component({
             });
         },
         changeLanguage: function() {
+            wx.vibrateShort({
+              type: "light"
+            });
             let nextLang;
             if (this.data.language === "en") {
                 nextLang = "ch";
@@ -154,6 +157,9 @@ Component({
             }
         },
         adminButtonTapped: function() {
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/AnyEventIdeaAdminPanel/AnyEventIdeaAdminPanel",
             success: (res) => {
