@@ -155,10 +155,10 @@ Component({
         }
       },
       consentFormTap: function(){
-        wx.vibrateShort({
-          type: "light"
-        });
         if(this.data.allowConsent && !this.data.consentDone){
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
             success: (res) => {
@@ -171,10 +171,10 @@ Component({
         }
       },
       mealOptionTap: function(){
-        wx.vibrateShort({
-          type: "light"
-        });
         if(this.data.allowMeal){
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
             success: (res) => {
@@ -187,10 +187,10 @@ Component({
         }
       },
       houseTap: function(){
-        wx.vibrateShort({
-          type: "light"
-        });
         if(this.data.allowHouse){
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
             success: (res) => {
@@ -221,22 +221,24 @@ Component({
       //   }
       // },
       suggestionsTap: function() {
-        wx.vibrateShort({
-          type: "light"
-        });
-        wx.navigateTo({
-          url: '/pages/AnyEventIdea/AnyEventIdea',
-          success: (res) => {
-            res.eventChannel.emit('userData', this.data.userData);
-            res.eventChannel.emit('eventName', "Circuscape 2025 Suggestions");
-          }
-        })
+        if(this.data.allowSuggestions){
+          wx.vibrateShort({
+            type: "light"
+          });
+          wx.navigateTo({
+            url: '/pages/AnyEventIdea/AnyEventIdea',
+            success: (res) => {
+              res.eventChannel.emit('userData', this.data.userData);
+              res.eventChannel.emit('eventName', "Circuscape 2025 Suggestions");
+            }
+          })
+        }
       },
       musicRequestTap: function() {
-        wx.vibrateShort({
-          type: "light"
-        });
         if(this.data.allowMusic){
+          wx.vibrateShort({
+            type: "light"
+          });
           wx.navigateTo({
             url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
             success: (res) => {

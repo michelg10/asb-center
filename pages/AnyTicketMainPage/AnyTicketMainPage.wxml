@@ -72,7 +72,7 @@
             <image id="event-option-icon" src="/pages/AnyTicketMainPage/house.png"></image>
           </view>
         </view>
-        <view id="any-ticket-event-option-row">
+        <view id="any-ticket-event-option-row" wx:if="{{allowPreOptions}}">
           <view id="event-option" bindtap="consentFormTap">
             <text>Click to Submit a Consent Form</text>
             <view id="date-label" wx:if="{{allowConsent && !consentDone}}">Ends: {{consentEndDisplay}}</view>

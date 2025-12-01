@@ -587,7 +587,7 @@ Component({
     footerCreditsTap: function () {
       wx.showModal({
         title: 'ASB Center Credits',
-        content: "Founder: Michel Guo '23\nMaintaining Developer: Michael Yu '26",
+        content: "Founder: Michel Guo '23\nMaintaining Developer: Michael Yu '26 & Chingmo Zhou '27",
         showCancel: false,
         confirmText: 'Dismiss',
       })
