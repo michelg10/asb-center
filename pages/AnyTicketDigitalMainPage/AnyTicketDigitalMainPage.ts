@@ -14,52 +14,48 @@ type ComponentDataInterface = {
     holderStatus: boolean | false,
     holderLostStatus: boolean | false,
     holderTicketId: string,
-    // ticketUsed: boolean | false,
+    ticketUsed: boolean | false,
     isAdmin: boolean,
     canIssueTicketToGuest: boolean,
-    consentDone: boolean | false,
-    allowConsent: boolean | false,
-    allowMeal: boolean | false,
+    // consentDone: boolean | false,
+    // allowConsent: boolean | false,
     allowHouse: boolean | false,
     hideHouse: boolean | false,
-    // allowPerf: boolean | false,
+    allowPerf: boolean | false,
     allowSuggestions: boolean | false,
-    // allowPrompose: boolean | false,
+    allowPrompose: boolean | false,
     allowMusic: boolean | false,
-    // allowTicket: boolean | false,
+    allowTicket: boolean | false,
     allowValidation: boolean | false,
     allowPreOptions: boolean | true,
     allowLateOptions: boolean | true,
     db: DB.Database,
     errorMessage: string | undefined,
-    consentStart: number,
-    mealStart: number,
+    // consentStart: number,
     houseStart: number,
-    // perfStart: number,
+    perfStart: number,
     suggestionsStart: number,
-    // promposeStart: number,
+    promposeStart: number,
     musicStart: number,
-    // ticketStart: number,
+    ticketStart: number,
     eventStart: number,
-    consentEnd: number,
-    mealEnd: number,
+    // consentEnd: number,
     houseEnd: number,
-    // perfEnd: number,
+    perfEnd: number,
     suggestionsEnd: number,
-    // promposeEnd: number,
+    promposeEnd: number,
     musicEnd: number,
-    // ticketEnd: number,
+    ticketEnd: number,
     eventEnd: number,
-    consentEndDisplay: string,
-    mealEndDisplay: string,
+    // consentEndDisplay: string,
     houseEndDisplay: string,
     houseStartDisplay: string,
-    // perfEndDisplay: string,
+    perfEndDisplay: string,
     suggestionsEndDisplay: string,
-    // promposeEndDisplay: string,
+    promposeEndDisplay: string,
     musicEndDisplay: string,
-    // ticketStartDisplay: string,
-    // ticketEndDisplay: string,
+    ticketStartDisplay: string,
+    ticketEndDisplay: string,
     recomputeCaller: any,
     viewVisible: boolean,
     codeLastGen: string
@@ -154,38 +150,22 @@ Component({
           })
         }
       },
-      consentFormTap: function(){
-        if(this.data.allowConsent && !this.data.consentDone){
-          wx.vibrateShort({
-            type: "light"
-          });
-          wx.navigateTo({
-            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-            success: (res) => {
-              res.eventChannel.emit("eventName", this.data.eventName);
-              res.eventChannel.emit("option", "consent");
-              res.eventChannel.emit("dueDate", this.data.consentEndDisplay);
-              res.eventChannel.emit("userData", this.data.userData);
-            }
-          });
-        }
-      },
-      mealOptionTap: function(){
-        if(this.data.allowMeal){
-          wx.vibrateShort({
-            type: "light"
-          });
-          wx.navigateTo({
-            url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
-            success: (res) => {
-              res.eventChannel.emit("eventName", this.data.eventName);
-              res.eventChannel.emit("option", "meal");
-              res.eventChannel.emit("dueDate", this.data.mealEndDisplay);
-              res.eventChannel.emit("userData", this.data.userData);
-            }
-          });
-        }
-      },
+      // consentFormTap: function(){
+      //   if(this.data.allowConsent && !this.data.consentDone){
+      //     wx.vibrateShort({
+      //       type: "light"
+      //     });
+      //     wx.navigateTo({
+      //       url: "/pages/AnyTicketSubOption/AnyTicketSubOption",
+      //       success: (res) => {
+      //         res.eventChannel.emit("eventName", this.data.eventName);
+      //         res.eventChannel.emit("option", "consent");
+      //         res.eventChannel.emit("dueDate", this.data.consentEndDisplay);
+      //         res.eventChannel.emit("userData", this.data.userData);
+      //       }
+      //     });
+      //   }
+      // },
       houseTap: function(){
         if(this.data.allowHouse){
           wx.vibrateShort({
@@ -202,24 +182,22 @@ Component({
           });
         }
       },
-      // performanceTap: function(){
-      //   if(this.data.allowPerf){
-      //     wx.openEmbeddedMiniProgram({
-      //       appId: 'wxebadf544ddae62cb',
-      //       path: 'pages/webview/index?sid=21147588&hash=vx69&navigateBackMiniProgram=true',
-      //       allowFullScreen: true
-      //     });
-      //   }
-      // },
-      // promposalTap: function(){
-      //   if(this.data.allowPrompose){
-      //     wx.openEmbeddedMiniProgram({
-      //       appId: 'wxebadf544ddae62cb',
-      //       path: 'pages/webview/index?sid=21147569&hash=2o6b&navigateBackMiniProgram=true',
-      //       allowFullScreen: true
-      //     });
-      //   }
-      // },
+      performanceTap: function(){
+        if(this.data.allowPerf){
+          wx.openEmbeddedMiniProgram({
+            appId: 'wxebadf544ddae62cb',
+            path: 'pages/webview/index?sid=26249988&hash=msqg&navigateBackMiniProgram=true',
+          });
+        }
+      },
+      promposalTap: function(){
+        if(this.data.allowPrompose){
+          wx.openEmbeddedMiniProgram({
+            appId: 'wxebadf544ddae62cb',
+            path: 'pages/webview/index?sid=26250034&hash=c24m&navigateBackMiniProgram=true',
+          });
+        }
+      },
       suggestionsTap: function() {
         if(this.data.allowSuggestions){
           wx.vibrateShort({
@@ -250,24 +228,23 @@ Component({
           });
         }
       },
-      // ticketTap: function(){
-      //   if(this.data.allowTicket){
-      //     if(this.data.userData.student){
-      //       wx.openEmbeddedMiniProgram({
-      //         appId: 'wxebadf544ddae62cb',
-      //         path: 'pages/webview/index?sid=21597613&hash=xd16&navigateBackMiniProgram=true',
-      //         allowFullScreen: true
-      //       });
-      //     } else {
-      //       wx.showModal({
-      //         title: "Not Registered",
-      //         content: "You must complete registration to participate in this event.",
-      //         showCancel: false,
-      //         confirmText: "Dismiss",
-      //       })
-      //     }
-      //   }
-      // },
+      ticketTap: function(){
+        if(this.data.allowTicket){
+          if(this.data.userData.student){
+            wx.openEmbeddedMiniProgram({
+              appId: 'wxebadf544ddae62cb',
+              path: 'pages/webview/index?sid=26249218&hash=ty4v&navigateBackMiniProgram=true',
+            });
+          } else {
+            wx.showModal({
+              title: "Not Registered",
+              content: "You must complete registration to participate in this event.",
+              showCancel: false,
+              confirmText: "Dismiss",
+            })
+          }
+        }
+      },
       adminStationMode: function(){
         wx.vibrateShort({
           type: "light"
@@ -284,18 +261,17 @@ Component({
       onShow: async function(){
         let deadlineRes = await this.data.db.collection("PromDeadlines").get();
         let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
-        let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
-        let getMealDeadline = deadlineRes.data.find(d => d.optionId === "meal");
-        // let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
+        // let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
+        let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
         let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
-        // let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
+        let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
         let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
-        // let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+        let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
         let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
         let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
-        if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getConsentDeadline || !getMealDeadline){
+        if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getPerfDeadline || !getPromposeDeadline || !getTicketDeadline || !getSuggestionsDeadline){
           this.setData({
-            errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
+            errorMessage: "An unexpected error occurred (GETDDLUNDEF). Please check your network connection and reload the page.",
           });
         } else if (checkErrorMsg) {
           if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
@@ -325,50 +301,46 @@ Component({
           })
         };
         this.setData({
-          consentStart: getConsentDeadline?.startTime,
-          mealStart: getMealDeadline?.startTime,
+          // consentStart: getConsentDeadline?.startTime,
           houseStart: getHouseDeadline?.startTime,
-          // perfStart: getPerfDeadline?.startTime,
+          perfStart: getPerfDeadline?.startTime,
           suggestionsStart: getSuggestionsDeadline?.startTime,
-          // promposeStart: getPromposeDeadline?.startTime,
+          promposeStart: getPromposeDeadline?.startTime,
           musicStart: getMusicDeadline?.startTime,
-          // ticketStart: getTicketDeadline?.startTime,
+          ticketStart: getTicketDeadline?.startTime,
           eventStart: getEventDeadline?.startTime,
-          consentEnd: getConsentDeadline?.endTime,
-          mealEnd: getMealDeadline?.endTime,
+          // consentEnd: getConsentDeadline?.endTime,
           houseEnd: getHouseDeadline?.endTime,
           hideHouse: getHouseDeadline?.hide,
-          // perfEnd: getPerfDeadline?.endTime,
+          perfEnd: getPerfDeadline?.endTime,
           suggestionsEnd: getSuggestionsDeadline?.endTime,
-          // promposeEnd: getPromposeDeadline?.endTime,
+          promposeEnd: getPromposeDeadline?.endTime,
           musicEnd: getMusicDeadline?.endTime,
-          // ticketEnd: getTicketDeadline?.endTime,
+          ticketEnd: getTicketDeadline?.endTime,
           eventEnd: getEventDeadline?.endTime
         });
         this.setData({
-          allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
-          allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
+          // allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
           allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
-          // allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
+          allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
           allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
-          // allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
+          allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
           allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
-          // allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
+          allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
           allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
         })
         this.setData({
-          allowPreOptions: this.data.allowConsent || this.data.allowMeal,
+          allowPreOptions: this.data.allowPrompose || this.data.allowPerf,
           allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
-          consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
-          mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
+          // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
           houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
           houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
-          // perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
+          perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
           suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
-          // promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
+          promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
           musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
-          // ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
-          // ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
+          ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
+          ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
         })
       },
       backButtonTapped: function() {
@@ -433,11 +405,11 @@ Component({
                     ticketUsed: true
                   })
                 };
-                // setTimeout(
-                //   () => {
-                //     this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
-                //   }, 500
-                // );
+                setTimeout(
+                  () => {
+                    this.data.recomputeCaller = setInterval(() => {this.recomputeCode()}, 500);
+                  }, 500
+                );
               } else {
                 if (this.data.userData.student) {
                   this.data.db.collection("PromTickets").where({
@@ -488,18 +460,17 @@ Component({
           })
           let deadlineRes = await this.data.db.collection("PromDeadlines").get();
           let getHouseDeadline = deadlineRes.data.find(d => d.optionId === "house");
-          // let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
-          let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
-          let getMealDeadline = deadlineRes.data.find(d => d.optionId === "meal");
+          let getPerfDeadline = deadlineRes.data.find(d => d.optionId === "perf");
+          // let getConsentDeadline = deadlineRes.data.find(d => d.optionId === "consent");
           let getSuggestionsDeadline = deadlineRes.data.find(d => d.optionId === "suggestions");
-          // let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
+          let getPromposeDeadline = deadlineRes.data.find(d => d.optionId === "promposal");
           let getMusicDeadline = deadlineRes.data.find(d => d.optionId === "music");
-          // let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
+          let getTicketDeadline = deadlineRes.data.find(d => d.optionId === "ticket");
           let getEventDeadline = deadlineRes.data.find(d => d.optionId === "validate");
           let checkErrorMsg = deadlineRes.data.find(d => d.optionId === "errorMsg");
-          if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getConsentDeadline || !getMealDeadline){
+          if (!getHouseDeadline || !getMusicDeadline || !getEventDeadline || !checkErrorMsg || !getPerfDeadline || !getPromposeDeadline || !getTicketDeadline || !getSuggestionsDeadline){
             this.setData({
-              errorMessage: "An unexpected error occurred (GETDDLUNDEF). Check your network connection?",
+              errorMessage: "An unexpected error occurred (GETDDLUNDEF). Please check your network connection and reload the page.",
             });
           } else if (checkErrorMsg) {
             if (checkErrorMsg.startTime<=(Date.now()/1000) && (Date.now()/1000)<=checkErrorMsg.endTime){
@@ -509,24 +480,22 @@ Component({
             }
           }
           this.setData({
-            consentStart: getConsentDeadline?.startTime,
-            mealStart: getMealDeadline?.startTime,
+            // consentStart: getConsentDeadline?.startTime,
             houseStart: getHouseDeadline?.startTime,
-            // perfStart: getPerfDeadline?.startTime,
+            perfStart: getPerfDeadline?.startTime,
             suggestionsStart: getSuggestionsDeadline?.startTime,
-            // promposeStart: getPromposeDeadline?.startTime,
+            promposeStart: getPromposeDeadline?.startTime,
             musicStart: getMusicDeadline?.startTime,
-            // ticketStart: getTicketDeadline?.startTime,
+            ticketStart: getTicketDeadline?.startTime,
             eventStart: getEventDeadline?.startTime,
-            consentEnd: getConsentDeadline?.endTime,
-            mealEnd: getMealDeadline?.endTime,
+            // consentEnd: getConsentDeadline?.endTime,
             houseEnd: getHouseDeadline?.endTime,
             hideHouse: getHouseDeadline?.hide,
-            // perfEnd: getPerfDeadline?.endTime,
+            perfEnd: getPerfDeadline?.endTime,
             suggestionsEnd: getSuggestionsDeadline?.endTime,
-            // promposeEnd: getPromposeDeadline?.endTime,
+            promposeEnd: getPromposeDeadline?.endTime,
             musicEnd: getMusicDeadline?.endTime,
-            // ticketEnd: getTicketDeadline?.endTime,
+            ticketEnd: getTicketDeadline?.endTime,
             eventEnd: getEventDeadline?.endTime
           });
             let getConsentStatus = await this.data.db.collection("PromStudentData").where({
@@ -548,29 +517,27 @@ Component({
             })
           };
           this.setData({
-            allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
-            allowMeal: this.data.mealStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.mealEnd,
+            // allowConsent: this.data.consentStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.consentEnd,
             allowHouse: this.data.houseStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.houseEnd,
-            // allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
+            allowPerf: this.data.perfStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.perfEnd,
             allowSuggestions: this.data.suggestionsStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.suggestionsEnd,
-            // allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
+            allowPrompose: this.data.promposeStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.promposeEnd,
             allowMusic: this.data.musicStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.musicEnd,
-            // allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
+            allowTicket: this.data.ticketStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.ticketEnd,
             allowValidation: this.data.eventStart<=(Date.now()/1000) && (Date.now()/1000)<=this.data.eventEnd
           })
           this.setData({
-            allowPreOptions: this.data.allowConsent || this.data.allowMeal,
+            allowPreOptions: this.data.allowPrompose || this.data.allowPerf,
             allowLateOptions: this.data.allowMusic || this.data.allowSuggestions,
-            consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
-            mealEndDisplay: this.convertUnixTime(this.data.mealEnd),
+            // consentEndDisplay: this.convertUnixTime(this.data.consentEnd),
             houseStartDisplay: this.convertUnixTimeToMin(this.data.houseStart),
             houseEndDisplay: this.convertUnixTimeToMin(this.data.houseEnd),
-            // perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
+            perfEndDisplay: this.convertUnixTime(this.data.perfEnd),
             suggestionsEndDisplay: this.convertUnixTime(this.data.suggestionsEnd),
-            // promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
+            promposeEndDisplay: this.convertUnixTime(this.data.promposeEnd),
             musicEndDisplay: this.convertUnixTime(this.data.musicEnd),
-            // ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
-            // ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
+            ticketStartDisplay: this.convertUnixTime(this.data.ticketStart),
+            ticketEndDisplay: this.convertUnixTime(this.data.ticketEnd),
           })
         });
         eventChannel.on('eventName', (data: String) => {
@@ -633,29 +600,29 @@ Component({
           }, 10*1000);
         });
       },
-      // recomputeCode: function() {
-      //   if (this.data.viewVisible) {
-      //     let qrCodeData=[];
-      //     for (let i=0;i<this.data.holderTicketId.length;i++) {
-      //       qrCodeData.push(this.data.holderTicketId.charCodeAt(i));
-      //     }
-      //     let accessCodeContents=generateQrCode("ticketCode", "inputTicketEventId25", qrCodeData);
-      //     if (accessCodeContents !== this.data.codeLastGen) {
-      //       let myCreateQRCode = createQRCode.bind(this);
-      //       if (isDarkTheme()) {
-      //         myCreateQRCode("ticketcodecanvas", accessCodeContents, 'FFFFFF', darkContainerColor);
-      //       } else {
-      //         myCreateQRCode("ticketcodecanvas", accessCodeContents, '000000', lightContainerColor);
-      //       }
-      //       this.data.codeLastGen=accessCodeContents;
-      //     }
-      //     let date = new Date();
-      //     let newUpdateString=`${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
-      //     this.setData({
-      //       lastUpdateTime: newUpdateString,
-      //     });
-      //   }
-      // },
+      recomputeCode: function() {
+        if (this.data.viewVisible) {
+          let qrCodeData=[];
+          for (let i=0;i<this.data.holderTicketId.length;i++) {
+            qrCodeData.push(this.data.holderTicketId.charCodeAt(i));
+          }
+          let accessCodeContents=generateQrCode("ticketCode", "PM26", qrCodeData);
+          if (accessCodeContents !== this.data.codeLastGen) {
+            let myCreateQRCode = createQRCode.bind(this);
+            if (isDarkTheme()) {
+              myCreateQRCode("ticketcodecanvas", accessCodeContents, 'FFFFFF', darkContainerColor);
+            } else {
+              myCreateQRCode("ticketcodecanvas", accessCodeContents, '000000', lightContainerColor);
+            }
+            this.data.codeLastGen=accessCodeContents;
+          }
+          let date = new Date();
+          let newUpdateString=`${extendNumberToLengthString(date.getHours(), 2)}:${extendNumberToLengthString(date.getMinutes(), 2)}:${extendNumberToLengthString(date.getSeconds(), 2)}`;
+          this.setData({
+            lastUpdateTime: newUpdateString,
+          });
+        }
+      },
       onHide: function() {
         this.data.viewVisible = false;
       },

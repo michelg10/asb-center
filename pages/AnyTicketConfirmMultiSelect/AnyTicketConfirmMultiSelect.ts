@@ -65,7 +65,7 @@ Component({
           dueDate: res,
         });
       });
-      await this.data.db.collection("CircuscapeDeadlines").where({
+      await this.data.db.collection("PromDeadlines").where({
         optionId: "house",
       }).get().then((res) => {
         this.setData({
@@ -145,7 +145,7 @@ Component({
               title: "Loading...",
               mask: true,
             });
-            let checkGroupLimit = await this.data.db.collection("CircuscapeDeadlines").where({
+            let checkGroupLimit = await this.data.db.collection("PromDeadlines").where({
               optionId: "house",
             }).get();
             // let checkGroupLimit = await this.data.db.collection("PromTables").where({
@@ -176,7 +176,7 @@ Component({
               return;
             } else {
               for(let i=0;i<this.data.studentData.length;i++){
-                let checkStudent = await this.data.db.collection("CircuscapeStudentData").where({
+                let checkStudent = await this.data.db.collection("PromStudentData").where({
                   userId: this.data.studentData[i].id,
                 }).get();
                 if (checkStudent){
@@ -221,7 +221,7 @@ Component({
                 // })
                 for(let i=0;i<this.data.studentData.length;i++){
                   // console.log(this.data.studentData[i].id);
-                  let checkStudent = await this.data.db.collection("CircuscapeStudentData").where({
+                  let checkStudent = await this.data.db.collection("PromStudentData").where({
                     userId: this.data.studentData[i].id,
                   }).get();
                   if (checkStudent && checkStudent.data.length!==0){

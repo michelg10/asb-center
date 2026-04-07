@@ -11,7 +11,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "issue"){
-      await db.collection('CircuscapeTickets').where({
+      await db.collection('PromTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -25,7 +25,7 @@ exports.main = async (event, context) => {
     });
     return;
   } else if (event.type === "revoke"){
-    await db.collection('CircuscapeTickets').where({
+    await db.collection('PromTickets').where({
       ticketId: event.ticketId,
     }).update({
       data: {
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
     });
     return;
   } else if (event.type === "issuePreview"){
-    await db.collection('CircuscapeTickets').add({
+    await db.collection('PromTickets').add({
       data: {
         ticketId: "ADMIN".concat(Math.floor(Math.random() * (99999999 - 10000000 + 1) + 10000000).toString()),
         entry: true,

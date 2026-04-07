@@ -16,17 +16,17 @@
         <text class="heading-text" bindlongpress="onIssuePreview">{{anyTicketName}}</text>
       <view wx:if="{{displayAnyTicket}}">
         <text class="submission-{{anyTicketStatusClass}}">Status: {{anyTicketStatus}} Event Ticket</text>
-        <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueTicket" bindlongpress="onIssueTicketStation">
+        <!-- <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueTicket" bindlongpress="onIssueTicketStation">
           <text>Issue Ticket...</text>
-        </view>
-        <!-- <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueDigitalTicket">
-          <text>Issue Digital Event Ticket...</text>
         </view> -->
+        <view id="full-width-option-container" wx:if="{{adminStatus.canIssueTicket===true && anyTicketStatus!=='Issued'}}" bindtap="onIssueDigitalTicket">
+          <text>Issue Digital Event Ticket...</text>
+        </view>
       <view wx:if="{{anyTicketStatus!=='No'}}">
         <view id="full-width-option-container"  bindtap="onOperateTicket">
           <text>Operate Ticket...</text>
         </view>
-        <view class="heading-text">Select Dinner Option</view>
+        <!-- <view class="heading-text">Select Dinner Option</view>
         <text class="submission-{{dinnerSelectionClass}}">Option: {{dinnerSelection}}</text>
         <view class="option-row" bindtap="cheeseTap">
           <text class="option-text">McDonald's Cheese Burger</text>
@@ -42,7 +42,7 @@
           <view class="button" bindtap="onSaveDinner" id="save-button">
             <text class="button-text">Save</text>
           </view>
-        </view>
+        </view> -->
       </view>
     </view>
     <text class="heading-text" wx:else>The current user is either not registered, ineligible to participate in this event, or you do not have permission to issue an event ticket for this event.</text>

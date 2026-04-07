@@ -28,6 +28,7 @@
     "pages/SportsMeetPersonaDetail/SportsMeetPersonaDetail",
     "pages/AnyTicketAdminPanel/AnyTicketAdminPanel",
     "pages/AnyTicketMainPage/AnyTicketMainPage",
+    "pages/AnyTicketDigitalMainPage/AnyTicketDigitalMainPage",
     "pages/AnyTicketCheckTicket/AnyTicketCheckTicket",
     "pages/AnyTicketStationCheckTicket/AnyTicketStationCheckTicket",
     "pages/AnyTicketSubOption/AnyTicketSubOption",

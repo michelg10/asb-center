@@ -246,6 +246,16 @@ Component({
           }
         })
       }
+      if (eventClickedId === "Prom2026") {
+        wx.navigateTo({
+          url: '/pages/AnyTicketDigitalMainPage/AnyTicketDigitalMainPage',
+          success: (res) => {
+            res.eventChannel.emit('userData', this.data.userData);
+            res.eventChannel.emit('eventId', "Prom2026");
+            res.eventChannel.emit('eventName', "PROM 2026");
+          }
+        })
+      }
       if (eventClickedId === "ChristmasSale2022") {
         wx.navigateTo({
           url: '/pages/AnyOrderMainPage/AnyOrderMainPage',

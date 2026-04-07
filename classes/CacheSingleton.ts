@@ -102,7 +102,7 @@ class CacheSingleton {
 
     async getAnyEventIdeaLogs() {
       this.#anyEventIdeaLogs = new Array<anyEventIdeaLog>();
-      let anyEventIdeaLogs = await allCollectionsData(this.#db, "CircuscapeIdeas");
+      let anyEventIdeaLogs = await allCollectionsData(this.#db, "PromIdeas");
       for (let i=0;i<anyEventIdeaLogs.data.length;i++) {
           let name = "Anonymous";
           let contactInformation = "undefined";

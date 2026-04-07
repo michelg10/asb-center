@@ -11,7 +11,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "dinnerModify"){
-      await db.collection('CircuscapeStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "dinner"){
-      await db.collection('CircuscapeStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           dinnerOption: event.dinnerOption
@@ -30,7 +30,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitConsent"){
-      await db.collection('CircuscapeStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
@@ -41,7 +41,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitConsentNew"){
-      await db.collection('CircuscapeStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           consent: event.consent,
@@ -51,7 +51,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "submitMusic"){
-      await db.collection('CircuscapeMusic').add({
+      await db.collection('PromMusic').add({
         data: {
           userData: event.userData,
           musicName: event.musicName,
@@ -62,14 +62,14 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "houseModify"){
-      await db.collection('CircuscapeStudentData').where({
+      await db.collection('PromStudentData').where({
         userId: event.userId,
       }).update({
         data: {
           house: event.house
         }
       });
-      await db.collection('CircuscapeDeadlines').where({
+      await db.collection('PromDeadlines').where({
         optionId: "house",
       }).update({
         data: {
@@ -79,7 +79,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "houseAdd"){
-      await db.collection('CircuscapeStudentData').add({
+      await db.collection('PromStudentData').add({
         data: {
           userId: event.userId,
           // house: true,
@@ -87,7 +87,7 @@ exports.main = async (event, context) => {
           timestamp: Date.now()
         }
       });
-      await db.collection('CircuscapeDeadlines').where({
+      await db.collection('PromDeadlines').where({
         optionId: "house",
       }).update({
         data: {

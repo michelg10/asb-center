@@ -8,7 +8,7 @@ cloud.init({
 // 云函数入口函数
 exports.main = async (event, context) => {
     let db = cloud.database();
-    db.collection("CircuscapeIdeas").add({
+    db.collection("PromIdeas").add({
         data: {
             timestamp: Date.now(),
             userData: event.userData,

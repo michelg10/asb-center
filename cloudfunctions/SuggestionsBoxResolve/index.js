@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext();
     let db = cloud.database();
     if (event.type === "anyEventIdea"){
-      await db.collection('CircuscapeIdeas').where({
+      await db.collection('PromIdeas').where({
         _id: event.logId,
       }).update({
         data: {

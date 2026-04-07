@@ -9,7 +9,7 @@
     </view>
   </view>
     <block wx:if="{{!hasBeenSubmitted}}">
-        <text id="submissions-box-text">{{language === 'ch' ? '我们希望 Circuscape 2025 成为一次难忘的体验，而你的想法至关重要！请在这个建议箱中分享你对本次活动方面的创意，我们都愿意倾听！没有任何想法是太大或太小的，而这是你打造完美 Circuscape 2025 的机会。快来提交你的建议，让我们一起创造最棒的 Circuscape 2025 吧！' : 'We want Circuscape 2025 to be unforgettable, and your input matters! Use this suggestion box to share your best ideas for activities and more, we’re all ears! No idea is too big or too small, and this is your chance to shape the night. Drop your suggestions here, and let’s make Circuscape 2025 the best one yet!'}}
+        <text id="submissions-box-text">{{language === 'ch' ? '我们希望 PROM 2026 成为一次难忘的体验，而你的想法至关重要！请在这个建议箱中分享你对本次活动方面的创意，我们都愿意倾听！没有任何想法是太大或太小的，而这是你打造完美 PROM 2026 的机会。快来提交你的建议，让我们一起创造最棒的 PROM 2026 吧！' : 'We want PROM 2026 to be unforgettable, and your input matters! Use this suggestion box to share your best ideas for activities and more, we’re all ears! No idea is too big or too small, and this is your chance to shape the night. Drop your suggestions here, and let’s make PROM 2026 the best one yet!'}}
         </text>
         <text id="submissions-box-text-disclaimer">{{(language === 'ch' ? '每一份建议不一定都能开花结果，但一定不会有声音石沉大海。' : 'We cannot guarantee that all suggestions will be fulfilled - but we can guarantee that they will be thoroughly discussed and reviewed by the ASB.')}}</text>
         <view class="question">

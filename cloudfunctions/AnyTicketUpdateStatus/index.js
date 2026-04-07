@@ -11,7 +11,7 @@ let db = cloud.database();
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     if (event.type === "entry"){
-      await db.collection('CircuscapeTickets').where({
+      await db.collection('PromTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "exit"){
-      await db.collection('CircuscapeTickets').where({
+      await db.collection('PromTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -33,7 +33,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "main"){
-      await db.collection('CircuscapeTickets').where({
+      await db.collection('PromTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -44,7 +44,7 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "lost"){
-      await db.collection('CircuscapeTickets').where({
+      await db.collection('PromTickets').where({
         ticketId: event.ticketId,
       }).update({
         data: {
@@ -56,8 +56,8 @@ exports.main = async (event, context) => {
       return;
     }
     else if (event.type === "updateCount"){
-      const countIssued = await db.collection('CircuscapeTickets').where({status: 'Issued'}).count();
-      const countEntry = await db.collection('CircuscapeTickets').where({entry: true}).count();
+      const countIssued = await db.collection('PromTickets').where({status: 'Issued'}).count();
+      const countEntry = await db.collection('PromTickets').where({entry: true}).count();
       return {issued: countIssued.total, entry: countEntry.total};
     }
     return;

@@ -1,0 +1,207 @@
+/* pages/AnyTicketMainPage/AnyTicketMainPage.wxss */
+/* @import "imageStyles.wxss"; */
+@import "../../global-colors.wxss";
+@import "../MainMenu/MainMenu.wxss";
+@import "/styles/secureCodePreview.wxss";
+#any-ticket-master-container{
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 110px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--page-background);
+}
+#any-ticket-heading-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+#any-ticket-display-container {
+  display: flex;
+  flex-direction: column;
+}
+#any-ticket-event-option-row{
+  display: flex;
+  flex-direction: row;
+}
+#any-ticket-ticket{
+  margin-top: 20px;
+  width: 100%;
+  height: 200px;
+  background-size: contain;
+  border-radius: 8px;
+}
+#any-ticket-no-ticket{
+  margin-top: 20px;
+  width: 100%;
+  height: 200px;
+  background-size: contain;
+  border-radius: 8px;
+  opacity: 0.54;
+}
+.subheading-text{
+  margin-top: 15px;
+  font-size: 22px;
+  font-weight: bold;
+}
+.sub-text{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+#event-option{
+  /* height: 200px; */
+  border-radius: 8px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 5px;
+  padding: 9px 9px;
+  box-sizing: border-box;
+  background-color: var(--subcontainer-background);
+}
+#event-option text {
+  margin-top: 5px;
+  font-weight: 700;
+  font-size: 17px;
+}
+#event-option-full{
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 5px;
+  padding: 9px 20px;
+  box-sizing: border-box;
+  background-color: var(--subcontainer-background);
+}
+#event-option-full text {
+  margin-top: 5px;
+  font-weight: 700;
+  font-size: 17px;
+}
+#date-label {
+  font-weight: 700;
+  font-size: 17px;
+  color: #3180E9;
+}
+#event-option-restrict-label{
+  background-color: #000000;
+  color: #FFFFFF;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  font-weight: 700;
+  width: 85px;
+  height: 25px;
+}
+@media (prefers-color-scheme: dark) {
+  #event-option-icon {
+    margin-left: 10vw;
+    width: 120px;
+    height: 120px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: invert();
+  }
+}
+#event-option-icon {
+  margin-left: 10vw;
+  width: 120px;
+  height: 120px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+#AnyTicketErrorMessage {
+  margin-top: 51px;
+  margin-left: 38px;
+  margin-right: 38px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #D81717;
+}
+#upcoming-events-container {
+  margin-top: 23px;
+  display: flex;
+  flex-direction: column; 
+}
+#upcoming-events-inner-container {
+  margin-top: 12px;
+  background-color: var(--subcontainer-background);
+  border-radius: 11px;
+}
+.logs-separator {
+  margin-left: 18px;
+  padding-top:1px;
+  position: relative;
+  background-color: var(--list-separator);
+}
+.upcoming-events-block {
+  height: 55px;
+}
+.logs-left-top-down-arrange {
+  display: flex;
+  flex-direction: column;
+}
+.logs-right-top-down-arrange {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.upcoming-event-upcoming {
+  color: #3671E0;
+  font-weight: bold;
+  font-size: 13px;
+}
+.upcoming-events-title {
+  font-size: 17px;
+  font-weight: 500;
+}
+.upcoming-events-location {
+  color: var(--secondary);
+  font-size: 15px;
+  font-weight: 500;
+}
+.upcoming-events-time {
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+#upcoming-events-heading {
+  margin: 0 auto;
+}
+.logs-lr-arrange-block {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 16px;
+  align-items: center;
+}
+#ticket-display-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  text-align: center;
+}
+#ticket-code-code-container {
+  margin: 15px 5px;
+  border-radius: 8px;
+  padding: 9px 9px;
+  background-color: var(--subcontainer-background);
+}
+.stamp-overlay {
+  position: absolute;
+  top: 23%;
+  left: 77%;
+  width: 150px;
+  height: 100px;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  pointer-events: none;
+  filter: saturate(3);
+}

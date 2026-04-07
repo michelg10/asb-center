@@ -82,7 +82,7 @@ Component({
           content: "By submitting, you certify your digital signature is effective. You cannot edit this form after submission.\n确认提交则声明您的电子签名具有同等效应，提交后不可修改。",
           success: async (res) => {
             if(res.confirm){
-                let checkDatabase = await this.data.db.collection("CircuscapeStudentData").where({
+                let checkDatabase = await this.data.db.collection("PromStudentData").where({
                   userId: this.data.userData.student?.id,
                 }).get();
                 if (checkDatabase.data.length!==0){
@@ -135,6 +135,8 @@ Component({
         wx.showModal({
           title: "Submit Request",
           content: "Confirm Submission?",
+          confirmText: "Confirm",
+          cancelText: "Cancel",
           success: async (res) => {
             if(res.confirm){
               await wx.cloud.callFunction({
@@ -167,7 +169,7 @@ Component({
         }
       },
       checkMealSelection: async function(){
-        let checkMeal = await this.data.db.collection("CircuscapeStudentData").where({
+        let checkMeal = await this.data.db.collection("PromStudentData").where({
           userId: this.data.userData.student?.id,
         }).get();
         if(checkMeal.data.length===0 || checkMeal.data[0].dinnerOption===undefined){
@@ -194,7 +196,7 @@ Component({
           studentSearchTextfield: '',
         })
         if(this.data.userData && this.data.userData.student){
-          let checkHouse = await this.data.db.collection("CircuscapeStudentData").where({
+          let checkHouse = await this.data.db.collection("PromStudentData").where({
             userId: this.data.userData.student?.id,
           }).get();
           if (checkHouse.data[0].house===undefined || !checkHouse.data[0].house){
@@ -265,7 +267,7 @@ Component({
               // let tmpGNumbers: gNumber[] = [];
 
               const allStudentRes = await this.data.cacheSingleton.getStudentData();
-              const ticketRes = await allCollectionsData(this.data.db, "CircuscapeTickets");
+              const ticketRes = await allCollectionsData(this.data.db, "PromTickets");
               // const gNumberRes = await allCollectionsData(this.data.db, "gNumbers");
 
               const allStudentData = allStudentRes;
@@ -328,7 +330,7 @@ Component({
               });
             }
             wx.hideLoading();
-            /*allCollectionsData(this.data.db, "CircuscapeTickets").then((res) => {
+            /*allCollectionsData(this.data.db, "PromTickets").then((res) => {
               let tmpTicketData = [];
               let tmpStudentData: Student[] = [];
               let tmpGNumbers: gNumber[] = [];
@@ -425,7 +427,7 @@ Component({
             title: "Loading...",
             mask: true,
           });
-          let checkHouse = await this.data.db.collection("CircuscapeStudentData").where({
+          let checkHouse = await this.data.db.collection("PromStudentData").where({
             userId: this.data.userData.student?.id,
           }).get();
           if(checkHouse.data.length===0){
@@ -530,7 +532,7 @@ Component({
         });
       },
       checkHouseAvail: async function() {
-        let checkGroupLimit = await this.data.db.collection("CircuscapeDeadlines").where({
+        let checkGroupLimit = await this.data.db.collection("PromDeadlines").where({
           optionId: "house",
         }).get();
         if (checkGroupLimit.data[0].current>=checkGroupLimit.data[0].limit){
@@ -589,11 +591,11 @@ Component({
         // }
         if(this.data.userData && this.data.userData.student) {
           try {
-            let studentData = await this.data.db.collection("CircuscapeStudentData").where({
+            let studentData = await this.data.db.collection("PromStudentData").where({
               userId: this.data.userData.student?.id,
             }).get();
             let houseNumber = studentData.data[0].house;
-            let houseStudents = await this.data.db.collection("CircuscapeStudentData").where({
+            let houseStudents = await this.data.db.collection("PromStudentData").where({
               house: houseNumber,
             }).get();
             let matchingStudentDataIndexes: number[] = [];
@@ -655,7 +657,7 @@ Component({
           title: "Loading...",
           mask: true,
         });
-        let checkMeal = await this.data.db.collection("CircuscapeStudentData").where({
+        let checkMeal = await this.data.db.collection("PromStudentData").where({
           userId: this.data.userData.student?.id,
         }).get();
         if(checkMeal.data.length===0){
