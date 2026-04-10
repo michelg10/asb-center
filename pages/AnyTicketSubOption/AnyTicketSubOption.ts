@@ -908,28 +908,36 @@ Component({
               confirmText: "Dismiss"
             })
             return;
-          }
-          else {
-            wx.navigateTo({
-              url: '/pages/AnyTicketConfirmMultiSelect/AnyTicketConfirmMultiSelect',
-              success: (res) => {
-                let selectedData:Student[]=[];
-                for (let i=0;i<this.data.userSelect.length;i++) {
-                  if (this.data.userSelect[i]) {
-                    selectedData.push(this.data.studentData[i]);
+          } else {
+            if (this.data.totalSelected % 2 !== 0) {
+              wx.showModal({
+                title: "Invalid Selection",
+                content: `Your group size must be an EVEN number between ${this.data.houseMin} to ${this.data.houseMax} people.`,
+                showCancel: false,
+                confirmText: "Dismiss"
+              })
+              return;
+            } else {
+              wx.navigateTo({
+                url: '/pages/AnyTicketConfirmMultiSelect/AnyTicketConfirmMultiSelect',
+                success: (res) => {
+                  let selectedData:Student[]=[];
+                  for (let i=0;i<this.data.userSelect.length;i++) {
+                    if (this.data.userSelect[i]) {
+                      selectedData.push(this.data.studentData[i]);
+                    }
                   }
+                  res.eventChannel.emit('selectedData', selectedData);
+                  res.eventChannel.emit('eventName', this.data.eventName);
+                  res.eventChannel.emit('dueDate', this.data.dueDate);
                 }
-                res.eventChannel.emit('selectedData', selectedData);
-                res.eventChannel.emit('eventName', this.data.eventName);
-                res.eventChannel.emit('dueDate', this.data.dueDate);
-              }
-            });
+              });
+            }
           }
-        }
-      else{
+        } else {
         wx.showModal({
           title: "Sign-Up Full",
-          content: "We're sorry, sign-ups for the escape room are currently full.",
+          content: "We're sorry, sign-ups for table groups are currently full.",
           showCancel: false,
           confirmText: "Dismiss"
         });

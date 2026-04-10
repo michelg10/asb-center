@@ -4,7 +4,7 @@
   </view>
   <text class="big-title-text">{{eventName}}</text>
   <view class="date-text">Ends: {{dueDate}}</view>
-  <view class="heading-text">Escape Room Sign-Up</view>
+  <view class="heading-text">Table Group Sign-Up</view>
   <!-- <text class="subheading-text">Group Members</text> -->
   <text class="big-title-sub-text">{{studentData.length}}/{{sizeMax}} guests selected</text>
   <view id="selection-confirmation-list">

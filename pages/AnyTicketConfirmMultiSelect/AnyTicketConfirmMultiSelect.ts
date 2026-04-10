@@ -190,7 +190,7 @@ Component({
                     let getStudentNickname = checkStudentName.data[0].nickname as string;
                     wx.showModal({
                       title: "Group Member Unavailable",
-                      content: `${getStudentNickname} is already in another escape room group.`,
+                      content: `${getStudentNickname} is already in another table group.`,
                       showCancel: false,
                       confirmText: "Return",
                       success: (res) => {
