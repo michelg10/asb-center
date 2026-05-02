@@ -909,7 +909,7 @@ Component({
             })
             return;
           } else {
-            if (this.data.totalSelected % 2 !== 0) {
+            if (this.data.totalSelected % 2 !== 0) { // EVEN number limiting factor for PROM, disable for other events.
               wx.showModal({
                 title: "Invalid Selection",
                 content: `Your group size must be an EVEN number between ${this.data.houseMin} to ${this.data.houseMax} people.`,
